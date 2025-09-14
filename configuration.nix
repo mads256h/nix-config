@@ -11,9 +11,14 @@
     ];
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
+  #boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.consoleMode = "max";
+
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
+  };
 
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -81,8 +86,8 @@
       name = "Noto Sans";
     };
     fonts.monospace = {
-      package = pkgs.hack-font;
-      name = "Hack";
+      package = pkgs.nerd-fonts.hack;
+      name = "Hack Nerd Font";
     };
     fonts.emoji = {
       package = pkgs.noto-fonts-emoji;
@@ -112,6 +117,7 @@
     killall
     spotify
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
+    sbctl
   ];
 
   # spotify
@@ -161,6 +167,11 @@
   security.pam.services.login.gnupg = {
     enable = true;
     storeOnly = true;
+    noAutostart = true;
+  };
+
+  security.pam.services.hyprlock.gnupg = {
+    enable = true;
     noAutostart = true;
   };
 

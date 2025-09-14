@@ -183,7 +183,7 @@
             };
         };
         "tray" = {
-            # "icon-size" = 21;
+          #"icon-size" = 21;
             "spacing" = 10;
             # "icons" = {
             #   "blueman" = "bluetooth";
@@ -334,6 +334,8 @@
 
         "$mod, d, exec, rofi -show drun"
 
+        "$mod, l, exec, hyprlock"
+
         ",XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 10%+"
         ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%-"
         ",XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
@@ -411,6 +413,27 @@
     '';
   };
   services.hyprpolkitagent.enable = true;
+  programs.hyprlock.enable = true;
+
+  services.dunst = {
+    enable = true;
+
+    settings = {
+      global = {
+        width = 300;
+        height = "(0, 300)";
+        origin = "bottom-right";
+        offset = "(30, 50)";
+        separator_height = 2;
+        padding = 8;
+        text_icon_padding = 0;
+        frame_width = 1;
+      };
+      urgency_critical = {
+        timeout = 0;
+      };
+    };
+  };
 
   programs.nixvim = {
     enable = true;
