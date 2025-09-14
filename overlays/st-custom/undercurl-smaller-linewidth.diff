@@ -1,0 +1,13 @@
+diff --git a/st-undercurl-0.9-20240103.diff b/st-undercurl-0.9-20240103.diff
+index b099933..760d0b5 100644
+--- a/st-undercurl-0.9-20240103.diff
++++ b/st-undercurl-0.9-20240103.diff
+@@ -251,7 +251,7 @@ index 210f184..3a0e79e 100644
+ -		XftDrawRect(xw.draw, fg, winx, winy + dc.font.ascent * chscale + 1,
+ -				width, 1);
+ +		// Underline Color
+-+		const int widthThreshold  = 28; // +1 width every widthThreshold px of font
+++		const int widthThreshold  = 32; // +1 width every widthThreshold px of font
+ +		int wlw = (win.ch / widthThreshold) + 1; // Wave Line Width
+ +		int linecolor;
+ +		if ((base.ucolor[0] >= 0) &&

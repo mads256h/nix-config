@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, lib, inputs, ... }:
 {
   imports = [
     inputs.nixvim.homeModules.nixvim
@@ -32,7 +32,26 @@
   };
   home.shell.enableBashIntegration = true;
 
-  programs.vifm.enable = true;
+  programs.tmux = {
+    enable = true;
+    mouse = true;
+    historyLimit = 30000;
+    escapeTime = 0;
+    focusEvents = true;
+    plugins = [
+      pkgs.tmuxPlugins.fpp
+      pkgs.tmuxPlugins.urlview
+    ];
+    extraConfig = ''
+      set -g status off
+      '';
+  };
+
+  home.file.".urlview" = {
+    enable = true;
+    text = "COMMAND ${pkgs.librewolf}/bin/librewolf";
+  };
+
 
   programs.ssh = {
     enable = true;
@@ -99,6 +118,11 @@
 
   programs.alacritty = {
     enable = true;
+    settings.window = {
+      opacity = lib.mkForce 0.8;
+      blur = true;
+    };
+    settings.scrolling.history = 0;
   };
   programs.waybar = {
     enable = true;
@@ -321,7 +345,7 @@
         "layout" = "hy3";
       };
       decoration = {
-        blur.enabled = false;
+        blur.enabled = true;
         shadow.enabled = false;
       };
       animations.enabled = false;
@@ -329,7 +353,7 @@
       bind = [
         "$mod+SHIFT, Q, hy3:killactive"
         "$mod+SHIFT, E, exit"
-        "$mod, return, exec, alacritty"
+        "$mod, return, exec, alacritty -e tmux"
         "$mod, W, exec, librewolf"
 
         "$mod, d, exec, rofi -show drun"
@@ -396,6 +420,10 @@
         kb_layout = "dk";
         numlock_by_default = true;
       };
+
+      windowrulev2 = [
+        "workspace 10, class:(KeePassXC)"
+      ];
     };
     
     extraConfig = ''
@@ -459,6 +487,15 @@
       tabstop = 2;
     };
 
+    highlightOverride = {
+      Normal = { bg = "none"; ctermbg = "none"; };
+      NonText = { bg = "none"; ctermbg = "none"; };
+      SignColumn = { bg = "none"; ctermbg = "none"; };
+      LineNr = { bg = "none"; ctermbg = "none"; };
+      LineNrAbove = { bg = "none"; ctermbg = "none"; };
+      LineNrBelow = { bg = "none"; ctermbg = "none"; };
+    };
+
     keymaps = [
       {
         mode = "n";
@@ -479,7 +516,7 @@
         options = { noremap = true; silent = true; };
       }
     ];
-    
+
     plugins.lualine.enable = true;
 
     plugins.treesitter = {

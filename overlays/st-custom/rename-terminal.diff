@@ -1,0 +1,24 @@
+From b469a9fa4c142fd6f0d639cecd871f09c4684d62 Mon Sep 17 00:00:00 2001
+From: c0dev0id <sh+github@codevoid.de>
+Date: Mon, 2 Aug 2021 20:35:56 +0200
+Subject: [PATCH] Update patch to current version
+
+---
+ config.def.h | 2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/config.def.h b/config.def.h
+index 6f05dce..b98451c 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -74,7 +74,7 @@ static unsigned int cursorthickness = 2;
+ static int bellvolume = 0;
+
+ /* default TERM value */
+-char *termname = "st-256color";
++char *termname = "st-mads256h-256color";
+
+ /*
+  * spaces per tab
+-- 
+2.32.0

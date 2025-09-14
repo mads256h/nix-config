@@ -1,0 +1,12 @@
+--- a/x.c	2024-03-30 11:10:07.310291713 +0100
++++ b/x.c	2024-03-30 11:10:33.216467902 +0100
+@@ -2239,6 +2239,9 @@
+ void
+ reload(int sig)
+ {
++  XFreeGC(xw.dpy, xw.bggc);
++  bginit();
++
+ 	xrdb_load();
+ 
+ 	/* colors, fonts */

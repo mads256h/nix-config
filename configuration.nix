@@ -43,6 +43,8 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   };
 
+  nixpkgs.overlays = [ (import ./overlays/st-custom) ];
+
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
 
@@ -98,6 +100,13 @@
       name = "Breeze";
       size = 32;
     };
+
+    targets.nixvim.enable = true;
+    targets.nixvim.transparentBackground = {
+      main = true;
+      numberLine = true;
+      signColumn = true;
+    };
   };
 
   security.polkit.enable = true;
@@ -118,6 +127,7 @@
     spotify
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
     sbctl
+    st
   ];
 
   # spotify
