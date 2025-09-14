@@ -20,9 +20,12 @@
 
     stylix.url = "github:nix-community/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
+
+    nixvim.url = "github:nix-community/nixvim";
+    nixvim.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ self, nixpkgs, nixos-hardware, home-manager, stylix, ... }: {
+  outputs = inputs@{ self, nixpkgs, nixos-hardware, home-manager, stylix, nixvim, ... }: {
     nixosConfigurations."laptop-mads" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
