@@ -434,12 +434,40 @@
       smarttab = true;
       softtabstop = 2;
       tabstop = 2;
-      completeopt = "menuone,noselect";
     };
+
+    keymaps = [
+      {
+        mode = "n";
+        key = "<c-c>";
+        action = ''"+yy'';
+        options = { noremap = true; silent = true; };
+      }
+      {
+        mode = "v";
+        key = "<c-c>";
+        action = ''"+y'';
+        options = { noremap = true; silent = true; };
+      }
+      {
+        mode = "n";
+        key = "<c-v>";
+        action = ''"+p'';
+        options = { noremap = true; silent = true; };
+      }
+    ];
     
     plugins.lualine.enable = true;
 
-    plugins.treesitter.enable = true;
+    plugins.treesitter = {
+      enable = true;
+      settings = {
+        highlight.enable = true;
+        indent.enable = true;
+      };
+    };
+    plugins.treesitter-context.enable = true;
+    plugins.treesitter-textobjects.enable = true;
     plugins.lspconfig.enable = true;
     plugins.cmp = {
       enable = true;
@@ -515,7 +543,7 @@
             expr = ''let flake = builtins.getFlake(toString ./.); in flake.nixosConfigurations."laptop-mads".options'';
           };
           home_manager = {
-            expr = ''let flake = builtins.getFlake(toString ./.); in flake.homeConfigurations."mads@laptop-mads".options'';
+            expr = ''let flake = builtins.getFlake(toString ./.); in flake.nixosConfigurations."laptop-mads".options.home-manager.users.type.getSubOptions []'';
           };
         };
       };
