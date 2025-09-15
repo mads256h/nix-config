@@ -1,4 +1,22 @@
-{ config, pkgs, lib, inputs, ... }: {
+{ config, pkgs, lib, inputs, ... }:
+let
+  randomizeWallpaper = pkgs.writeTextFile {
+    name = "random-wallpaper";
+    executable = true;
+    text = ''
+      #!${pkgs.bash}/bin/bash
+
+      WALLPAPER_DIR="$HOME/Pictures/wallpapers/"
+      CURRENT_WALL=$(${pkgs.hyprland}/bin/hyprctl hyprpaper listloaded)
+
+      # Get a random wallpaper that is not the current one
+      WALLPAPER=$(find "$WALLPAPER_DIR" -type f ! -name "$(basename "$CURRENT_WALL")" | shuf -n 1)
+
+      # Apply the selected wallpaper
+      ${pkgs.hyprland}/bin/hyprctl hyprpaper reload ,"$WALLPAPER"
+      '';
+  };
+in {
   wayland.windowManager.hyprland = {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
@@ -32,6 +50,7 @@
         "$mod+SHIFT, Q, hy3:killactive"
         "$mod+SHIFT, E, exit"
         "$mod, return, exec, alacritty -e tmux"
+        "$mod, g, exec, alacritty -e vifmrun"
         "$mod, W, exec, librewolf"
 
         "$mod, d, exec, rofi -show drun"
@@ -100,11 +119,14 @@
       };
 
       windowrulev2 = [
+        "noblur, class:([^A][^l][^a][^c][^r][^i][^t][^t][^y])"
         "workspace 10, class:(KeePassXC)"
       ];
     };
     
     extraConfig = ''
+      exec-once = ${randomizeWallpaper}
+
       bind = $mod, R, submap, resize
       submap = resize
 
@@ -122,6 +144,15 @@
   programs.waybar = {
     enable = true;
     systemd.enable = true;
+    style = ''
+      #workspaces {
+        padding: 0;
+      }
+
+      #workspaces button {
+        padding: 0;
+      }
+      '';
     settings = {
       mainBar = {
         layer = "top";
@@ -318,6 +349,8 @@
 
   services.hyprpolkitagent.enable = true;
   programs.hyprlock.enable = true;
+  services.hyprpaper.enable = true;
+  services.hyprpaper.settings.ipc = "on";
 
   services.dunst = {
     enable = true;

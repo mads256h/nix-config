@@ -8,6 +8,26 @@ let
   torrentClient = "${pkgs.tremc}/bin/tremc";
   office = "${pkgs.libreoffice-fresh}/bin/libreoffice";
 
+  bash = "${pkgs.bash}/bin/bash";
+  file = "${pkgs.file}/bin/file";
+  cut = "${pkgs.coreutils}/bin/cut";
+  grep = "${pkgs.gnugrep}/bin/grep";
+  cat = "${pkgs.coreutils}/bin/cat";
+
+
+  outputOrFile = pkgs.writeTextFile {
+    name = "output-or-file";
+    executable = true;
+    text = ''
+      #!${bash}
+      if ${file} -L "$1" | ${cut} -d ':' -f 2- | ${cut} -d ' ' -f 2- | ${grep} -q 'text\|ASCII\|Unicode'; then
+        ${cat} "$1"
+      else
+        ${file} -L "$1" | ${cut} -d ':' -f 2- | ${cut} -d ' ' -f 2-
+      fi
+      '';
+  };
+
   preview = pkgs.writeTextFile {
     name = "vifm-preview-config";
     text = ''
@@ -40,6 +60,9 @@ let
          \ ${vifmimg} draw %px %py %pw %ph %c
          \ %pc
          \ ${vifmimg} clear
+
+      " everything else
+      fileviewer *[^/] ${outputOrFile} %f
       '';
   };
 
@@ -113,9 +136,12 @@ in
       set ignorecase
       set smartcase
       set incsearch
+      set dotfiles
       set previewoptions+=graphicsdelay:0
       set viewcolumns=-{name},-15{perms},15{mtime},9{size}
       set slowfs+=/home/mads/mnt
+
+      set statusline="  %{system('git show -s --pretty=%d HEAD 2>/dev/null')}%= %A %10u:%-7g %15s %20d  "
 
       command! dragon ${pkgs.dragon-drop}/bin/dragon-drop -a -x %f
       nmap <C-d> :dragon<CR>
@@ -130,6 +156,12 @@ in
       " Next and Prev pdf page
       map > :!${vifmimg} inc<CR>
       map < :!${vifmimg} dec<CR>
+
+      " theme
+      hi Win cterm=none ctermfg=default ctermbg=default
+      hi Border cterm=none ctermfg=default ctermbg=default
+      hi TopLine cterm=bold ctermfg=default ctermbg=black
+      hi StatusLine cterm=bold ctermfg=default ctermbg=black
 
       view
       '';
