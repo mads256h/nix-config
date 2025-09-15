@@ -22,6 +22,7 @@
     pkgs.tremc
     pkgs.libreoffice-fresh
     pkgs.vifmimg
+    pkgs.ueberzugpp
   ];
 
 

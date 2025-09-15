@@ -1,26 +1,31 @@
-{ stdenv, lib, fetchFromGitHub, vifm, ueberzugpp, ffmpegthumbnailer, epub-thumbnailer, poppler-utils, djvulibre, ffmpeg, fontpreview, ... }:
+{ stdenv, lib, fetchFromGitHub, makeWrapper, vifm, ueberzugpp, ffmpegthumbnailer, epub-thumbnailer, poppler-utils, djvulibre, ffmpeg, fontpreview, coreutils, ... }:
 
 stdenv.mkDerivation rec {
-  version = "unstable-2024-01-16";
+  version = "unstable-2024-01-16-1";
   pname = "vifmimg";
 
   src = fetchFromGitHub {
     owner = "thimc";
     repo = "vifmimg";
     rev = "8ba24fc724505582015203f257c71b9d8a30454f";
-    sha256 = "11pbfayww7pwyk8a7jgvijx9i96ahyvn5y84gpn0yjd0b9wf75bn";
+    hash = "sha256-Am0nIZm2B6N5lX/Zq2dzUTag0BXOnbcwuz8BfylYSbQ=";
   };
 
-  buildInputs = [ vifm ueberzugpp ffmpegthumbnailer epub-thumbnailer poppler-utils djvulibre ffmpeg fontpreview ];
-  installPhase = ''
+  #configurePhase = "";
+
+  #buildInputs = [ vifm ueberzugpp ffmpegthumbnailer epub-thumbnailer poppler-utils djvulibre ffmpeg fontpreview ];
+
+  buildInputs = [ makeWrapper ];
+
+  buildPhase = ''
     mkdir -p $out/bin
     cp vifm* $out/bin
   '';
 
-  postInstall = ''
+  installPhase = ''
     wrapProgram $out/bin/vifmimg \
-      --prefix PATH : ${lib.makeBinPath [ vifm ueberzugpp ffmpegthumbnailer epub-thumbnailer poppler-utils djvulibre ffmpeg fontpreview ]}
-    wrapProgram $out/bin/vifmrun \
-      --prefix PATH : ${lib.makeBinPath [ vifm ueberzugpp ]}
+      --set PATH ${lib.makeBinPath [ vifm ueberzugpp ffmpegthumbnailer epub-thumbnailer poppler-utils djvulibre ffmpeg fontpreview coreutils ]}:$out/bin:$PATH
+      #wrapProgram $out/bin/vifmrun \
+      #--set PATH ${lib.makeBinPath [ vifm ueberzugpp ]}:$out/bin:$PATH
   '';
 }
