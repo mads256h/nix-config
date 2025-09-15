@@ -5,6 +5,8 @@
     ./home/hyprland.nix
     ./home/neovim.nix
     ./home/ssh.nix
+    ./home/vifm.nix
+    ./home/mpv.nix
   ];
 
   home.username = "mads";
@@ -17,6 +19,9 @@
 
   home.packages = [
     pkgs.gcr
+    pkgs.tremc
+    pkgs.libreoffice-fresh
+    pkgs.vifmimg
   ];
 
 
@@ -74,6 +79,9 @@
     };
     autostart = true;
   };
+
+  programs.zathura.enable = true;
+  programs.imv.enable = true;
 
 
   programs.alacritty = {

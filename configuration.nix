@@ -43,7 +43,10 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   };
 
-  nixpkgs.overlays = [ (import ./overlays/st-custom) ];
+  nixpkgs.overlays = [ 
+    (import ./overlays/st-custom)
+    (import ./overlays/packages)
+  ];
 
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
