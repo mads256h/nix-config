@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, inputs, stylix, ... }:
 {
   programs.nixvim = {
     enable = true;
@@ -24,14 +24,10 @@
       tabstop = 2;
     };
 
-    highlightOverride = {
-      Normal = { bg = "none"; ctermbg = "none"; };
-      NonText = { bg = "none"; ctermbg = "none"; };
-      SignColumn = { bg = "none"; ctermbg = "none"; };
-      LineNr = { bg = "none"; ctermbg = "none"; };
-      LineNrAbove = { bg = "none"; ctermbg = "none"; };
-      LineNrBelow = { bg = "none"; ctermbg = "none"; };
-    };
+    colorschemes.onedark.enable = true;
+    colorschemes.onedark.settings.transparent = true;
+
+    colorscheme = "onedark";
 
     keymaps = [
       {
@@ -170,4 +166,6 @@
       changedelete = { text = "~"; };
     };
   };
+
+  stylix.targets.nixvim.enable = false;
 }

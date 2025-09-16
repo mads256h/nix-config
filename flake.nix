@@ -35,10 +35,7 @@
       modules = [
         ./configuration.nix
         ./hardware-configuration.nix
-        "${nixos-hardware.outPath}/common/cpu/intel/skylake/default.nix"
-        nixos-hardware.nixosModules.common-gpu-nvidia
-        nixos-hardware.nixosModules.common-pc-laptop
-        nixos-hardware.nixosModules.common-pc-ssd
+        nixos-hardware.nixosModules.msi-gl62
         
         home-manager.nixosModules.home-manager {
           home-manager.extraSpecialArgs = { inherit inputs; };

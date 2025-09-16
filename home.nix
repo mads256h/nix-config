@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, inputs, stylix, ... }:
 {
   imports = [
     inputs.nixvim.homeModules.nixvim
@@ -101,4 +101,7 @@
     enable = true;
     nativeMessagingHosts = [ pkgs.keepassxc ];
   };
+
+  fonts.fontconfig.enable = true;
+  fonts.fontconfig.subpixelRendering = "rgb";
 }

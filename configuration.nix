@@ -48,20 +48,6 @@
     (import ./overlays/packages)
   ];
 
-  # Enable the X11 windowing system.
-  # services.xserver.enable = true;
-
-
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
-
-  # Enable sound.
-  # services.pulseaudio.enable = true;
-  # OR
-  # services.pipewire = {
-  #   enable = true;
-  #   pulse.enable = true;
-  # };
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
@@ -102,13 +88,6 @@
       package = pkgs.kdePackages.breeze;
       name = "Breeze";
       size = 32;
-    };
-
-    targets.nixvim.enable = true;
-    targets.nixvim.transparentBackground = {
-      main = true;
-      numberLine = true;
-      signColumn = true;
     };
   };
 
