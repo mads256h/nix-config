@@ -7,6 +7,7 @@
     ./home/ssh.nix
     ./home/vifm.nix
     ./home/mpv.nix
+    ./home/accounts.nix
   ];
 
   home.username = "mads";
@@ -23,6 +24,8 @@
     pkgs.libreoffice-fresh
     pkgs.vifmimg
     pkgs.ueberzugpp
+    pkgs.seahorse
+    pkgs.libsecret
   ];
 
 
@@ -36,6 +39,14 @@
   
   programs.bash = {
     enable = true;
+    initExtra = ''
+      export PS1="\[\e[0m\]\[\e[31m\][\[\e[32m\]\u\[\e[0m\]@\[\e[34m\]\h \[\e[33m\]\W\[\e[31m\]]\[\e[0m\]\\$ \[\e[0m\]"
+
+      # Start hyprland automagically on tty1
+      if [ -z "''${WAYLAND_DISPLAY}" ] && [ "''${XDG_VTNR}" -eq 1 ]; then
+        exec ${pkgs.hyprland}/bin/hyprland
+      fi
+      '';
   };
   home.shell.enableBashIntegration = true;
 
@@ -104,4 +115,13 @@
 
   fonts.fontconfig.enable = true;
   fonts.fontconfig.subpixelRendering = "rgb";
+
+  services.gnome-keyring.enable = true;
+  services.gnome-keyring.components = [ "secrets" ];
+
+  services.protonmail-bridge.enable = true;
+  services.protonmail-bridge.extraPackages = [ pkgs.gnome-keyring ];
+
+  programs.thunderbird.enable = true;
+  programs.thunderbird.profiles.default.isDefault = true;
 }

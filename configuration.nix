@@ -167,6 +167,9 @@
     noAutostart = true;
   };
 
+  security.pam.services.login.enableGnomeKeyring = true;
+  security.pam.services.hyprlock.enableGnomeKeyring = true;
+
   fileSystems =
     let
       # Use the user's gpg-agent session to query
