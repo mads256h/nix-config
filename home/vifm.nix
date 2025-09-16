@@ -14,6 +14,16 @@ let
   grep = "${pkgs.gnugrep}/bin/grep";
   cat = "${pkgs.coreutils}/bin/cat";
 
+  zip = "${pkgs.zip}/bin/zip";
+  tar = "${pkgs.gnutar}/bin/tar";
+  xz = "${pkgs.xz}/bin/xz";
+  unrar = "${pkgs.unrar}/bin/unrar";
+  z7 = "${pkgs.p7zip}/bin/7z";
+
+  jq = "${pkgs.jq}/bin/jq";
+  pygmentize = "${pkgs.python313Packages.pygments}/bin/pygmentize";
+
+
 
   outputOrFile = pkgs.writeTextFile {
     name = "output-or-file";
@@ -45,24 +55,59 @@ let
 
       " video
       fileviewer {*.avi,*.mp4,*.wmv,*.dat,*.3gp,*.ogv,*.mkv,*.mpg,*.mpeg,*.vob,*.fl[icv],*.m2v,*.mov,*.webm,*.ts,*.mts,*.m4v,*.r[am],*.qt,*.divx,*.as[fx],*.bik,*.bik2,*.bk2},<video/*>
-          \ ${vifmimg} video %px %py %pw %ph %c
-          \ %pc
-          \ ${vifmimg} clear
+        \ ${vifmimg} video %px %py %pw %ph %c
+        \ %pc
+        \ ${vifmimg} clear
 
       " images
       fileviewer {*.bmp,*.jpg,*.jpeg,*.gif,*.png,*.xpm},<image/*>
-         \ ${vifmimg} draw %px %py %pw %ph %c
-         \ %pc
-         \ ${vifmimg} clear
+        \ ${vifmimg} draw %px %py %pw %ph %c
+        \ %pc
+        \ ${vifmimg} clear
 
       " icons
       fileviewer {*.bmp,*.jpg,*.jpeg,*.gif,*.png,*.xpm},<image/*>
-         \ ${vifmimg} draw %px %py %pw %ph %c
-         \ %pc
-         \ ${vifmimg} clear
+        \ ${vifmimg} draw %px %py %pw %ph %c
+        \ %pc
+        \ ${vifmimg} clear
+
+      " archives
+      fileviewer {*.zip,*.jar,*.war,*.ear,*.oxt},<application/zip,application/java-archive>
+        \ ${zip} -sf %c
+
+      fileviewer {*.tgz,*.tar.gz}
+        \ ${tar} -tzf %c
+
+      fileviewer {*.tar.bz2,*.tbz2}
+        \ ${tar} -tjf %c
+
+      fileviewer {*.tar.txz,*.txz}
+        \ ${xz} --list %c
+
+      fileviewer {*.tar.zst,*.zst}
+        \ ${tar} -t --zstd -f %c
+
+      fileviewer {*.tar},<application/x-tar>
+        \ ${tar} -tf %c
+
+      fileviewer {*.rar},<application/x-rar>
+        \ ${unrar} vb %c
+
+      fileviewer {*.7z},<application/x-7z-compressed>
+        \ ${z7} l %c
+
+      " json
+      fileviewer {*.json},<application/json,text/json>
+        \ ${jq} -C . %c
+
+
+      " code highlighting
+      fileviewer {*.js,*.c,*.h,*.cpp,*.hpp,*.sh,*.bash,*.cs,*.rs,*.xml,*.py,*.tex,CMakeLists.txt,*.toml,*.yml,*.yaml,*.lua,*.css,*.html,*.md,*.nix,*.proto,*.diff,PKGBUILD},<application/x-shellscript>,<text/x-shellscript>,<text/x-perl>
+        \ ${pygmentize} -O style=monokai -g
 
       " everything else
-      fileviewer *[^/] ${outputOrFile} %f
+      fileviewer *[^/]
+        \ ${outputOrFile} %f
       '';
   };
 

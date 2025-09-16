@@ -1,22 +1,5 @@
 { config, pkgs, lib, inputs, ... }:
-let
-  randomizeWallpaper = pkgs.writeTextFile {
-    name = "random-wallpaper";
-    executable = true;
-    text = ''
-      #!${pkgs.bash}/bin/bash
-
-      WALLPAPER_DIR="$HOME/Pictures/wallpapers/"
-      CURRENT_WALL=$(${pkgs.hyprland}/bin/hyprctl hyprpaper listloaded)
-
-      # Get a random wallpaper that is not the current one
-      WALLPAPER=$(find "$WALLPAPER_DIR" -type f ! -name "$(basename "$CURRENT_WALL")" | shuf -n 1)
-
-      # Apply the selected wallpaper
-      ${pkgs.hyprland}/bin/hyprctl hyprpaper reload ,"$WALLPAPER"
-      '';
-  };
-in {
+{
   wayland.windowManager.hyprland = {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
@@ -125,8 +108,6 @@ in {
     };
     
     extraConfig = ''
-      exec-once = ${randomizeWallpaper}
-
       bind = $mod, R, submap, resize
       submap = resize
 
@@ -351,6 +332,19 @@ in {
   programs.hyprlock.enable = true;
   services.hyprpaper.enable = true;
   services.hyprpaper.settings.ipc = "on";
+
+  systemd.user.services.hyprpaper.Service.ExecStartPost = "${pkgs.writeShellScript "random-wallpaper" ''
+    #!${pkgs.bash}/bin/bash
+
+    WALLPAPER_DIR="$HOME/Pictures/wallpapers/"
+    CURRENT_WALL=$(${pkgs.hyprland}/bin/hyprctl hyprpaper listloaded)
+
+    # Get a random wallpaper that is not the current one
+    WALLPAPER=$(${pkgs.findutils}/bin/find "$WALLPAPER_DIR" -type f ! -name "$(${pkgs.coreutils}/bin/basename "$CURRENT_WALL")" | ${pkgs.coreutils}/bin/shuf -n 1)
+
+    # Apply the selected wallpaper
+    ${pkgs.hyprland}/bin/hyprctl hyprpaper reload ,"$WALLPAPER"
+    ''}";
 
   services.dunst = {
     enable = true;
