@@ -44,7 +44,7 @@
 
       # Start hyprland automagically on tty1
       if [ -z "''${WAYLAND_DISPLAY}" ] && [ "''${XDG_VTNR}" -eq 1 ]; then
-        exec ${pkgs.hyprland}/bin/hyprland
+        exec hyprland
       fi
       '';
   };
