@@ -101,7 +101,7 @@
       };
 
       windowrulev2 = [
-        "noblur, class:([^A][^l][^a][^c][^r][^i][^t][^t][^y])"
+        "noblur, class:negative:(Alacritty)"
         "workspace 10, class:(KeePassXC)"
       ];
     };
