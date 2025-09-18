@@ -169,7 +169,7 @@ in
       so ${preview}
       so ${openWith}
 
-      set vicmd=${pkgs.neovim}/bin/nvim
+      set vicmd=nvim
       set syscalls
       set history=100
       set sortnumbers
