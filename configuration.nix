@@ -118,6 +118,44 @@
 
   hardware.graphics.enable = true;
 
+  networking.networkmanager.dispatcherScripts = [{
+    type = "pre-down";
+    source = "${pkgs.writeShellScript "lock-keepassxc-database" ''
+        set -e
+
+        echo $2
+
+        SOCKET_NAME="/tmp/keepassxc-mads.socket"
+
+        # Prepare data to be sent
+        # Format:
+        # [block_size (4 bytes)][ID (4 bytes)][data_size (4 bytes)]
+        # The lock signal is an ID of '2' (quint32) and we will reserve the space for block size
+        BLOCK_SIZE=12 # 4 (block size) + 4 (ID) + 4 (size)
+        LOCK_SIGNAL=2  # This is the ID for database lock as per your source code
+
+        # Prepare the data for the lock signal
+        DATA="\x00\x00\x00\x00" # Placeholder for block size (we'll update this later)
+        DATA+="\x00\x00\x00\x02" # Lock signal ID (quint32: 2)
+        DATA+="\x00\x00\x00\x0C" # Block size (12 bytes)
+
+        # Now we need to send this to the socket
+        echo -n -e "$DATA" | ${pkgs.socat}/bin/socat - UNIX-CONNECT:"$SOCKET_NAME"
+
+        # Check if the connection was successful
+        if [ $? -eq 0 ]; then
+            echo "Database lock signal sent successfully."
+        else
+            echo "Failed to send lock signal."
+            exit 1
+        fi
+
+        sleep 2
+
+        systemctl stop home-mads-mnt.mount
+      ''}";
+  } ];
+
   services.interception-tools = {
     enable = true;
     udevmonConfig = ''
