@@ -26,9 +26,11 @@
 
     lanzaboote.url = "github:nix-community/lanzaboote/v0.4.2";
     lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
+
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
   };
 
-  outputs = inputs@{ self, nixpkgs, nixos-hardware, home-manager, stylix, lanzaboote, ... }: {
+  outputs = inputs@{ self, nixpkgs, nixos-hardware, home-manager, stylix, lanzaboote, nixos-wsl, ... }: {
     nixosConfigurations."laptop-mads" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
@@ -47,6 +49,25 @@
         stylix.nixosModules.stylix
 
         lanzaboote.nixosModules.lanzaboote
+      ];
+    };
+
+    nixosConfigurations."wsl" = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./systems/wsl/configuration.nix
+        
+        home-manager.nixosModules.home-manager {
+          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.mads = ./systems/wsl/home.nix;
+        }
+
+        stylix.nixosModules.stylix
+
+      nixos-wsl.nixosModules.default
       ];
     };
   };
