@@ -26,4 +26,9 @@
       };
     };
   };
+
+  home.file.".urlview" = {
+    enable = true;
+    text = "COMMAND /mnt/c/WINDOWS/explorer.exe";
+  };
 }

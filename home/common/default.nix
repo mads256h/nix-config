@@ -1,4 +1,4 @@
-{ config, lib, inputs, ... }:
+{ config, lib, inputs, pkgs, ... }:
 {
   imports = [
     inputs.nixvim.homeModules.nixvim
@@ -20,6 +20,10 @@
     historyLimit = 30000;
     escapeTime = 0;
     focusEvents = true;
+    plugins = [
+      pkgs.tmuxPlugins.fpp
+      pkgs.tmuxPlugins.urlview
+    ];
     extraConfig = ''
       set -g status off
       '';
