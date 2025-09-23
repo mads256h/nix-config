@@ -31,4 +31,8 @@
     enable = true;
     text = "COMMAND /mnt/c/WINDOWS/explorer.exe";
   };
+
+  programs.bash.initExtra = ''
+    export PS1="\[\e[0m\]\[\e[31m\][\[\e[32m\]\u\[\e[0m\]@\[\e[34m\]\h \[\e[33m\]\W\[\e[31m\]]\[\e[0m\]\\$ \[\e[0m\]"
+    '';
 }
