@@ -7,15 +7,7 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    wget
-    curl
-    htop
-    lshw
-    pciutils
-    killall
-    spotify
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
-    sbctl
   ];
 
   programs.steam = {

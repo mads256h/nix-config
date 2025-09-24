@@ -26,8 +26,8 @@
   environment.systemPackages = with pkgs; [
     wget
     curl
-    htop
     killall
+    sbctl
   ];
 
   # nixpkgs.overlays = [ 

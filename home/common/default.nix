@@ -52,4 +52,8 @@
     userEmail = "mail@madsmogensen.dk";
     userName = "mads256h";
   };
+
+  programs.htop = {
+    enable = true;
+  };
 }

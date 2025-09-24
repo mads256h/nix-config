@@ -1,6 +1,7 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, inputs, ... }:
 {
   imports = [
+    inputs.spicetify-nix.homeManagerModules.spicetify
     ./hyprland.nix
     ./ssh.nix
     ./mpv.nix
@@ -9,15 +10,34 @@
     ./thunderbird.nix
   ];
 
-  home.packages = [
-    pkgs.gcr
-    pkgs.tremc
-    pkgs.libreoffice-fresh
-    pkgs.vifmimg
-    pkgs.ueberzugpp
-    pkgs.seahorse
-    pkgs.libsecret
+  home.packages = with pkgs; [
+    gcr
+    tremc
+    libreoffice-fresh
+    vifmimg
+    ueberzugpp
+    seahorse
+    libsecret
   ];
+
+  programs.spicetify = {
+    enable = true;
+    enabledExtensions = with inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.system}.extensions; [
+      goToSong
+      betterGenres
+      keyboardShortcut
+      shuffle
+      trashbin
+    ];
+    enabledSnippets = with inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.system}.snippets; [
+      removeGradient
+      hideDownloadButton
+    ];
+    alwaysEnableDevTools = true;
+    #windowManagerPatch = true;
+  };
+
+  stylix.targets.spicetify.enable = false;
 
 
   programs.keepassxc = {
