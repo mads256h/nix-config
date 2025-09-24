@@ -22,19 +22,18 @@
 
   programs.spicetify = {
     enable = true;
-    enabledExtensions = with inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.system}.extensions; [
-      goToSong
-      betterGenres
-      keyboardShortcut
-      shuffle
-      trashbin
-    ];
+    # enabledExtensions = with inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.system}.extensions; [
+    #   goToSong
+    #   betterGenres
+    #   keyboardShortcut
+    #   shuffle
+    #   trashbin
+    # ];
     enabledSnippets = with inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.system}.snippets; [
       removeGradient
       hideDownloadButton
     ];
     alwaysEnableDevTools = true;
-    #windowManagerPatch = true;
   };
 
   stylix.targets.spicetify.enable = false;
