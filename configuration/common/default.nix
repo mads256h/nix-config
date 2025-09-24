@@ -35,6 +35,10 @@
   #   (import ./overlays/packages)
   # ];
 
+  hardware.enableRedistributableFirmware = true;
+
+  nixpkgs.config.allowUnfree = true;
+
   nix.settings.experimental-features = ["nix-command" "flakes" ];
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, sysconfig, ... }:
 let
   vifmimg = "${pkgs.vifmimg}/bin/vifmimg";
   pdfViewer = "${pkgs.zathura}/bin/zathura";
@@ -38,8 +38,8 @@ let
       '';
   };
 
-  preview = pkgs.writeTextFile {
-    name = "vifm-preview-config";
+  previewGraphical = lib.optionalString sysconfig.graphical pkgs.writeTextFile {
+    name = "vifm-preview-graphical-config";
     text = ''
       " pdf
       fileviewer {*.pdf},<application/pdf>
@@ -70,7 +70,12 @@ let
         \ ${vifmimg} draw %px %py %pw %ph %c
         \ %pc
         \ ${vifmimg} clear
+      '';
+  };
 
+  preview = pkgs.writeTextFile {
+    name = "vifm-preview-config";
+    text = ''
       " archives
       fileviewer {*.zip,*.jar,*.war,*.ear,*.oxt},<application/zip,application/java-archive>
         \ ${zip} -sf %c
@@ -111,7 +116,8 @@ let
       '';
   };
 
-  openWith = pkgs.writeTextFile {
+
+  openWith = lib.optionalString sysconfig.graphical pkgs.writeTextFile {
     name = "vifm-open-with-config";
     text = ''
       " pdf, postscript, djvu
@@ -166,8 +172,9 @@ in
   home.file.".config/vifm/vifmrc" = {
     enable = true;
     text = ''
+      ${lib.optionalString sysconfig.graphical "so ${previewGraphical}"}
       so ${preview}
-      so ${openWith}
+      ${lib.optionalString sysconfig.graphical "so ${openWith}"}
 
       set vicmd=nvim
       set syscalls

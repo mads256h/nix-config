@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, sysconfig, ... }:
 {
   stylix = {
     enable = true;
@@ -26,5 +26,7 @@
       name = "Breeze";
       size = 32;
     };
+
+    autoEnable = sysconfig.graphical; # Only enable specific stuff on non-graphical environments
   };
 }

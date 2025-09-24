@@ -31,19 +31,18 @@
   };
 
   outputs = inputs@{ self, nixpkgs, nixos-hardware, home-manager, stylix, lanzaboote, nixos-wsl, ... }: {
-    nixosConfigurations."laptop-mads" = nixpkgs.lib.nixosSystem {
+    nixosConfigurations."laptop-mads" = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
+      specialArgs = { inherit inputs; sysconfig = { graphical = true; }; };
       modules = [
-        ./configuration.nix
-        ./hardware-configuration.nix
+        ./systems/laptop-mads/configuration.nix
         nixos-hardware.nixosModules.msi-gl62
         
         home-manager.nixosModules.home-manager {
-          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.extraSpecialArgs = specialArgs;
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.mads = ./home.nix;
+          home-manager.users.mads = ./systems/laptop-mads/home.nix;
         }
 
         stylix.nixosModules.stylix
@@ -52,14 +51,14 @@
       ];
     };
 
-    nixosConfigurations."wsl" = nixpkgs.lib.nixosSystem {
+    nixosConfigurations."wsl" = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
+      specialArgs = { inherit inputs; sysconfig = { graphical = false; }; };
       modules = [
         ./systems/wsl/configuration.nix
         
         home-manager.nixosModules.home-manager {
-          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.extraSpecialArgs = specialArgs;
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.mads = ./systems/wsl/home.nix;
