@@ -102,6 +102,7 @@
 
       windowrulev2 = [
         "noblur, class:negative:(Alacritty)"
+        "workspace 2, class:(spotify)"
         "workspace 10, class:(KeePassXC)"
       ];
     };

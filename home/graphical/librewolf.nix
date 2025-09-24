@@ -5,6 +5,11 @@
     nativeMessagingHosts = [ pkgs.keepassxc ];
     profiles.default = {
       isDefault = true;
+      settings = {
+        "privacy.clearOnShutdown.cookies" = false;
+        "privacy.clearOnShutdown.sessions" = false;
+        "privacy.clearOnShutdown_v2.cookiesAndStorage" = false;
+      };
     };
   };
 
