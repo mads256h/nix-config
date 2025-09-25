@@ -31,6 +31,7 @@
     enabledSnippets = with inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.system}.snippets; [
       removeGradient
       hideDownloadButton
+      modernScrollbar
     ];
     alwaysEnableDevTools = true;
   };
@@ -76,7 +77,7 @@
   programs.rofi.enable = true;
 
   fonts.fontconfig.enable = true;
-  fonts.fontconfig.subpixelRendering = "rgb";
+  #fonts.fontconfig.subpixelRendering = "rgb";
 
   services.gnome-keyring.enable = true;
   services.gnome-keyring.components = [ "secrets" ];
