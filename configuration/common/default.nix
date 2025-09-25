@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, ... }:
+{ pkgs, inputs, ... }:
 {
   imports =
     [
@@ -38,6 +38,10 @@
   hardware.enableRedistributableFirmware = true;
 
   nixpkgs.config.allowUnfree = true;
+
+  nixpkgs.overlays = [ 
+    (import ../../overlays/packages)
+  ];
 
   nix.settings.experimental-features = ["nix-command" "flakes" ];
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];

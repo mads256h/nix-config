@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ pkgs, sysconfig, ... }:
 {
   programs.ssh = {
     enable = true;
@@ -36,6 +36,6 @@
     maxCacheTtl = 3600 * 24;
     maxCacheTtlSsh = 3600 * 24;
     extraConfig = "allow-preset-passphrase";
-    pinentry.package = pkgs.pinentry-gnome3;
+    pinentry.package = if sysconfig.graphical then pkgs.pinentry-gnome3 else pkgs.pinentry-tty;
   };
 }

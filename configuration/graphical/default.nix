@@ -6,7 +6,7 @@
     vista-fonts
   ];
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = [
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
   ];
 
@@ -133,9 +133,4 @@
         inherit options;
       };
     };
-
-
-  nixpkgs.overlays = [ 
-    (import ../../overlays/packages)
-  ];
 }

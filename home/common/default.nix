@@ -3,6 +3,7 @@
   imports = [
     ./neovim.nix
     ./vifm.nix
+    ./ssh.nix
   ];
 
   home.username = "mads";
@@ -36,7 +37,13 @@
   programs.bash = {
     enable = true;
     initExtra = ''
-      export PS1="\[\e[0m\]\[\e[31m\][\[\e[32m\]\u\[\e[0m\]@\[\e[34m\]\h \[\e[33m\]\W\[\e[31m\]]\[\e[0m\]\\$ \[\e[0m\]"
+      source ${pkgs.git}/share/git/contrib/completion/git-prompt.sh
+      GIT_PS1_SHOWDIRTYSTATE=auto
+      GIT_PS1_SHOWSTASHSTATE=auto
+      GIT_PS1_SHOWUNTRACKEDFILES=auto
+      GIT_PS1_SHOWUPSTREAM=auto
+      GIT_PS1_COMPRESSSPARSESTATE=auto
+      export PS1="\[\e[0m\]\[\e[31m\][\[\e[32m\]\u\[\e[0m\]@\[\e[34m\]\h \[\e[33m\]\W\[\e[36m\]\$(__git_ps1)\[\e[31m\]]\[\e[0m\]\\$ \[\e[0m\]"
 
       '' + lib.optionalString sysconfig.graphical ''
       # Start hyprland automagically on tty1
@@ -55,5 +62,12 @@
 
   programs.htop = {
     enable = true;
+    package = pkgs.htop-vim;
+    settings = {
+      hide_userland_threads = true;
+      show_cpu_frequency = true;
+      show_cpu_temperature = true;
+      highlight_base_name = true;
+    };
   };
 }

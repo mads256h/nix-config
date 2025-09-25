@@ -3,7 +3,6 @@
   imports = [
     inputs.spicetify-nix.homeManagerModules.spicetify
     ./hyprland.nix
-    ./ssh.nix
     ./mpv.nix
     ./accounts.nix
     ./librewolf.nix
