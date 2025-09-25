@@ -34,6 +34,28 @@
   };
 
   outputs = inputs@{ self, nixpkgs, nixos-hardware, home-manager, stylix, lanzaboote, nixos-wsl, ... }: {
+    nixosConfigurations."desktop-mads" = nixpkgs.lib.nixosSystem rec {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; sysconfig = { graphical = true; }; };
+      modules = [
+        ./systems/desktop-mads/configuration.nix
+        nixos-hardware.nixosModules.common-cpu-amd
+        nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+        nixos-hardware.nixosModules.common-pc-ssd
+        
+        home-manager.nixosModules.home-manager {
+          home-manager.extraSpecialArgs = specialArgs;
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.mads = ./systems/desktop-mads/home.nix;
+        }
+
+        stylix.nixosModules.stylix
+
+        #lanzaboote.nixosModules.lanzaboote
+      ];
+    };
+
     nixosConfigurations."laptop-mads" = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; sysconfig = { graphical = true; }; };

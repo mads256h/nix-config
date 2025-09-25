@@ -50,12 +50,12 @@
         ",XF86AudioPrev, exec, ${pkgs.playerctl}/bin/playerctl -p spotify previous"
         ",XF86AudioNext, exec, ${pkgs.playerctl}/bin/playerctl -p spotify next"
         ",XF86AudioPlay, exec, ${pkgs.playerctl}/bin/playerctl -p spotify play-pause"
-        "$mod+SHIFT, left, exec, ${pkgs.playerctl}/bin/playerctl -p spotify previous"
-        "$mod+SHIFT, right, exec, ${pkgs.playerctl}/bin/playerctl -p spotify next"
-        "$mod+SHIFT, up, exec, ${pkgs.playerctl}/bin/playerctl -p spotify play-pause"
-        "$mod+SHIFT, down, exec, ${pkgs.playerctl}/bin/playerctl -p spotify play-pause"
+        "$mod+ALT, left, exec, ${pkgs.playerctl}/bin/playerctl -p spotify previous"
+        "$mod+ALT, right, exec, ${pkgs.playerctl}/bin/playerctl -p spotify next"
+        "$mod+ALT, up, exec, ${pkgs.playerctl}/bin/playerctl -p spotify play-pause"
+        "$mod+ALT, down, exec, ${pkgs.playerctl}/bin/playerctl -p spotify play-pause"
 
-        "$mod, space, togglefloating"
+        "$mod+SHIFT, space, togglefloating"
         "$mod, f, fullscreen, 0"
 
         "$mod, left, hy3:movefocus, l"
@@ -87,6 +87,9 @@
         "$mod+SHIFT, code:17, hy3:movetoworkspace, 8"
         "$mod+SHIFT, code:18, hy3:movetoworkspace, 9"
         "$mod+SHIFT, code:19, hy3:movetoworkspace, 10"
+
+        "$mod+CTRL, left, movecurrentworkspacetomonitor, l"
+        "$mod+CTRL, right, movecurrentworkspacetomonitor, r"
       ];
 
       workspace = [
