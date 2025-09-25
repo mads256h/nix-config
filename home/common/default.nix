@@ -30,6 +30,7 @@
     ];
     extraConfig = ''
       set -g status off
+      set-window-option -g mode-keys vi
       '';
   };
   stylix.targets.tmux.enable = true;
