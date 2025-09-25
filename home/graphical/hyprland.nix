@@ -16,6 +16,7 @@
     
     settings = {
       "$mod" = "SUPER";
+      ecosystem.no_update_news = true;
       general = {
         "border_size" = 0;
         "gaps_in" = 15;
@@ -23,7 +24,12 @@
         "layout" = "hy3";
       };
       decoration = {
-        blur.enabled = true;
+        blur = {
+          enabled = true;
+          size = 4;
+          passes = 2;
+          xray = true;
+        };
         shadow.enabled = false;
       };
       animations.enabled = false;
@@ -34,6 +40,7 @@
         "$mod, return, exec, alacritty -e tmux"
         "$mod, g, exec, alacritty -e vifmrun"
         "$mod, W, exec, librewolf"
+        "$mod, s, exec, spotify"
 
         "$mod, d, exec, rofi -show drun"
 
