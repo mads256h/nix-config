@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 {
   imports = [
     ../../home/common
@@ -25,4 +25,10 @@
     enable = true;
     text = "COMMAND /mnt/c/WINDOWS/explorer.exe";
   };
+
+  programs.gpg.settings = {
+    "pinentry-mode" = "loopback";
+  };
+
+  services.gpg-agent.grabKeyboardAndMouse = false;
 }
