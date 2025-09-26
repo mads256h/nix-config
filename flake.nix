@@ -36,7 +36,7 @@
   outputs = inputs@{ self, nixpkgs, nixos-hardware, home-manager, stylix, lanzaboote, nixos-wsl, ... }: {
     nixosConfigurations."desktop-mads" = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
-      specialArgs = { inherit inputs; sysconfig = { graphical = true; }; };
+      specialArgs = { inherit inputs; sysconfig = { graphical = true; laptop = false; }; };
       modules = [
         ./systems/desktop-mads/configuration.nix
         nixos-hardware.nixosModules.common-cpu-amd
@@ -58,7 +58,7 @@
 
     nixosConfigurations."laptop-mads" = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
-      specialArgs = { inherit inputs; sysconfig = { graphical = true; }; };
+      specialArgs = { inherit inputs; sysconfig = { graphical = true; laptop = true; }; };
       modules = [
         ./systems/laptop-mads/configuration.nix
         nixos-hardware.nixosModules.msi-gl62
@@ -78,7 +78,7 @@
 
     nixosConfigurations."wsl" = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
-      specialArgs = { inherit inputs; sysconfig = { graphical = false; }; };
+      specialArgs = { inherit inputs; sysconfig = { graphical = false; laptop = true; }; };
       modules = [
         ./systems/wsl/configuration.nix
         
