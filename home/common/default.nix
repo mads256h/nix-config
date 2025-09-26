@@ -19,6 +19,7 @@
 
   home.packages = with pkgs; [
     shellcheck
+    yt-dlp
   ];
 
 
