@@ -26,6 +26,11 @@
     text = "COMMAND /mnt/c/WINDOWS/explorer.exe";
   };
 
+  programs.git = {
+    userEmail = lib.mkForce "mbmo@netcompany.com";
+    userName = lib.mkForce "Mads Beyer Mogensen";
+  };
+
   programs.gpg.settings = {
     "pinentry-mode" = "loopback";
   };

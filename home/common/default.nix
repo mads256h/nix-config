@@ -17,6 +17,10 @@
   #xdg.autostart.readOnly = true;
   xdg.autostart.enable = true;
 
+  home.packages = with pkgs; [
+    shellcheck
+  ];
+
 
   programs.tmux = {
     enable = true;
