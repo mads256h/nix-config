@@ -64,6 +64,9 @@
     enable = true;
     userEmail = "mail@madsmogensen.dk";
     userName = "mads256h";
+    extraConfig = {
+      pull.ff = "only";
+    };
   };
 
   programs.htop = {
