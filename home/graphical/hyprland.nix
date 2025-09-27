@@ -111,7 +111,9 @@
       };
 
       windowrulev2 = [
-        "noblur, class:negative:(Alacritty)"
+        "noblur, class:negative:^(Alacritty)$"
+        "immediate, class:^(gamescope)$"
+        "immediate, class:^(cs2)$"
         "workspace 2, class:(spotify)"
         "workspace 10, class:(KeePassXC)"
       ];

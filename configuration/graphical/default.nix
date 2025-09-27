@@ -12,9 +12,18 @@
 
   programs.steam = {
     enable = true;
+    extest.enable = true;
   };
 
+  programs.gamemode = {
+    enable = true;
+    enableRenice = true;
+    settings.general.renice = 10;
+  };
+  users.users.mads.extraGroups = [ "gamemode" ];
+
   hardware.graphics.enable = true;
+  hardware.graphics.enable32Bit = true;
 
   # spotify
   networking.firewall.allowedTCPPorts = [ 57621 ];

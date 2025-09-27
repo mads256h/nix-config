@@ -9,6 +9,7 @@
         "privacy.clearOnShutdown.cookies" = false;
         "privacy.clearOnShutdown.sessions" = false;
         "privacy.clearOnShutdown_v2.cookiesAndStorage" = false;
+        "media.videocontrols.picture-in-picture.video-toggle.enabled" = false;
       };
     };
   };
