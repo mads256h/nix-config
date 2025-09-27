@@ -22,6 +22,13 @@
   };
   users.users.mads.extraGroups = [ "gamemode" ];
 
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    configPackages = [ inputs.hyprland.packages.${pkgs.system}.hyprland ];
+    xdgOpenUsePortal = true;
+  };
+
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
 

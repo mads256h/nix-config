@@ -17,6 +17,7 @@
     ueberzugpp
     seahorse
     libsecret
+    pulsemixer
   ];
 
   programs.spicetify = {
