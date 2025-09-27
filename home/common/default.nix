@@ -65,7 +65,15 @@
     userEmail = "mail@madsmogensen.dk";
     userName = "mads256h";
     extraConfig = {
-      pull.ff = "only";
+      init.defaultBranch = "master";
+      pull.rebase = true;
+      merge.tool = "vimdiff";
+      commit.verbose = true;
+      diff.algorithm = "histogram";
+
+      user.signingKey = "75C8BC5DCCE7257DA133C6CECCD33BA72D54F208";
+      commit.gpgSign = true;
+      tag.gpgSign = true;
     };
   };
 
