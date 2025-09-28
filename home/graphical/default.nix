@@ -18,6 +18,8 @@
     seahorse
     libsecret
     pulsemixer
+    wineWowPackages.waylandFull
+    winetricks
   ];
 
   programs.spicetify = {
