@@ -135,7 +135,10 @@
           "_netdev"
           "ssh_command=${sshAsUser}\\040mads"
           "noauto"
-          "x-gvfs-hide"
+          "comment=x-gvfs-show"
+          "x-gvfs-name=server"
+          "x-gvfs-icon=network-server"
+          "x-gvfs-symbolic-icon=network-server"
           "x-systemd.automount"
           #"Compression=yes" # YMMV
           # Disconnect approximately 2*15=30 seconds after a network failure

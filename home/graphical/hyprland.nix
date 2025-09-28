@@ -159,12 +159,23 @@
     enable = true;
     systemd.enable = true;
     style = ''
-      #workspaces {
+      .modules-left #workspaces {
         padding: 0;
       }
 
-      #workspaces button {
+      .modules-left #workspaces button {
+        border-bottom-style: none;
         padding: 0;
+      }
+
+      .modules-left #workspaces button.active,
+      .modules-left #workspaces button.focused {
+        border-bottom-style: none;
+        box-shadow: none;
+      }
+
+      #workspaces button.active {
+        background: rgba(171, 178, 191, 0.1);
       }
       '';
     settings = {
