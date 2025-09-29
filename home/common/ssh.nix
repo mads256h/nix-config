@@ -1,4 +1,4 @@
-{ pkgs, sysconfig, ... }:
+{ pkgs, sysconfig, lib, ... }:
 {
   programs.ssh = {
     enable = true;
@@ -30,12 +30,14 @@
     enable = true;
   };
 
-  services.gpg-agent = {
-    enable = true;
-    enableSshSupport = true;
-    maxCacheTtl = 3600 * 24;
-    maxCacheTtlSsh = 3600 * 24;
-    extraConfig = "allow-preset-passphrase";
-    pinentry.package = if sysconfig.graphical then pkgs.pinentry-gnome3 else pkgs.pinentry-tty;
+  services = lib.optionalAttrs sysconfig.graphical {
+      gpg-agent = {
+      enable = true;
+      enableSshSupport = true;
+      maxCacheTtl = 3600 * 24;
+      maxCacheTtlSsh = 3600 * 24;
+      extraConfig = "allow-preset-passphrase";
+      pinentry.package = if sysconfig.graphical then pkgs.pinentry-gnome3 else pkgs.pinentry-tty;
+    };
   };
 }
