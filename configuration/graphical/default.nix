@@ -25,7 +25,10 @@
 
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.kdePackages.xdg-desktop-portal-kde
+    ];
     configPackages = [ inputs.hyprland.packages.${pkgs.system}.hyprland ];
     xdgOpenUsePortal = true;
   };
