@@ -55,6 +55,54 @@
         action = ''"+p'';
         options = { noremap = true; silent = true; };
       }
+      {
+        mode = "n";
+        key = "gD";
+        action = { __raw = "vim.lsp.buf.declaration"; };
+        options = { noremap = true; silent = true; };
+      }
+      {
+        mode = "n";
+        key = "gd";
+        action = { __raw = "vim.lsp.buf.definition"; };
+        options = { noremap = true; silent = true; };
+      }
+      {
+        mode = "n";
+        key = "gi";
+        action = { __raw = "vim.lsp.buf.implementation"; };
+        options = { noremap = true; silent = true; };
+      }
+      {
+        mode = "n";
+        key = "K";
+        action = { __raw = "vim.lsp.buf.hover"; };
+        options = { noremap = true; silent = true; };
+      }
+      {
+        mode = [ "n" "v" ];
+        key = "<space>ca";
+        action = { __raw = "vim.lsp.buf.code_action"; };
+        options = { noremap = true; silent = true; };
+      }
+      {
+        mode = "n";
+        key = "<space>ci";
+        action = { __raw = "vim.diagnostic.setqflist"; };
+        options = { noremap = true; silent = true; };
+      }
+      {
+        mode = "n";
+        key = "<space>rn";
+        action = { __raw = "vim.lsp.buf.rename"; };
+        options = { noremap = true; silent = true; };
+      }
+      {
+        mode = "n";
+        key = "<space>f";
+        action = { __raw = "function() vim.lsp.buf.format { async = true } end"; };
+        options = { noremap = true; silent = true; };
+      }
     ];
 
     plugins.lualine.enable = true;
