@@ -198,7 +198,7 @@ in
       command! dragon ${pkgs.dragon-drop}/bin/dragon-drop -a -x %f
       nmap <C-d> :dragon<CR>
 
-      nnoremap s :shell<cr>
+      nnoremap s :!tmux new-window && tmux send-keys -t 1 'cd %d && clear' ENTER<cr>
 
       " Mappings for faster renaming
       nnoremap I cw<c-a>

@@ -20,6 +20,7 @@
     pulsemixer
     wineWowPackages.waylandFull
     winetricks
+    prismlauncher
   ];
 
   programs.spicetify = {

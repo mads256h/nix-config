@@ -38,7 +38,8 @@
         "$mod+SHIFT, Q, hy3:killactive"
         "$mod+SHIFT, E, exit"
         "$mod, return, exec, alacritty -e tmux"
-        "$mod, g, exec, alacritty -e vifmrun"
+        "$mod+SHIFT, return, exec, alacritty"
+        "$mod, g, exec, alacritty -e tmux new-session vifmrun"
         "$mod, W, exec, librewolf"
         "$mod, s, exec, spotify"
 
