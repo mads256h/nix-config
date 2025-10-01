@@ -198,6 +198,7 @@
           #"power-profiles-daemon"
           "cpu"
           "memory"
+          "disk"
           "temperature"
           "backlight"
           "sway/language"
@@ -220,8 +221,8 @@
         idle_inhibitor = {
             format = "{icon}";
             format-icons = {
-                activated = "";
-                deactivated = "";
+                activated = " ";
+                deactivated = " ";
             };
         };
         tray = {
@@ -239,6 +240,9 @@
         };
         memory = {
             format = "{}% ";
+        };
+        disk = {
+          format = "{percentage_used}% 󰋊";
         };
         temperature = {
             # thermal-zone = 2;
