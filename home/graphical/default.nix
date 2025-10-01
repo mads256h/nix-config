@@ -83,6 +83,9 @@
   fonts.fontconfig.enable = true;
   #fonts.fontconfig.subpixelRendering = "rgb";
 
+  home.sessionVariables._JAVA_OPTIONS = "-Djava.util.prefs.userRoot=$XDG_CONFIG_HOME/java -Dawt.useSystemAAFontSettings=gasp -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Djdk.gtk.version=3 -Djdk.downloader.home=$XDG_DATA_HOME/jdks -Djavafx.cachedir=$XDG_CACHE_HOME/openjfx";
+
+
   services.gnome-keyring.enable = true;
   services.gnome-keyring.components = [ "secrets" ];
 
