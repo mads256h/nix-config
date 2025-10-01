@@ -16,11 +16,15 @@
   xdg.enable = true;
   #xdg.autostart.readOnly = true;
   xdg.autostart.enable = true;
+  xdg.mimeApps.enable = true;
 
   home.packages = with pkgs; [
     shellcheck
     yt-dlp
     unzip
+    p7zip
+    xdg-utils
+    glib
   ];
 
 

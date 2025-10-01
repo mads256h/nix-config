@@ -218,4 +218,26 @@ in
       view
       '';
   };
+
+  xdg.desktopEntries = lib.optionalAttrs sysconfig.graphical {
+    # Taken from vifm.desktop
+    vifm = {
+      categories = [
+        "System"
+        "FileManager"
+        "Utility"
+        "ConsoleOnly"
+      ];
+      comment = "Vim-like ncurses based file manager";
+      genericName = "File Manager";
+      name = "Vifm";
+      icon = "Vifm";
+      exec = "vifmrun %F";
+      terminal = true;
+      type = "Application";
+      mimeType = [ "inode/directory" ];
+    };
+  };
+
+  xdg.mimeApps.defaultApplications."inode/directory" = lib.mkForce [ "vifm.desktop" ];
 }
