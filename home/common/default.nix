@@ -73,8 +73,8 @@
       diff.algorithm = "histogram";
 
       user.signingKey = "75C8BC5DCCE7257DA133C6CECCD33BA72D54F208";
-      commit.gpgSign = true;
-      tag.gpgSign = true;
+      commit.gpgSign = sysconfig.graphical;
+      tag.gpgSign = sysconfig.graphical;
     };
   };
 
