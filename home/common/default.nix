@@ -25,6 +25,7 @@
     p7zip
     xdg-utils
     glib
+    jq
   ];
 
 
