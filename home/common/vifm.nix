@@ -187,6 +187,7 @@ in
       set suggestoptions=normal,visual,view,otherpane,keys,marks,registers
       set ignorecase
       set smartcase
+      set sort=iname
       set incsearch
       set dotfiles
       set previewoptions+=graphicsdelay:0

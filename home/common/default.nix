@@ -1,6 +1,7 @@
 { config, lib, inputs, pkgs, sysconfig, ... }:
 {
   imports = [
+    ./bash.nix
     ./neovim.nix
     ./vifm.nix
     ./ssh.nix
@@ -45,26 +46,6 @@
       '';
   };
   stylix.targets.tmux.enable = true;
-
-  programs.bash = {
-    enable = true;
-    initExtra = ''
-      source ${pkgs.git}/share/git/contrib/completion/git-prompt.sh
-      GIT_PS1_SHOWDIRTYSTATE=auto
-      GIT_PS1_SHOWSTASHSTATE=auto
-      GIT_PS1_SHOWUNTRACKEDFILES=auto
-      GIT_PS1_SHOWUPSTREAM=auto
-      GIT_PS1_COMPRESSSPARSESTATE=auto
-      export PS1="\[\e[0m\]\[\e[31m\][\[\e[32m\]\u\[\e[0m\]@\[\e[34m\]\h \[\e[33m\]\W\[\e[36m\]\$(__git_ps1)\[\e[31m\]]\[\e[0m\]\\$ \[\e[0m\]"
-
-      '' + lib.optionalString sysconfig.graphical ''
-      # Start hyprland automagically on tty1
-      if [ -z "''${WAYLAND_DISPLAY}" ] && [ "''${XDG_VTNR}" -eq 1 ]; then
-        exec hyprland
-      fi
-      '';
-  };
-  home.shell.enableBashIntegration = true;
 
   programs.git = {
     enable = true;

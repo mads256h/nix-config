@@ -21,6 +21,8 @@
     wineWowPackages.waylandFull
     winetricks
     prismlauncher
+    slurp
+    grim
   ];
 
   programs.spicetify = {
@@ -61,6 +63,7 @@
         SpecialChars = true;
         WordList = "eff_large.wordlist";
       };
+      Security.IconDownloadFallback = true;
     };
     autostart = true;
   };
