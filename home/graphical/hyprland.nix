@@ -1,6 +1,6 @@
 { config, pkgs, lib, inputs, sysconfig, ... }:
 {
-  wayland.windowManager.hyprland = {
+  wayland.windowManager.hyprland = rec {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
@@ -44,6 +44,10 @@
         "$mod, s, exec, spotify"
 
         "$mod, d, exec, rofi -show drun"
+
+        ''$mod, t, exec, ${pkgs.slurp}/bin/slurp | ${pkgs.grim}/bin/grim -g - - | ${pkgs.coreutils}/bin/tee ~/Pictures/screenshots/$(date +%s).png | ${pkgs.wl-clipboard}/bin/wl-copy''
+        ''$mod+SHIFT, t, exec, ${package}/bin/hyprctl -j activewindow | ${pkgs.jq}/bin/jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"' | ${pkgs.grim}/bin/grim -g - - | ${pkgs.coreutils}/bin/tee ~/Pictures/screenshots/$(date +%s).png | ${pkgs.wl-clipboard}/bin/wl-copy''
+        ''$mod+CTRL, t, exec, ${pkgs.grim}/bin/grim -o "$(${package}/bin/hyprctl -j activeworkspace | ${pkgs.jq}/bin/jq -r .monitor)" - | ${pkgs.coreutils}/bin/tee ~/Pictures/screenshots/$(date +%s).png | ${pkgs.wl-clipboard}/bin/wl-copy''
 
         "$mod, l, exec, hyprlock"
 

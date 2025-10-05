@@ -21,8 +21,7 @@
     wineWowPackages.waylandFull
     winetricks
     prismlauncher
-    slurp
-    grim
+    easytag
   ];
 
   programs.spicetify = {
