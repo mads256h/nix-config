@@ -10,7 +10,7 @@
       identityFile = "~/.ssh/bitbucket_rsa";
     };
 
-    "*.ibmgst" = {
+    "*.ibmgst.dk" = {
       user = "mbmo";
       identityFile = "~/.ssh/mbmo_gst_servere_rsa";
     };

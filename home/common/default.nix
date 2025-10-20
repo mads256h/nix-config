@@ -64,7 +64,7 @@
       tag.gpgSign = sysconfig.graphical;
 
       # Use ssh instead of http
-      url."git@bitbucket.org:".insteadOf = "https:/bitbucket.org/";
+      url."git@bitbucket.org:".insteadOf = "https://bitbucket.org/";
     };
   };
 
