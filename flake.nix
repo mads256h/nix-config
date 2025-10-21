@@ -91,7 +91,7 @@
 
         stylix.nixosModules.stylix
 
-      nixos-wsl.nixosModules.default
+        nixos-wsl.nixosModules.default
       ];
     };
   };

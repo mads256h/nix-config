@@ -22,6 +22,7 @@
     winetricks
     prismlauncher
     easytag
+    imagemagick
   ];
 
   programs.spicetify = {
