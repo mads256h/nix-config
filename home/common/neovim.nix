@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, stylix, ... }:
+{ inputs, ... }:
 {
   imports = [
     inputs.nixvim.homeModules.nixvim
@@ -174,7 +174,7 @@
     };
     lsp.servers.nixd = {
       enable = true;
-      settings.settings = {
+      config.settings = {
         nixpkgs = {
           # For flake.
           # This expression will be interpreted as "nixpkgs" toplevel
