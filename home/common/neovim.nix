@@ -36,6 +36,11 @@
 
     colorscheme = "onedark";
 
+    performance.byteCompileLua = {
+      enable = true;
+      plugins = true;
+    };
+
     keymaps = [
       {
         mode = "n";
