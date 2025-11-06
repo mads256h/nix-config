@@ -41,73 +41,109 @@
         mode = "n";
         key = "<c-c>";
         action = ''"+yy'';
-        options = { noremap = true; silent = true; };
+        options = {
+          silent = true; 
+          desc = "Copy line to clipboard";
+        };
       }
       {
         mode = "v";
         key = "<c-c>";
         action = ''"+y'';
-        options = { noremap = true; silent = true; };
+        options = {
+          silent = true; 
+          desc = "Copy selection to clipboard";
+        };
       }
       {
         mode = "n";
         key = "<c-v>";
         action = ''"+p'';
-        options = { noremap = true; silent = true; };
+        options = {
+          silent = true; 
+          desc = "Paste from clipboard";
+        };
       }
       {
         mode = "n";
         key = "gD";
         action = { __raw = "vim.lsp.buf.declaration"; };
-        options = { noremap = true; silent = true; };
+        options = {
+          silent = true; 
+          desc = "Go to declaration";
+        };
       }
       {
         mode = "n";
         key = "gd";
         action = { __raw = "vim.lsp.buf.definition"; };
-        options = { noremap = true; silent = true; };
+        options = {
+          silent = true; 
+          desc = "Go to definition";
+        };
       }
       {
         mode = "n";
         key = "gi";
         action = { __raw = "vim.lsp.buf.implementation"; };
-        options = { noremap = true; silent = true; };
+        options = {
+          silent = true; 
+          desc = "Go to implementation";
+        };
       }
       {
         mode = "n";
         key = "K";
         action = { __raw = "vim.lsp.buf.hover"; };
-        options = { noremap = true; silent = true; };
+        options = {
+          silent = true; 
+          desc = "Hover";
+        };
       }
       {
         mode = [ "n" "v" ];
         key = "<space>ca";
         action = { __raw = "vim.lsp.buf.code_action"; };
-        options = { noremap = true; silent = true; };
+        options = {
+          silent = true; 
+          desc = "Code action";
+        };
       }
       {
         mode = "n";
         key = "<space>ci";
         action = { __raw = "vim.diagnostic.setqflist"; };
-        options = { noremap = true; silent = true; };
+        options = {
+          silent = true; 
+          desc = "Show problems";
+        };
       }
       {
         mode = "n";
         key = "<space>rn";
         action = { __raw = "vim.lsp.buf.rename"; };
-        options = { noremap = true; silent = true; };
+        options = {
+          silent = true; 
+          desc = "Rename";
+        };
       }
       {
         mode = "n";
         key = "<space>f";
         action = { __raw = "function() vim.lsp.buf.format { async = true } end"; };
-        options = { noremap = true; silent = true; };
+        options = {
+          silent = true; 
+          desc = "Format file";
+        };
       }
       {
         mode = "n";
         key = "m";
         action = "<cmd>:Neotree toggle<CR>";
-        options = { noremap = true; silent = true; };
+        options = {
+          silent = true; 
+          desc = "Toggle file tree";
+        };
       }
     ];
 
@@ -230,6 +266,9 @@
     plugins.luasnip.enable = true;
     plugins.lsp-signature.enable = true;
     plugins.cmp-nvim-lsp.enable = true;
+    plugins.neo-tree.enable = true;
+    plugins.vim-suda.enable = true;
+    plugins.which-key.enable = true;
     plugins.gitsigns.enable = true;
     plugins.gitsigns.settings.signs = {
       add = { text = "+"; };
@@ -238,7 +277,7 @@
       topdelete = { text = "‾"; };
       changedelete = { text = "~"; };
     };
-    plugins.neo-tree.enable = true;
+
   };
 
   stylix.targets.nixvim.enable = false;
