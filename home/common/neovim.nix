@@ -103,6 +103,12 @@
         action = { __raw = "function() vim.lsp.buf.format { async = true } end"; };
         options = { noremap = true; silent = true; };
       }
+      {
+        mode = "n";
+        key = "m";
+        action = "<cmd>:Neotree toggle<CR>";
+        options = { noremap = true; silent = true; };
+      }
     ];
 
     plugins.lualine.enable = true;
@@ -196,6 +202,16 @@
         };
       };
     };
+    lsp.servers.ltex = {
+      enable = true;
+      config.filetypes = [
+        "markdown"
+        "text"
+        "gitcommit"
+        "tex"
+        "bibtex"
+      ];
+    };
     lsp.servers.bashls.enable = true;
     lsp.servers.systemd_ls.enable = true;
     lsp.servers.jsonls.enable = true;
@@ -208,6 +224,8 @@
     lsp.servers.eslint.enable = true;
     lsp.servers.html.enable = true;
     lsp.servers.omnisharp.enable = true;
+
+
     plugins.lspkind.enable = true;
     plugins.luasnip.enable = true;
     plugins.lsp-signature.enable = true;
@@ -220,6 +238,7 @@
       topdelete = { text = "‾"; };
       changedelete = { text = "~"; };
     };
+    plugins.neo-tree.enable = true;
   };
 
   stylix.targets.nixvim.enable = false;
