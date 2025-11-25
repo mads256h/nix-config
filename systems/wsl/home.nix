@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   imports = [
     ../../home/common
@@ -20,6 +20,10 @@
       identityFile = "~/.ssh/mbmo_sit_servere_rsa";
     };
   };
+
+  home.packages = with pkgs; [
+    ibmcloud-cli
+  ];
 
   home.file.".urlview" = {
     enable = true;
