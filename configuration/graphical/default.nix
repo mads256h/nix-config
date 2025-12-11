@@ -7,7 +7,7 @@
   ];
 
   environment.systemPackages = [
-    inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
+    inputs.rose-pine-hyprcursor.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   programs.steam = {
@@ -29,7 +29,7 @@
       pkgs.xdg-desktop-portal-gtk
       pkgs.kdePackages.xdg-desktop-portal-kde
     ];
-    configPackages = [ inputs.hyprland.packages.${pkgs.system}.hyprland ];
+    configPackages = [ inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland ];
     xdgOpenUsePortal = true;
   };
 

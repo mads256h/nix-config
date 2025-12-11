@@ -10,7 +10,7 @@
   home.username = "mads";
   home.homeDirectory = "/home/mads";
 
-  home.stateVersion = "25.05";
+  home.stateVersion = "25.11";
 
   programs.home-manager.enable = true;
 
@@ -49,9 +49,9 @@
 
   programs.git = {
     enable = true;
-    userEmail = "mail@madsmogensen.dk";
-    userName = "mads256h";
-    extraConfig = {
+    settings = {
+      user.email = "mail@madsmogensen.dk";
+      user.name = "mads256h";
       init.defaultBranch = "master";
       pull.rebase = true;
       merge.tool = "vimdiff";
