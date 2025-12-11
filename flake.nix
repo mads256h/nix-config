@@ -27,7 +27,7 @@
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    lanzaboote.url = "github:nix-community/lanzaboote/v0.4.2";
+    lanzaboote.url = "github:nix-community/lanzaboote/v1.0.0";
     lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
 
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
@@ -52,7 +52,7 @@
 
         stylix.nixosModules.stylix
 
-        #lanzaboote.nixosModules.lanzaboote
+        lanzaboote.nixosModules.lanzaboote
       ];
     };
 
