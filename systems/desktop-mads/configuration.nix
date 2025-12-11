@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -29,5 +29,8 @@
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 
   networking.firewall.enable = false;
+
+  # Temporary fix
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
 }
 
