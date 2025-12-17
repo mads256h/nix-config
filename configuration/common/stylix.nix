@@ -1,4 +1,9 @@
-{ config, pkgs, sysconfig, ... }:
+{
+  config,
+  pkgs,
+  sysconfig,
+  ...
+}:
 {
   stylix = {
     enable = true;

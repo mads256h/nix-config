@@ -1,10 +1,9 @@
 { pkgs, inputs, ... }:
 {
-  imports =
-    [
-      ./cachix.nix
-      ./stylix.nix
-    ];
+  imports = [
+    ./cachix.nix
+    ./stylix.nix
+  ];
 
   # Set your time zone.
   time.timeZone = "Europe/Copenhagen";
@@ -12,9 +11,9 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "da_DK.UTF-8";
   console = {
-  #   font = "Lat2-Terminus16";
-     keyMap = "dk";
-  #   useXkbConfig = true; # use xkb.options in tty.
+    #   font = "Lat2-Terminus16";
+    keyMap = "dk";
+    #   useXkbConfig = true; # use xkb.options in tty.
   };
 
   users.users.mads = {
@@ -31,7 +30,7 @@
     sbctl
   ];
 
-  # nixpkgs.overlays = [ 
+  # nixpkgs.overlays = [
   #   (import ./overlays/st-custom)
   #   (import ./overlays/packages)
   # ];
@@ -40,11 +39,14 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.overlays = [ 
+  nixpkgs.overlays = [
     (import ../../overlays/packages)
   ];
 
-  nix.settings.experimental-features = ["nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
   # This option defines the first version of NixOS you have installed on this particular machine,

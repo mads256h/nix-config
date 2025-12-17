@@ -1,4 +1,19 @@
-{ stdenv, lib, fetchFromGitHub, makeWrapper, vifm, ueberzugpp, ffmpegthumbnailer, epub-thumbnailer, poppler-utils, djvulibre, ffmpeg, fontpreview, coreutils, ... }:
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  makeWrapper,
+  vifm,
+  ueberzugpp,
+  ffmpegthumbnailer,
+  epub-thumbnailer,
+  poppler-utils,
+  djvulibre,
+  ffmpeg,
+  fontpreview,
+  coreutils,
+  ...
+}:
 
 stdenv.mkDerivation rec {
   version = "unstable-2024-01-16-1";
@@ -24,8 +39,25 @@ stdenv.mkDerivation rec {
 
   installPhase = ''
     wrapProgram $out/bin/vifmimg \
-      --set PATH ${lib.makeBinPath [ vifm ueberzugpp ffmpegthumbnailer epub-thumbnailer poppler-utils djvulibre ffmpeg fontpreview coreutils ]}:$out/bin:$PATH
+      --set PATH ${
+        lib.makeBinPath [
+          vifm
+          ueberzugpp
+          ffmpegthumbnailer
+          epub-thumbnailer
+          poppler-utils
+          djvulibre
+          ffmpeg
+          fontpreview
+          coreutils
+        ]
+      }:$out/bin:$PATH
       #wrapProgram $out/bin/vifmrun \
-      #--set PATH ${lib.makeBinPath [ vifm ueberzugpp ]}:$out/bin:$PATH
+      #--set PATH ${
+        lib.makeBinPath [
+          vifm
+          ueberzugpp
+        ]
+      }:$out/bin:$PATH
   '';
 }

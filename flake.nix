@@ -33,66 +33,98 @@
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
   };
 
-  outputs = inputs@{ self, nixpkgs, nixos-hardware, home-manager, stylix, lanzaboote, nixos-wsl, ... }: {
-    nixosConfigurations."desktop-mads" = nixpkgs.lib.nixosSystem rec {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; sysconfig = { graphical = true; laptop = false; }; };
-      modules = [
-        ./systems/desktop-mads/configuration.nix
-        nixos-hardware.nixosModules.common-cpu-amd
-        nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
-        nixos-hardware.nixosModules.common-pc-ssd
-        
-        home-manager.nixosModules.home-manager {
-          home-manager.extraSpecialArgs = specialArgs;
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.mads = ./systems/desktop-mads/home.nix;
-        }
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      nixos-hardware,
+      home-manager,
+      stylix,
+      lanzaboote,
+      nixos-wsl,
+      ...
+    }:
+    {
+      nixosConfigurations."desktop-mads" = nixpkgs.lib.nixosSystem rec {
+        system = "x86_64-linux";
+        specialArgs = {
+          inherit inputs;
+          sysconfig = {
+            graphical = true;
+            laptop = false;
+          };
+        };
+        modules = [
+          ./systems/desktop-mads/configuration.nix
+          nixos-hardware.nixosModules.common-cpu-amd
+          nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+          nixos-hardware.nixosModules.common-pc-ssd
 
-        stylix.nixosModules.stylix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.extraSpecialArgs = specialArgs;
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.mads = ./systems/desktop-mads/home.nix;
+          }
 
-        lanzaboote.nixosModules.lanzaboote
-      ];
+          stylix.nixosModules.stylix
+
+          lanzaboote.nixosModules.lanzaboote
+        ];
+      };
+
+      nixosConfigurations."laptop-mads" = nixpkgs.lib.nixosSystem rec {
+        system = "x86_64-linux";
+        specialArgs = {
+          inherit inputs;
+          sysconfig = {
+            graphical = true;
+            laptop = true;
+          };
+        };
+        modules = [
+          ./systems/laptop-mads/configuration.nix
+          nixos-hardware.nixosModules.msi-gl62
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.extraSpecialArgs = specialArgs;
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.mads = ./systems/laptop-mads/home.nix;
+          }
+
+          stylix.nixosModules.stylix
+
+          lanzaboote.nixosModules.lanzaboote
+        ];
+      };
+
+      nixosConfigurations."wsl" = nixpkgs.lib.nixosSystem rec {
+        system = "x86_64-linux";
+        specialArgs = {
+          inherit inputs;
+          sysconfig = {
+            graphical = false;
+            laptop = true;
+          };
+        };
+        modules = [
+          ./systems/wsl/configuration.nix
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.extraSpecialArgs = specialArgs;
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.mads = ./systems/wsl/home.nix;
+          }
+
+          stylix.nixosModules.stylix
+
+          nixos-wsl.nixosModules.default
+        ];
+      };
     };
-
-    nixosConfigurations."laptop-mads" = nixpkgs.lib.nixosSystem rec {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; sysconfig = { graphical = true; laptop = true; }; };
-      modules = [
-        ./systems/laptop-mads/configuration.nix
-        nixos-hardware.nixosModules.msi-gl62
-        
-        home-manager.nixosModules.home-manager {
-          home-manager.extraSpecialArgs = specialArgs;
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.mads = ./systems/laptop-mads/home.nix;
-        }
-
-        stylix.nixosModules.stylix
-
-        lanzaboote.nixosModules.lanzaboote
-      ];
-    };
-
-    nixosConfigurations."wsl" = nixpkgs.lib.nixosSystem rec {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; sysconfig = { graphical = false; laptop = true; }; };
-      modules = [
-        ./systems/wsl/configuration.nix
-        
-        home-manager.nixosModules.home-manager {
-          home-manager.extraSpecialArgs = specialArgs;
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.mads = ./systems/wsl/home.nix;
-        }
-
-        stylix.nixosModules.stylix
-
-        nixos-wsl.nixosModules.default
-      ];
-    };
-  };
 }

@@ -1,4 +1,9 @@
-{ pkgs, sysconfig, lib, ... }:
+{
+  pkgs,
+  sysconfig,
+  lib,
+  ...
+}:
 {
   programs.ssh = {
     enable = true;
@@ -31,7 +36,7 @@
   };
 
   services = lib.optionalAttrs sysconfig.graphical {
-      gpg-agent = {
+    gpg-agent = {
       enable = true;
       enableSshSupport = true;
       maxCacheTtl = 3600 * 24;

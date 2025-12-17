@@ -1,19 +1,27 @@
-{ config, pkgs, lib, inputs, sysconfig, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  sysconfig,
+  ...
+}:
 {
   wayland.windowManager.hyprland = rec {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-    
+    portalPackage =
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+
     systemd.enable = true;
     systemd.enableXdgAutostart = true;
 
     xwayland.enable = true;
-    
+
     plugins = [
       inputs.hy3.packages.x86_64-linux.hy3
     ];
-    
+
     settings = {
       "$mod" = "SUPER";
       ecosystem.no_update_news = true;
@@ -108,7 +116,7 @@
         "w[tv1], gapsout:0, gapsin:0"
         "f[1], gapsout:0, gapsin:0"
       ];
-      
+
       "monitor" = ",preferred,auto,1";
       input = {
         kb_layout = "dk";
@@ -124,7 +132,7 @@
         "workspace 10, class:(KeePassXC)"
       ];
     };
-    
+
     extraConfig = ''
       bind = $mod, R, submap, resize
       submap = resize
@@ -183,7 +191,7 @@
       #workspaces button.active {
         background: rgba(171, 178, 191, 0.1);
       }
-      '';
+    '';
     settings = {
       mainBar = {
         layer = "top";
@@ -223,58 +231,78 @@
         };
 
         idle_inhibitor = {
-            format = "{icon}";
-            format-icons = {
-                activated = " ";
-                deactivated = " ";
-            };
+          format = "{icon}";
+          format-icons = {
+            activated = " ";
+            deactivated = " ";
+          };
         };
         tray = {
           #icon-size = 21;
-            spacing = 10;
+          spacing = 10;
         };
         clock = {
-            interval = 1;
-            format = "{:%Y-%m-%d %H:%M:%S}";
-            tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+          interval = 1;
+          format = "{:%Y-%m-%d %H:%M:%S}";
+          tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
         };
         cpu = {
-            format = "{usage}% ";
-            tooltip = false;
+          format = "{usage}% ";
+          tooltip = false;
         };
         memory = {
-            format = "{}% ";
+          format = "{}% ";
         };
         disk = {
           format = "{percentage_used}% 󰋊";
         };
         temperature = {
-            # thermal-zone = 2;
-            # hwmon-path = "/sys/class/hwmon/hwmon2/temp1_input";
-            critical-threshold = 80;
-            # format-critical = "{temperatureC}°C {icon}";
-            format = "{temperatureC}°C {icon}";
-            format-icons = ["" "" ""];
+          # thermal-zone = 2;
+          # hwmon-path = "/sys/class/hwmon/hwmon2/temp1_input";
+          critical-threshold = 80;
+          # format-critical = "{temperatureC}°C {icon}";
+          format = "{temperatureC}°C {icon}";
+          format-icons = [
+            ""
+            ""
+            ""
+          ];
         };
         backlight = {
-            # device = "acpi_video1";
-            format = "{percent}% {icon}";
-            format-icons = ["" "" "" "" "" "" "" "" ""];
+          # device = "acpi_video1";
+          format = "{percent}% {icon}";
+          format-icons = [
+            ""
+            ""
+            ""
+            ""
+            ""
+            ""
+            ""
+            ""
+            ""
+          ];
         };
         battery = {
-            states = {
-                # good = 95;
-                warning = 30;
-                critical = 15;
-            };
-            format = "{capacity}% {icon}";
-            format-full = "{capacity}% {icon}";
-            format-charging = "{capacity}% ";
-            format-plugged = "{capacity}% ";
-            format-alt = "{time} {icon}";
-            # format-good = ""; // An empty format will hide the module
-            # format-full = "";
-            format-icons = ["" "" "" "" ""];
+          states = {
+            # good = 95;
+            warning = 30;
+            critical = 15;
+          };
+          format = "{capacity}% {icon}";
+          format-full = "{capacity}% {icon}";
+          format-charging = "{capacity}% ";
+          format-plugged = "{capacity}% ";
+          format-alt = "{time} {icon}";
+          # format-good = ""; // An empty format will hide the module
+          # format-full = "";
+          format-icons = [
+            ""
+            ""
+            ""
+            ""
+            ""
+          ];
         };
         power-profiles-daemon = {
           format = "{icon}";
@@ -288,35 +316,39 @@
           };
         };
         network = {
-            # interface = "wlp2*"; // (Optional) To force the use of this interface
-            format-wifi = "{essid} ({signalStrength}%) ";
-            format-ethernet = "{ipaddr} ";
-            tooltip-format = "{ifname} via {gwaddr} ";
-            format-linked = "{ifname} (No IP) ";
-            format-disconnected = "Disconnected ⚠";
-            format-alt = "{ifname}: {ipaddr}/{cidr}";
+          # interface = "wlp2*"; // (Optional) To force the use of this interface
+          format-wifi = "{essid} ({signalStrength}%) ";
+          format-ethernet = "{ipaddr} ";
+          tooltip-format = "{ifname} via {gwaddr} ";
+          format-linked = "{ifname} (No IP) ";
+          format-disconnected = "Disconnected ⚠";
+          format-alt = "{ifname}: {ipaddr}/{cidr}";
         };
         pulseaudio = {
-            scroll-step = 5;
-            format = "{volume}% {icon} {format_source}";
-            format-bluetooth = "{volume}% {icon} {format_source}";
-            format-bluetooth-muted = " {icon} {format_source}";
-            format-muted = " {format_source}";
-            format-source = "{volume}% ";
-            format-source-muted = "";
-            format-icons = {
-                headphone = "";
-                hands-free = "";
-                headset = "";
-                phone = "";
-                portable = "";
-                car = "";
-                default = ["" "" ""];
-            };
-            on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
+          scroll-step = 5;
+          format = "{volume}% {icon} {format_source}";
+          format-bluetooth = "{volume}% {icon} {format_source}";
+          format-bluetooth-muted = " {icon} {format_source}";
+          format-muted = " {format_source}";
+          format-source = "{volume}% ";
+          format-source-muted = "";
+          format-icons = {
+            headphone = "";
+            hands-free = "";
+            headset = "";
+            phone = "";
+            portable = "";
+            car = "";
+            default = [
+              ""
+              ""
+              ""
+            ];
+          };
+          on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
         };
         "custom/power" = {
-          format  = "⏻ ";
+          format = "⏻ ";
           tooltip = false;
           menu = "on-click";
           menu-file = "${pkgs.waybar.src}/resources/custom_modules/power_menu.xml";
@@ -336,17 +368,18 @@
   services.hyprpaper.enable = true;
   services.hyprpaper.settings.ipc = "on";
 
-  systemd.user.services.hyprpaper.Service.ExecStartPost = "${pkgs.writeShellScript "random-wallpaper" ''
-    #!${pkgs.bash}/bin/bash
+  systemd.user.services.hyprpaper.Service.ExecStartPost =
+    "${pkgs.writeShellScript "random-wallpaper" ''
+      #!${pkgs.bash}/bin/bash
 
-    WALLPAPER_DIR="$HOME/Pictures/wallpapers/"
-    CURRENT_WALL=$(${pkgs.hyprland}/bin/hyprctl hyprpaper listloaded)
+      WALLPAPER_DIR="$HOME/Pictures/wallpapers/"
+      CURRENT_WALL=$(${pkgs.hyprland}/bin/hyprctl hyprpaper listloaded)
 
-    # Get a random wallpaper that is not the current one
-    WALLPAPER=$(${pkgs.findutils}/bin/find "$WALLPAPER_DIR" -type f ! -name "$(${pkgs.coreutils}/bin/basename "$CURRENT_WALL")" | ${pkgs.coreutils}/bin/shuf -n 1)
+      # Get a random wallpaper that is not the current one
+      WALLPAPER=$(${pkgs.findutils}/bin/find "$WALLPAPER_DIR" -type f ! -name "$(${pkgs.coreutils}/bin/basename "$CURRENT_WALL")" | ${pkgs.coreutils}/bin/shuf -n 1)
 
-    # Apply the selected wallpaper
-    ${pkgs.hyprland}/bin/hyprctl hyprpaper reload ,"$WALLPAPER"
+      # Apply the selected wallpaper
+      ${pkgs.hyprland}/bin/hyprctl hyprpaper reload ,"$WALLPAPER"
     ''}";
 
   services.hypridle = {
@@ -364,12 +397,13 @@
           on-timeout = "hyprctl dispatch dpms off";
           on-resume = "hyprctl dispatch dpms on";
         }
-      ] ++ lib.optionals sysconfig.laptop [
-          {
-            timeout = 300;
-            on-timeout = "loginctl lock-session";
-          }
-        ];
+      ]
+      ++ lib.optionals sysconfig.laptop [
+        {
+          timeout = 300;
+          on-timeout = "loginctl lock-session";
+        }
+      ];
     };
   };
 

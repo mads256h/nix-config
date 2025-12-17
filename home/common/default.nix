@@ -1,4 +1,11 @@
-{ config, lib, inputs, pkgs, sysconfig, ... }:
+{
+  config,
+  lib,
+  inputs,
+  pkgs,
+  sysconfig,
+  ...
+}:
 {
   imports = [
     ./bash.nix
@@ -27,8 +34,8 @@
     xdg-utils
     glib
     jq
+    nixfmt
   ];
-
 
   programs.tmux = {
     enable = true;
@@ -43,7 +50,7 @@
     extraConfig = ''
       set -g status off
       set-window-option -g mode-keys vi
-      '';
+    '';
   };
   stylix.targets.tmux.enable = true;
 

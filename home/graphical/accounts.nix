@@ -1,4 +1,11 @@
-{ config, pkgs, lib, inputs, stylix, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  stylix,
+  ...
+}:
 {
   accounts.calendar.accounts.personal = {
     primary = true;
@@ -10,7 +17,7 @@
       userName = "mads";
       passwordCommand = ''
         ${pkgs.libsecret}/bin/secret-tool lookup caldav password
-        '';
+      '';
       type = "caldav";
     };
   };
@@ -23,7 +30,7 @@
       userName = "mads";
       passwordCommand = ''
         ${pkgs.libsecret}/bin/secret-tool lookup caldav password
-        '';
+      '';
       type = "carddav";
     };
   };
@@ -40,7 +47,7 @@
     aliases = [
       "mail@madsmogensen.dk"
     ];
-    
+
     imap = {
       host = "127.0.0.1";
       port = 1143;

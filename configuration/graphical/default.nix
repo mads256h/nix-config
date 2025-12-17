@@ -40,9 +40,10 @@
   networking.firewall.allowedTCPPorts = [ 57621 ];
   networking.firewall.allowedUDPPorts = [ 5353 ];
 
-  networking.networkmanager.dispatcherScripts = [{
-    type = "pre-down";
-    source = "${pkgs.writeShellScript "lock-keepassxc-database" ''
+  networking.networkmanager.dispatcherScripts = [
+    {
+      type = "pre-down";
+      source = "${pkgs.writeShellScript "lock-keepassxc-database" ''
         set -e
 
         echo $2
@@ -76,7 +77,8 @@
 
         systemctl stop home-mads-mnt.mount
       ''}";
-  } ];
+    }
+  ];
 
   services.interception-tools = {
     enable = true;
@@ -90,9 +92,7 @@
 
   services.libinput.enable = true;
 
-
   security.polkit.enable = true;
-
 
   security.rtkit.enable = true;
   services.pipewire = {
@@ -121,33 +121,31 @@
     let
       # Use the user's gpg-agent session to query
       # for the password of the SSH key when auto-mounting.
-      sshAsUser =
-        pkgs.writeScript "sshAsUser" ''
-          user="$1"; shift
-          exec ${pkgs.sudo}/bin/sudo -i -u "$user" \
-            ${pkgs.openssh}/bin/ssh "$@"
-        '';
-      options =
-        [
-          "user"
-          "uid=mads"
-          "gid=users"
-          "allow_other"
-          "nosuid"
-          "noexec"
-          "nodev"
-          "_netdev"
-          "ssh_command=${sshAsUser}\\040mads"
-          "noauto"
-          "comment=x-gvfs-show"
-          "x-gvfs-name=server"
-          "x-gvfs-icon=network-server"
-          "x-gvfs-symbolic-icon=network-server"
-          "x-systemd.automount"
-          #"Compression=yes" # YMMV
-          # Disconnect approximately 2*15=30 seconds after a network failure
-          "reconnect"
-        ];
+      sshAsUser = pkgs.writeScript "sshAsUser" ''
+        user="$1"; shift
+        exec ${pkgs.sudo}/bin/sudo -i -u "$user" \
+          ${pkgs.openssh}/bin/ssh "$@"
+      '';
+      options = [
+        "user"
+        "uid=mads"
+        "gid=users"
+        "allow_other"
+        "nosuid"
+        "noexec"
+        "nodev"
+        "_netdev"
+        "ssh_command=${sshAsUser}\\040mads"
+        "noauto"
+        "comment=x-gvfs-show"
+        "x-gvfs-name=server"
+        "x-gvfs-icon=network-server"
+        "x-gvfs-symbolic-icon=network-server"
+        "x-systemd.automount"
+        #"Compression=yes" # YMMV
+        # Disconnect approximately 2*15=30 seconds after a network failure
+        "reconnect"
+      ];
     in
     {
       "/home/mads/mnt" = {

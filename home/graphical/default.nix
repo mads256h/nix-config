@@ -1,4 +1,9 @@
-{ pkgs, lib, inputs, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 {
   imports = [
     inputs.spicetify-nix.homeManagerModules.spicetify
@@ -23,6 +28,7 @@
     prismlauncher
     easytag
     imagemagick
+    renderdoc
   ];
 
   programs.spicetify = {
@@ -43,7 +49,6 @@
   };
 
   stylix.targets.spicetify.enable = false;
-
 
   programs.keepassxc = {
     enable = true;
@@ -71,7 +76,6 @@
   programs.zathura.enable = true;
   programs.imv.enable = true;
 
-
   programs.alacritty = {
     enable = true;
     settings.window = {
@@ -87,7 +91,6 @@
   #fonts.fontconfig.subpixelRendering = "rgb";
 
   home.sessionVariables._JAVA_OPTIONS = "-Djava.util.prefs.userRoot=$XDG_CONFIG_HOME/java -Dawt.useSystemAAFontSettings=gasp -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Djdk.gtk.version=3 -Djdk.downloader.home=$XDG_DATA_HOME/jdks -Djavafx.cachedir=$XDG_CACHE_HOME/openjfx";
-
 
   services.gnome-keyring.enable = true;
   services.gnome-keyring.components = [ "secrets" ];

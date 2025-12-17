@@ -1,4 +1,10 @@
-{ config, pkgs, lib, sysconfig, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  sysconfig,
+  ...
+}:
 let
   vifmimg = "${pkgs.vifmimg}/bin/vifmimg";
   pdfViewer = "${pkgs.zathura}/bin/zathura";
@@ -23,8 +29,6 @@ let
   jq = "${pkgs.jq}/bin/jq";
   pygmentize = "${pkgs.python313Packages.pygments}/bin/pygmentize";
 
-
-
   outputOrFile = pkgs.writeTextFile {
     name = "output-or-file";
     executable = true;
@@ -35,7 +39,7 @@ let
       else
         ${file} -L "$1" | ${cut} -d ':' -f 2- | ${cut} -d ' ' -f 2-
       fi
-      '';
+    '';
   };
 
   previewGraphical = lib.optionalString sysconfig.graphical pkgs.writeTextFile {
@@ -70,7 +74,7 @@ let
         \ ${vifmimg} draw %px %py %pw %ph %c
         \ %pc
         \ ${vifmimg} clear
-      '';
+    '';
   };
 
   preview = pkgs.writeTextFile {
@@ -113,9 +117,8 @@ let
       " everything else
       fileviewer *[^/]
         \ ${outputOrFile} %f
-      '';
+    '';
   };
-
 
   openWith = lib.optionalString sysconfig.graphical pkgs.writeTextFile {
     name = "vifm-open-with-config";
@@ -159,7 +162,7 @@ let
       filextype {*.odt,*.doc,*.docx,*.xls,*.xlsx,*.odp,*.pptx,*.ppt},<application/vnd.openxmlformats-officedocument.*,application/msword,application/vnd.ms-excel>
         \ {Open in libreoffice}
         \ ${office} %f %i 2>/dev/null
-      '';
+    '';
   };
 in
 {
@@ -217,7 +220,7 @@ in
       hi StatusLine cterm=bold ctermfg=default ctermbg=black
 
       view
-      '';
+    '';
   };
 
   xdg.desktopEntries = lib.optionalAttrs sysconfig.graphical {

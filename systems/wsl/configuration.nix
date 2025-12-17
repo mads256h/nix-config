@@ -1,8 +1,7 @@
 { ... }:
 {
-  imports =
-    [
-      ../../configuration/common
-      ../../configuration/wsl
-    ];
+  imports = [
+    ../../configuration/common
+    ../../configuration/wsl
+  ];
 }

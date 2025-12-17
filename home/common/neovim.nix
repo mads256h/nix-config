@@ -47,7 +47,7 @@
         key = "<c-c>";
         action = ''"+yy'';
         options = {
-          silent = true; 
+          silent = true;
           desc = "Copy line to clipboard";
         };
       }
@@ -56,7 +56,7 @@
         key = "<c-c>";
         action = ''"+y'';
         options = {
-          silent = true; 
+          silent = true;
           desc = "Copy selection to clipboard";
         };
       }
@@ -65,79 +65,98 @@
         key = "<c-v>";
         action = ''"+p'';
         options = {
-          silent = true; 
+          silent = true;
           desc = "Paste from clipboard";
         };
       }
       {
         mode = "n";
         key = "gD";
-        action = { __raw = "vim.lsp.buf.declaration"; };
+        action = {
+          __raw = "vim.lsp.buf.declaration";
+        };
         options = {
-          silent = true; 
+          silent = true;
           desc = "Go to declaration";
         };
       }
       {
         mode = "n";
         key = "gd";
-        action = { __raw = "vim.lsp.buf.definition"; };
+        action = {
+          __raw = "vim.lsp.buf.definition";
+        };
         options = {
-          silent = true; 
+          silent = true;
           desc = "Go to definition";
         };
       }
       {
         mode = "n";
         key = "gi";
-        action = { __raw = "vim.lsp.buf.implementation"; };
+        action = {
+          __raw = "vim.lsp.buf.implementation";
+        };
         options = {
-          silent = true; 
+          silent = true;
           desc = "Go to implementation";
         };
       }
       {
         mode = "n";
         key = "K";
-        action = { __raw = "vim.lsp.buf.hover"; };
+        action = {
+          __raw = "vim.lsp.buf.hover";
+        };
         options = {
-          silent = true; 
+          silent = true;
           desc = "Hover";
         };
       }
       {
-        mode = [ "n" "v" ];
+        mode = [
+          "n"
+          "v"
+        ];
         key = "<space>ca";
-        action = { __raw = "vim.lsp.buf.code_action"; };
+        action = {
+          __raw = "vim.lsp.buf.code_action";
+        };
         options = {
-          silent = true; 
+          silent = true;
           desc = "Code action";
         };
       }
       {
         mode = "n";
         key = "<space>ci";
-        action = { __raw = "vim.diagnostic.setqflist"; };
+        action = {
+          __raw = "vim.diagnostic.setqflist";
+        };
         options = {
-          silent = true; 
+          silent = true;
           desc = "Show problems";
         };
       }
       {
         mode = "n";
         key = "<space>rn";
-        action = { __raw = "vim.lsp.buf.rename"; };
+        action = {
+          __raw = "vim.lsp.buf.rename";
+        };
         options = {
-          silent = true; 
+          silent = true;
           desc = "Rename";
         };
       }
       {
         mode = "n";
         key = "<space>f";
-        action = { __raw = "function() vim.lsp.buf.format { async = true } end"; };
+        action = {
+          __raw = "function() vim.lsp.buf.format { async = true } end";
+        };
         options = {
-          silent = true; 
+          silent = true;
           desc = "Format file";
         };
       }
@@ -146,7 +165,7 @@
         key = "m";
         action = "<cmd>:Neotree toggle<CR>";
         options = {
-          silent = true; 
+          silent = true;
           desc = "Toggle file tree";
         };
       }
@@ -178,7 +197,7 @@
             function(args)
               require('luasnip').lsp_expand(args.body)
             end
-            '';
+          '';
         };
 
         mapping = {
@@ -193,7 +212,7 @@
               behavior = cmp.ConfirmBehavior.Replace,
               select = true,
             }
-            '';
+          '';
           "<Tab>" = ''
             function(fallback)
               if cmp.visible() then
@@ -204,7 +223,7 @@
                 fallback()
               end
             end
-            '';
+          '';
           "<S-Tab>" = ''
             function(fallback)
               if cmp.visible() then
@@ -215,7 +234,7 @@
                 fallback()
               end
             end
-            '';
+          '';
         };
       };
     };
@@ -266,7 +285,6 @@
     lsp.servers.html.enable = true;
     lsp.servers.omnisharp.enable = true;
 
-
     plugins.lspkind.enable = true;
     plugins.luasnip.enable = true;
     plugins.lsp-signature.enable = true;
@@ -276,11 +294,21 @@
     plugins.which-key.enable = true;
     plugins.gitsigns.enable = true;
     plugins.gitsigns.settings.signs = {
-      add = { text = "+"; };
-      change = { text = "~"; };
-      delete = { text = "_"; };
-      topdelete = { text = "‾"; };
-      changedelete = { text = "~"; };
+      add = {
+        text = "+";
+      };
+      change = {
+        text = "~";
+      };
+      delete = {
+        text = "_";
+      };
+      topdelete = {
+        text = "‾";
+      };
+      changedelete = {
+        text = "~";
+      };
     };
 
   };
