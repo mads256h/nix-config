@@ -20,4 +20,8 @@
     enable = true;
     text = "COMMAND ${pkgs.librewolf}/bin/librewolf";
   };
+
+  home.sessionVariables = {
+    BROWSER = "${pkgs.librewolf}/bin/librewolf";
+  };
 }

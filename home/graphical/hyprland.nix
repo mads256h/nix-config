@@ -20,6 +20,7 @@
 
     plugins = [
       inputs.hy3.packages.x86_64-linux.hy3
+      inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprwinwrap
     ];
 
     settings = {
@@ -36,7 +37,9 @@
           enabled = true;
           size = 4;
           passes = 2;
-          xray = true;
+          xray = false;
+          ignore_opacity = false;
+          new_optimizations = false;
         };
         shadow.enabled = false;
       };
@@ -112,6 +115,11 @@
         "$mod+CTRL, right, movecurrentworkspacetomonitor, r"
       ];
 
+      bindm = [
+        "$mod, mouse:272, movewindow"
+      ];
+
+
       workspace = [
         "w[tv1], gapsout:0, gapsin:0"
         "f[1], gapsout:0, gapsin:0"
@@ -131,6 +139,12 @@
         "workspace 2, class:(spotify)"
         "workspace 10, class:(KeePassXC)"
       ];
+
+      plugin = {
+        hyprwinwrap = {
+            class = "connecting-dots";
+          };
+      };
     };
 
     extraConfig = ''
@@ -365,22 +379,22 @@
 
   services.hyprpolkitagent.enable = true;
   programs.hyprlock.enable = true;
-  services.hyprpaper.enable = true;
-  services.hyprpaper.settings.ipc = "on";
-
-  systemd.user.services.hyprpaper.Service.ExecStartPost =
-    "${pkgs.writeShellScript "random-wallpaper" ''
-      #!${pkgs.bash}/bin/bash
-
-      WALLPAPER_DIR="$HOME/Pictures/wallpapers/"
-      CURRENT_WALL=$(${pkgs.hyprland}/bin/hyprctl hyprpaper listloaded)
-
-      # Get a random wallpaper that is not the current one
-      WALLPAPER=$(${pkgs.findutils}/bin/find "$WALLPAPER_DIR" -type f ! -name "$(${pkgs.coreutils}/bin/basename "$CURRENT_WALL")" | ${pkgs.coreutils}/bin/shuf -n 1)
-
-      # Apply the selected wallpaper
-      ${pkgs.hyprland}/bin/hyprctl hyprpaper reload ,"$WALLPAPER"
-    ''}";
+  # services.hyprpaper.enable = true;
+  # services.hyprpaper.settings.ipc = "on";
+  #
+  # systemd.user.services.hyprpaper.Service.ExecStartPost =
+  #   "${pkgs.writeShellScript "random-wallpaper" ''
+  #     #!${pkgs.bash}/bin/bash
+  #
+  #     WALLPAPER_DIR="$HOME/Pictures/wallpapers/"
+  #     CURRENT_WALL=$(${pkgs.hyprland}/bin/hyprctl hyprpaper listloaded)
+  #
+  #     # Get a random wallpaper that is not the current one
+  #     WALLPAPER=$(${pkgs.findutils}/bin/find "$WALLPAPER_DIR" -type f ! -name "$(${pkgs.coreutils}/bin/basename "$CURRENT_WALL")" | ${pkgs.coreutils}/bin/shuf -n 1)
+  #
+  #     # Apply the selected wallpaper
+  #     ${pkgs.hyprland}/bin/hyprctl hyprpaper reload ,"$WALLPAPER"
+  #   ''}";
 
   services.hypridle = {
     enable = true;

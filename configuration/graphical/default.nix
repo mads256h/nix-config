@@ -36,6 +36,12 @@
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
 
+  virtualisation.virtualbox.host = {
+    enable = true;
+    enableExtensionPack = true;
+  };
+  users.extraGroups.vboxusers.members = [ "mads" ];
+
   # spotify
   networking.firewall.allowedTCPPorts = [ 57621 ];
   networking.firewall.allowedUDPPorts = [ 5353 ];

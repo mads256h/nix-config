@@ -29,6 +29,7 @@
     easytag
     imagemagick
     renderdoc
+    jetbrains.rust-rover
   ];
 
   programs.spicetify = {
@@ -85,12 +86,16 @@
     settings.scrolling.history = 0;
   };
 
+  home.sessionVariables = {
+    TERMINAL = "${pkgs.alacritty}/bin/alacritty";
+  };
+
   programs.rofi.enable = true;
 
   fonts.fontconfig.enable = true;
   #fonts.fontconfig.subpixelRendering = "rgb";
 
-  home.sessionVariables._JAVA_OPTIONS = "-Djava.util.prefs.userRoot=$XDG_CONFIG_HOME/java -Dawt.useSystemAAFontSettings=gasp -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Djdk.gtk.version=3 -Djdk.downloader.home=$XDG_DATA_HOME/jdks -Djavafx.cachedir=$XDG_CACHE_HOME/openjfx";
+  home.sessionVariables._JAVA_OPTIONS = "-Djava.util.prefs.userRoot=$XDG_CONFIG_HOME/java -Dawt.useSystemAAFontSettings=gasp -Dswing.aatext=true -Djdk.downloader.home=$XDG_DATA_HOME/jdks -Djavafx.cachedir=$XDG_CACHE_HOME/openjfx";
 
   services.gnome-keyring.enable = true;
   services.gnome-keyring.components = [ "secrets" ];
