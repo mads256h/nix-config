@@ -119,7 +119,6 @@
         "$mod, mouse:272, movewindow"
       ];
 
-
       workspace = [
         "w[tv1], gapsout:0, gapsin:0"
         "f[1], gapsout:0, gapsin:0"
@@ -142,8 +141,8 @@
 
       plugin = {
         hyprwinwrap = {
-            class = "connecting-dots";
-          };
+          class = "connecting-dots";
+        };
       };
     };
 

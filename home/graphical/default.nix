@@ -30,7 +30,11 @@
     imagemagick
     renderdoc
     jetbrains.rust-rover
+    pcmanfm
   ];
+
+  # Enable for websites incompatible with librewolf (default config)
+  programs.chromium.enable = true;
 
   programs.spicetify = {
     enable = true;
@@ -102,4 +106,6 @@
 
   services.protonmail-bridge.enable = true;
   services.protonmail-bridge.extraPackages = [ pkgs.gnome-keyring ];
+
+  services.blueman-applet.enable = true;
 }

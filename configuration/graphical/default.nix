@@ -36,6 +36,9 @@
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
 
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+
   virtualisation.virtualbox.host = {
     enable = true;
     enableExtensionPack = true;
