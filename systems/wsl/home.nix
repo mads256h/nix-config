@@ -1,8 +1,6 @@
 { lib, pkgs, ... }:
 {
-  imports = [
-    ../../home/common
-  ];
+  imports = [ ../../home/common ];
 
   programs.ssh.matchBlocks = {
     "bitbucket.org" = {
@@ -21,9 +19,7 @@
     };
   };
 
-  home.packages = with pkgs; [
-    ibmcloud-cli
-  ];
+  home.packages = with pkgs; [ ibmcloud-cli ];
 
   home.file.".urlview" = {
     enable = true;

@@ -115,9 +115,7 @@
         "$mod+CTRL, right, movecurrentworkspacetomonitor, r"
       ];
 
-      bindm = [
-        "$mod, mouse:272, movewindow"
-      ];
+      bindm = [ "$mod, mouse:272, movewindow" ];
 
       workspace = [
         "w[tv1], gapsout:0, gapsin:0"

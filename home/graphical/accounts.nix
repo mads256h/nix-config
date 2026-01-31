@@ -44,9 +44,7 @@
     address = "mads256h@protonmail.com";
     userName = "mads256h@protonmail.com";
 
-    aliases = [
-      "mail@madsmogensen.dk"
-    ];
+    aliases = [ "mail@madsmogensen.dk" ];
 
     imap = {
       host = "127.0.0.1";

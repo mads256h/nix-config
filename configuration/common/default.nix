@@ -39,9 +39,7 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.overlays = [
-    (import ../../overlays/packages)
-  ];
+  nixpkgs.overlays = [ (import ../../overlays/packages) ];
 
   nix.settings.experimental-features = [
     "nix-command"

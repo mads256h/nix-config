@@ -168,9 +168,7 @@ in
 {
   programs.vifm.enable = true;
 
-  home.packages = [
-    pkgs.ueberzugpp
-  ];
+  home.packages = [ pkgs.ueberzugpp ];
 
   home.file.".config/vifm/vifmrc" = {
     enable = true;

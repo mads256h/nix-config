@@ -31,4 +31,10 @@
 
   # Temporary fix
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
+
+  services.sunshine = {
+    enable = true;
+    capSysAdmin = true;
+    openFirewall = true;
+  };
 }

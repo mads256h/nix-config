@@ -1,3 +1,1 @@
-final: prev: rec {
-  vifmimg = prev.callPackage ../../packages/vifmimg { };
-}
+final: prev: rec { vifmimg = prev.callPackage ../../packages/vifmimg { }; }
