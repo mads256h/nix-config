@@ -7,15 +7,15 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    hyprland.url = "github:hyprwm/hyprland?ref=v0.52.0";
-    hyprland-plugins.url = "github:hyprwm/hyprland-plugins?ref=v0.52.0";
+    hyprland.url = "github:hyprwm/hyprland?ref=v0.53.0";
+    hyprland-plugins.url = "github:hyprwm/hyprland-plugins?ref=v0.53.0";
     hyprland-plugins.inputs.hyprland.follows = "hyprland";
     rose-pine-hyprcursor = {
       url = "github:ndom91/rose-pine-hyprcursor";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.hyprlang.follows = "hyprland/hyprlang";
     };
-    hy3.url = "github:outfoxxed/hy3?ref=hl0.52.0";
+    hy3.url = "github:outfoxxed/hy3?ref=hl0.53.0";
     hy3.inputs.hyprland.follows = "hyprland";
 
     stylix.url = "github:nix-community/stylix";

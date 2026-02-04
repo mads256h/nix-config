@@ -12,7 +12,6 @@
     };
     general.allow_tearing = true;
     monitor = lib.mkForce ", highrr, auto, 1";
-    windowrule = "immediate, class:^(cs2)$";
   };
 
   services.kdeconnect = {

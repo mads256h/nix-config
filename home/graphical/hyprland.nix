@@ -129,11 +129,13 @@
         numlock_by_default = true;
       };
 
+      windowrule = [
+        "match:class gamescope, immediate yes"
+        "match:class cs2, immediate yes"
+      ];
+
       windowrulev2 = [
         "noblur, class:negative:^(Alacritty)$"
-        "immediate, class:^(gamescope)$"
-        "immediate, class:^(cs2)$"
-        "immediate, class:^(steam_app_.*)"
         "workspace 2, class:(spotify)"
         "workspace 10, class:(KeePassXC)"
       ];
