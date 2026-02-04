@@ -31,6 +31,7 @@
     renderdoc
     jetbrains.rust-rover
     pcmanfm
+    steamtinkerlaunch
   ];
 
   # Enable for websites incompatible with librewolf (default config)

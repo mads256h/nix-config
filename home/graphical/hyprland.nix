@@ -37,9 +37,10 @@
           enabled = true;
           size = 4;
           passes = 2;
-          xray = false;
-          ignore_opacity = false;
-          new_optimizations = false;
+          xray = true;
+          # xray = false;
+          # ignore_opacity = false;
+          # new_optimizations = false;
         };
         shadow.enabled = false;
       };
