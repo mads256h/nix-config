@@ -97,6 +97,8 @@
 
   programs.rofi.enable = true;
 
+  programs.mangohud.enable = true;
+
   fonts.fontconfig.enable = true;
   #fonts.fontconfig.subpixelRendering = "rgb";
 
