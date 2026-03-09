@@ -39,10 +39,11 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
-  virtualisation.virtualbox.host = {
-    enable = true;
-    enableExtensionPack = true;
-  };
+  # Disabled until nixos gets their finger out of their ass
+  # virtualisation.virtualbox.host = {
+  #   enable = true;
+  #   enableExtensionPack = true;
+  # };
   users.extraGroups.vboxusers.members = [ "mads" ];
 
   # spotify

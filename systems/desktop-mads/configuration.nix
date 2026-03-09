@@ -30,7 +30,7 @@
   networking.firewall.enable = false;
 
   # Temporary fix
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
+  #hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
 
   # services.sunshine = {
   #   enable = true;

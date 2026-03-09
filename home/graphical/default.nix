@@ -23,7 +23,7 @@
     seahorse
     libsecret
     pulsemixer
-    wineWowPackages.waylandFull
+    wineWow64Packages.waylandFull
     winetricks
     prismlauncher
     easytag
@@ -74,7 +74,10 @@
         SpecialChars = true;
         WordList = "eff_large.wordlist";
       };
-      Security.IconDownloadFallback = true;
+      Security = {
+        IconDownloadFallback = true;
+        LockDatabaseIdle = false;
+      };
     };
     autostart = true;
   };
