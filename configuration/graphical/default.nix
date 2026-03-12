@@ -27,7 +27,9 @@
     enable = true;
     extraPortals = [
       pkgs.xdg-desktop-portal-gtk
-      pkgs.kdePackages.xdg-desktop-portal-kde
+      pkgs.xdg-desktop-portal-gnome
+      pkgs.xdg-desktop-portal-wlr
+      pkgs.xdg-desktop-portal
     ];
     configPackages = [ inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland ];
     xdgOpenUsePortal = true;
