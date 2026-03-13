@@ -20,7 +20,7 @@
 
     plugins = [
       inputs.hy3.packages.x86_64-linux.hy3
-      inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprwinwrap
+      # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprwinwrap
     ];
 
     settings = {
@@ -130,21 +130,18 @@
       };
 
       windowrule = [
-        "match:class gamescope, immediate yes"
-        "match:class cs2, immediate yes"
+        "match:class gamescope, immediate on"
+        "match:class cs2, immediate on"
+        "match:class negative:^Alacritty$, no_blur on"
+        "match:class spotify, workspace 2"
+        "match:class KeePassXC, workspace 10"
       ];
 
-      windowrulev2 = [
-        "noblur, class:negative:^(Alacritty)$"
-        "workspace 2, class:(spotify)"
-        "workspace 10, class:(KeePassXC)"
-      ];
-
-      plugin = {
-        hyprwinwrap = {
-          class = "connecting-dots";
-        };
-      };
+      # plugin = {
+      #   hyprwinwrap = {
+      #     class = "connecting-dots";
+      #   };
+      # };
     };
 
     extraConfig = ''
@@ -379,22 +376,20 @@
 
   services.hyprpolkitagent.enable = true;
   programs.hyprlock.enable = true;
-  # services.hyprpaper.enable = true;
-  # services.hyprpaper.settings.ipc = "on";
-  #
-  # systemd.user.services.hyprpaper.Service.ExecStartPost =
-  #   "${pkgs.writeShellScript "random-wallpaper" ''
-  #     #!${pkgs.bash}/bin/bash
-  #
-  #     WALLPAPER_DIR="$HOME/Pictures/wallpapers/"
-  #     CURRENT_WALL=$(${pkgs.hyprland}/bin/hyprctl hyprpaper listloaded)
-  #
-  #     # Get a random wallpaper that is not the current one
-  #     WALLPAPER=$(${pkgs.findutils}/bin/find "$WALLPAPER_DIR" -type f ! -name "$(${pkgs.coreutils}/bin/basename "$CURRENT_WALL")" | ${pkgs.coreutils}/bin/shuf -n 1)
-  #
-  #     # Apply the selected wallpaper
-  #     ${pkgs.hyprland}/bin/hyprctl hyprpaper reload ,"$WALLPAPER"
-  #   ''}";
+  services.hyprpaper.enable = true;
+  services.hyprpaper.settings.ipc = "on";
+
+  systemd.user.services.hyprpaper.Service.ExecStartPost =
+    "${pkgs.writeShellScript "random-wallpaper" ''
+      #!${pkgs.bash}/bin/bash
+
+      ${pkgs.coreutils}/bin/sleep 5s
+
+      WALLPAPER_DIR="$HOME/Pictures/wallpapers/"
+      WALLPAPER=$(${pkgs.findutils}/bin/find "$WALLPAPER_DIR" -type f | ${pkgs.coreutils}/bin/shuf -n 1)
+
+      ${pkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ,"$WALLPAPER"
+    ''}";
 
   services.hypridle = {
     enable = true;
