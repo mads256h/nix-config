@@ -92,6 +92,13 @@
     }
   ];
 
+  services.udev = {
+    packages = [
+      pkgs.keychron-udev-rules
+      pkgs.qmk-udev-rules
+    ];
+  };
+
   services.interception-tools = {
     enable = true;
     udevmonConfig = ''
