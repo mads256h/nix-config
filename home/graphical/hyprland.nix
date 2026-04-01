@@ -135,6 +135,12 @@
         "match:class negative:^Alacritty$, no_blur on"
         "match:class spotify, workspace 2"
         "match:class KeePassXC, workspace 10"
+        "match:class ^(ueberzugpp_.*)$, float on"
+        "match:class ^(ueberzugpp_.*)$, no_initial_focus on"
+        "match:class ^(ueberzugpp_.*)$, suppress_event fullscreen maximize activate activatefocus"
+        "match:class ^(ueberzugpp_.*)$, content photo"
+        "match:class ^(ueberzugpp_.*)$, move 9999 9999"
+        "match:class ^(ueberzugpp_.*)$, no_focus on"
       ];
 
       # plugin = {
