@@ -35,14 +35,14 @@
     };
   };
 
-  accounts.email.accounts.protonmail = {
+  accounts.email.accounts.protonmail = rec {
     primary = true;
 
     thunderbird.enable = true;
 
     realName = "Mads Mogensen";
     address = "mads256h@protonmail.com";
-    userName = "mads256h@protonmail.com";
+    userName = address;
 
     aliases = [ "mail@madsmogensen.dk" ];
 
@@ -65,5 +65,15 @@
         certificatesFile = "${config.xdg.configHome}/.certs/cert.pem";
       };
     };
+  };
+
+  accounts.email.accounts.gmail = rec {
+    thunderbird.enable = true;
+
+    realName = "Mads Mogensen";
+    address = "mads256h@gmail.com";
+    userName = address;
+
+    flavor = "gmail.com";
   };
 }

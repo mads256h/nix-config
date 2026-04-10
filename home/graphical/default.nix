@@ -32,6 +32,7 @@
     jetbrains.rust-rover
     pcmanfm
     steamtinkerlaunch
+    signal-desktop
   ];
 
   # Enable for websites incompatible with librewolf (default config)

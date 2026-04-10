@@ -10,7 +10,7 @@ let
   pdfViewer = "${pkgs.zathura}/bin/zathura";
   mpv = "${pkgs.mpv}/bin/mpv";
   imageViewer = "${pkgs.imv}/bin/imv";
-  browser = "${pkgs.librewolf}/bin/librewolf";
+  browser = "${config.programs.librewolf.finalPackage}/bin/librewolf";
   torrentClient = "${pkgs.tremc}/bin/tremc";
   office = "${pkgs.libreoffice-fresh}/bin/libreoffice";
 

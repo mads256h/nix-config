@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   programs.librewolf = {
     enable = true;
@@ -18,10 +18,10 @@
 
   home.file.".urlview" = {
     enable = true;
-    text = "COMMAND ${pkgs.librewolf}/bin/librewolf";
+    text = "COMMAND ${config.programs.librewolf.finalPackage}/bin/librewolf";
   };
 
   home.sessionVariables = {
-    BROWSER = "${pkgs.librewolf}/bin/librewolf";
+    BROWSER = "${config.programs.librewolf.finalPackage}/bin/librewolf";
   };
 }
