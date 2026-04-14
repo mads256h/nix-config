@@ -23,17 +23,8 @@
   };
   users.users.mads.extraGroups = [ "gamemode" ];
 
-  xdg.portal = {
-    enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-gnome
-      pkgs.xdg-desktop-portal-wlr
-      pkgs.xdg-desktop-portal
-    ];
-    configPackages = [ inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland ];
-    xdgOpenUsePortal = true;
-  };
+  # Use xdg.portal hm config
+  environment.pathsToLink = [ "/share/xdg-desktop-portal" "/share/applications" ];
 
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;

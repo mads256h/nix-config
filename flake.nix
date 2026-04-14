@@ -43,6 +43,7 @@
       stylix,
       lanzaboote,
       nixos-wsl,
+      hyprland,
       ...
     }:
     {

@@ -17,7 +17,7 @@
   home.username = "mads";
   home.homeDirectory = "/home/mads";
 
-  home.stateVersion = "25.11";
+  home.stateVersion = "26.05";
 
   programs.home-manager.enable = true;
 

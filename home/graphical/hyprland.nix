@@ -442,5 +442,13 @@
     };
   };
 
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+    ];
+  };
+
   home.sessionVariables.NIXOS_OZONE_WL = 1;
 }
