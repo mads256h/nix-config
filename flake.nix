@@ -7,7 +7,7 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    hyprland.url = "github:hyprwm/hyprland?ref=v0.54.2";
+    hyprland.url = "github:hyprwm/hyprland?ref=v0.54.3";
     #hyprland-plugins.url = "github:hyprwm/hyprland-plugins?ref=v0.54.2";
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
     hyprland-plugins.inputs.hyprland.follows = "hyprland";
@@ -16,7 +16,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.hyprlang.follows = "hyprland/hyprlang";
     };
-    hy3.url = "github:outfoxxed/hy3?ref=hl0.54.2";
+    hy3.url = "github:outfoxxed/hy3?ref=hl0.54.2.1";
     hy3.inputs.hyprland.follows = "hyprland";
 
     stylix.url = "github:nix-community/stylix";
