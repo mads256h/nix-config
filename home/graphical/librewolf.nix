@@ -16,6 +16,12 @@
 
   stylix.targets.librewolf.profileNames = [ "default" ];
 
+  xdg.mimeApps.defaultApplications = {
+    "text/html" = "librewolf.desktop";
+    "x-scheme-handler/http" = "librewolf.desktop";
+    "x-scheme-handler/https" = "librewolf.desktop";
+  };
+
   home.file.".urlview" = {
     enable = true;
     text = "COMMAND ${config.programs.librewolf.finalPackage}/bin/librewolf";
