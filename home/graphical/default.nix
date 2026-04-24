@@ -33,6 +33,7 @@
     pcmanfm
     steamtinkerlaunch
     signal-desktop
+    steamguard-cli
   ];
 
   # Enable for websites incompatible with librewolf (default config)

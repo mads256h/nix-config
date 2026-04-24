@@ -31,6 +31,20 @@
 
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
+  
+  boot.initrd.systemd.services.enable-numlock = {
+    description = "Enable numlock";
+    wantedBy = [ "cryptsetup-pre.target" ];
+    before = [ "cryptsetup-pre.target" ];
+    after = [ "systemd-vconsole-setup.service" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.kbd}/bin/setleds -D +num";
+      StandardInput = "tty";
+      TTYPath = "/dev/console";
+    };
+  };
 
   # Disabled until nixos gets their finger out of their ass
   # virtualisation.virtualbox.host = {
