@@ -19,7 +19,10 @@
     };
   };
 
-  home.packages = with pkgs; [ ibmcloud-cli ];
+  home.packages = with pkgs; [
+    ibmcloud-cli
+    jira-cli-go
+  ];
 
   home.file.".urlview" = {
     enable = true;
