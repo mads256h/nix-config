@@ -29,9 +29,9 @@
     text = "COMMAND /mnt/c/WINDOWS/explorer.exe";
   };
 
-  programs.git = {
-    userEmail = lib.mkForce "mbmo@netcompany.com";
-    userName = lib.mkForce "Mads Beyer Mogensen";
+  programs.git.settings.user = {
+    email = lib.mkForce "mbmo@netcompany.com";
+    name = lib.mkForce "Mads Beyer Mogensen";
   };
 
   programs.gpg.settings = {
