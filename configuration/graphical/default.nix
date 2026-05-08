@@ -34,15 +34,17 @@
   
   boot.initrd.systemd.services.enable-numlock = {
     description = "Enable numlock";
-    wantedBy = [ "cryptsetup-pre.target" ];
-    before = [ "cryptsetup-pre.target" ];
-    after = [ "systemd-vconsole-setup.service" ];
+    wantedBy = [ "initrd.target" ];
+    before = [ "initrd-root-device.target" ];
+    unitConfig = {
+      DefaultDependencies = false;
+    };
 
     serviceConfig = {
       Type = "oneshot";
       ExecStart = "${pkgs.kbd}/bin/setleds -D +num";
       StandardInput = "tty";
-      TTYPath = "/dev/console";
+      TTYPath = "/dev/tty0";
     };
   };
 

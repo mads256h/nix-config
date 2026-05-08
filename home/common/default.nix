@@ -35,6 +35,8 @@
     glib
     jq
     nixfmt
+    file
+    unrar
   ];
 
   programs.tmux = {
