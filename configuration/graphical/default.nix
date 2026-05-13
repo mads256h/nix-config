@@ -30,7 +30,10 @@
   hardware.graphics.enable32Bit = true;
 
   hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
+  services.blueman = { 
+    enable = true;
+    withApplet = false; # Workaround
+  };
   
   boot.initrd.systemd.services.enable-numlock = {
     description = "Enable numlock";
