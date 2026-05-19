@@ -1,8 +1,15 @@
 # vim: ts=2 sw=2 et
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let domain = "spotify.madsmogensen.dk";
-in {
+let
+  domain = "spotify.madsmogensen.dk";
+in
+{
 
   services.your_spotify = {
     enable = true;
@@ -23,10 +30,7 @@ in {
 
       locations."/api/" = {
         proxyPass = "http://localhost:${toString config.services.your_spotify.settings.PORT}/";
-        extraConfig =
-          "proxy_set_header  X-Script-Name /api;" +
-          "proxy_pass_header Authorization;"
-          ;
+        extraConfig = "proxy_set_header  X-Script-Name /api;" + "proxy_pass_header Authorization;";
       };
     };
   };

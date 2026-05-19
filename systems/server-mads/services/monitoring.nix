@@ -1,5 +1,10 @@
 # vim: ts=2 sw=2 et
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   services.grafana = {
@@ -12,6 +17,7 @@
         root_url = "https://home.madsmogensen.dk/grafana/";
         serve_from_sub_path = true;
       };
+      security.secret_key = "SW2YcwTIb9zpOOhoPsMm"; # TODO: Replace this default key from nixos
     };
   };
 
@@ -30,7 +36,7 @@
 
     exporters.node = {
       enable = true;
-      enabledCollectors = ["systemd"];
+      enabledCollectors = [ "systemd" ];
       port = 9002;
     };
 
@@ -47,13 +53,15 @@
     scrapeConfigs = [
       {
         job_name = "server";
-        static_configs = [{
-          targets = [
-            "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
-            "127.0.0.1:${toString config.services.prometheus.exporters.nginx.port}"
-            "127.0.0.1:${toString config.services.prometheus.exporters.smartctl.port}"
-          ];
-        }];
+        static_configs = [
+          {
+            targets = [
+              "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
+              "127.0.0.1:${toString config.services.prometheus.exporters.nginx.port}"
+              "127.0.0.1:${toString config.services.prometheus.exporters.smartctl.port}"
+            ];
+          }
+        ];
       }
     ];
   };

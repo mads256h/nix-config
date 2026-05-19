@@ -1,5 +1,10 @@
 # vim: ts=2 sw=2 et
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Enable WireGuard
@@ -17,5 +22,5 @@
     ];
   };
 
-  networking.firewall.allowedUDPPorts = [config.networking.wg-quick.interfaces."wg0".listenPort];
+  networking.firewall.allowedUDPPorts = [ config.networking.wg-quick.interfaces."wg0".listenPort ];
 }

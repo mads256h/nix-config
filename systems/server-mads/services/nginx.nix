@@ -1,5 +1,10 @@
 # vim: ts=2 sw=2 et
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   services.nginx = {
@@ -14,7 +19,7 @@
     # Allow your_spotify to import json files
     clientMaxBodySize = "500M";
 
-    virtualHosts."home.madsmogensen.dk" =  {
+    virtualHosts."home.madsmogensen.dk" = {
       enableACME = true;
       forceSSL = true;
     };
@@ -30,25 +35,25 @@
       forceSSL = true;
     };
 
-    virtualHosts."webdav.madsmogensen.dk" =  {
+    virtualHosts."webdav.madsmogensen.dk" = {
       enableACME = true;
       forceSSL = true;
     };
 
-    virtualHosts."server-mads.lan" =  {
+    virtualHosts."server-mads.lan" = {
       # Only allow local connections to this virtual host
-      extraConfig =
-          "allow 10.0.1.0/24;" +
-          "deny all;"
-          ;
+      extraConfig = ''
+        allow 10.0.1.0/24;
+        deny all;
+      '';
     };
 
     virtualHosts."localhost" = {
-      extraConfig =
-        "allow 127.0.0.1;" +
-        "allow ::1;" +
-        "deny all;"
-        ;
+      extraConfig = ''
+        allow 127.0.0.1;
+        allow ::1;
+        deny all;
+      '';
     };
   };
 
@@ -57,5 +62,8 @@
     defaults.email = "mail@madsmogensen.dk";
   };
 
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
 }

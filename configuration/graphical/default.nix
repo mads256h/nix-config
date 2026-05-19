@@ -24,17 +24,20 @@
   users.users.mads.extraGroups = [ "gamemode" ];
 
   # Use xdg.portal hm config
-  environment.pathsToLink = [ "/share/xdg-desktop-portal" "/share/applications" ];
+  environment.pathsToLink = [
+    "/share/xdg-desktop-portal"
+    "/share/applications"
+  ];
 
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
 
   hardware.bluetooth.enable = true;
-  services.blueman = { 
+  services.blueman = {
     enable = true;
     withApplet = false; # Workaround
   };
-  
+
   boot.initrd.systemd.services.enable-numlock = {
     description = "Enable numlock";
     wantedBy = [ "initrd.target" ];

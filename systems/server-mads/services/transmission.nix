@@ -1,5 +1,10 @@
 # vim: ts=2 sw=2 et
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   services.transmission = {
@@ -29,5 +34,7 @@
   };
 
   # Allow through firewall
-  networking.firewall.interfaces."enp1s0".allowedTCPPorts = [ config.services.transmission.settings.rpc-port ];
+  networking.firewall.interfaces."enp1s0".allowedTCPPorts = [
+    config.services.transmission.settings.rpc-port
+  ];
 }

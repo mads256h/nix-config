@@ -1,8 +1,15 @@
 # vim: ts=2 sw=2 et
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let port = 5232;
-in {
+let
+  port = 5232;
+in
+{
   services.radicale = {
     enable = true;
     settings = {
@@ -21,23 +28,23 @@ in {
   };
 
   services.nginx = {
-    virtualHosts."home.madsmogensen.dk" =  {
+    virtualHosts."home.madsmogensen.dk" = {
       locations."/radicale/" = {
         proxyPass = "http://localhost:${toString port}/";
-        extraConfig =
-          "proxy_set_header  X-Script-Name /radicale;" +
-          "proxy_pass_header Authorization;"
-          ;
+        extraConfig = ''
+          proxy_set_header  X-Script-Name /radicale;
+          proxy_pass_header Authorization;
+        '';
       };
     };
 
-    virtualHosts."server-mads.lan" =  {
+    virtualHosts."server-mads.lan" = {
       locations."/radicale/" = {
         proxyPass = "http://localhost:${toString port}/";
-        extraConfig =
-          "proxy_set_header  X-Script-Name /radicale;" +
-          "proxy_pass_header Authorization;"
-          ;
+        extraConfig = ''
+          proxy_set_header  X-Script-Name /radicale;
+          proxy_pass_header Authorization;
+        '';
       };
     };
   };

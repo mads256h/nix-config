@@ -24,20 +24,27 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/258ba2f6-9932-47e3-9b34-e11cc747e127";
-      fsType = "btrfs";
-    };
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/258ba2f6-9932-47e3-9b34-e11cc747e127";
+    fsType = "btrfs";
+  };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/12CE-A600";
-      fsType = "vfat";
-      options = [ "defaults" "fmask=0077" "dmask=0077" "noexec" "nodev" "nosuid" ];
-    };
-
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/cfb6f323-2397-4508-8f65-e6ac4e3aeea4"; }
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/12CE-A600";
+    fsType = "vfat";
+    options = [
+      "defaults"
+      "fmask=0077"
+      "dmask=0077"
+      "noexec"
+      "nodev"
+      "nosuid"
     ];
+  };
+
+  swapDevices = [
+    { device = "/dev/disk/by-uuid/cfb6f323-2397-4508-8f65-e6ac4e3aeea4"; }
+  ];
 
   boot.tmp = {
     useTmpfs = true;
@@ -45,19 +52,27 @@
   };
 
   # Share
-  fileSystems."/mnt/share" =
-    { device = "/dev/disk/by-uuid/51a551fa-d1ba-4c83-8ad5-bfcab4496f29";
-      fsType = "btrfs";
-      options = [ "defaults" "nodev" "nosuid" ];
-    };
-
+  fileSystems."/mnt/share" = {
+    device = "/dev/disk/by-uuid/51a551fa-d1ba-4c83-8ad5-bfcab4496f29";
+    fsType = "btrfs";
+    options = [
+      "defaults"
+      "nodev"
+      "nosuid"
+    ];
+  };
 
   # Data
-  fileSystems."/mnt/data" =
-    { device = "/dev/disk/by-uuid/acb26053-df19-42f5-90b7-9e29079db53c";
-      fsType = "ext4";
-      options = [ "defaults" "nodev" "nosuid" "errors=remount-ro" ];
-    };
+  fileSystems."/mnt/data" = {
+    device = "/dev/disk/by-uuid/acb26053-df19-42f5-90b7-9e29079db53c";
+    fsType = "ext4";
+    options = [
+      "defaults"
+      "nodev"
+      "nosuid"
+      "errors=remount-ro"
+    ];
+  };
 
   services.btrfs.autoScrub.enable = true;
 
