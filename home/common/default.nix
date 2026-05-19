@@ -69,8 +69,8 @@
       submodule.recurse = true;
 
       user.signingKey = "75C8BC5DCCE7257DA133C6CECCD33BA72D54F208";
-      commit.gpgSign = sysconfig.graphical;
-      tag.gpgSign = sysconfig.graphical;
+      commit.gpgSign = sysconfig.graphical || sysconfig.server;
+      tag.gpgSign = sysconfig.graphical || sysconfig.server;
 
       # Use ssh instead of http
       url."git@bitbucket.org:".insteadOf = "https://bitbucket.org/";

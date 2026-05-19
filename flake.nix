@@ -54,6 +54,8 @@
           sysconfig = {
             graphical = true;
             laptop = false;
+            server = false;
+            baremetal = true;
           };
         };
         modules = [
@@ -83,6 +85,8 @@
           sysconfig = {
             graphical = true;
             laptop = true;
+            server = false;
+            baremetal = true;
           };
         };
         modules = [
@@ -110,6 +114,8 @@
           sysconfig = {
             graphical = false;
             laptop = true;
+            server = false;
+            baremetal = false;
           };
         };
         modules = [
@@ -126,6 +132,36 @@
           stylix.nixosModules.stylix
 
           nixos-wsl.nixosModules.default
+        ];
+      };
+
+      nixosConfigurations."server-mads" = nixpkgs.lib.nixosSystem rec {
+        system = "x86_64-linux";
+        specialArgs = {
+          inherit inputs;
+          sysconfig = {
+            graphical = false;
+            laptop = false;
+            server = true;
+            baremetal = true;
+          };
+        };
+        modules = [
+          ./systems/server-mads/configuration.nix
+          nixos-hardware.nixosModules.common-cpu-intel
+          nixos-hardware.nixosModules.common-pc-ssd
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.extraSpecialArgs = specialArgs;
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.mads = ./systems/server-mads/home.nix;
+          }
+
+          stylix.nixosModules.stylix
+
+          lanzaboote.nixosModules.lanzaboote
         ];
       };
     };

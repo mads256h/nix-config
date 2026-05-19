@@ -13,12 +13,10 @@
       "github.com".identityFile = "~/.ssh/github_rsa";
       "home.madsmogensen.dk" = {
         identityFile = "~/.ssh/server_rsa";
-        user = "root";
         port = 2222;
       };
       "server-mads.lan" = {
         identityFile = "~/.ssh/server_rsa";
-        user = "root";
       };
       "desktop-mads.router.lan" = {
         identityFile = "~/.ssh/desktop_rsa";
@@ -35,7 +33,7 @@
     enable = true;
   };
 
-  services = lib.optionalAttrs sysconfig.graphical {
+  services = lib.optionalAttrs sysconfig.baremetal {
     gpg-agent = {
       enable = true;
       enableSshSupport = true;
