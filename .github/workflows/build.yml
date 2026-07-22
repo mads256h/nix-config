@@ -1,0 +1,107 @@
+name: Build & Boot NixOS VMs
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  vm-boot-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [desktop-mads, laptop-mads, server-mads]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            extra-substituters = https://mads256h.cachix.org https://nix-community.cachix.org https://hyprland.cachix.org
+            extra-trusted-public-keys = mads256h.cachix.org-1:6kAAfDlu6DSFqADoOQzlkOPQKO1hoptBHgnJGnuEnkI= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=
+      
+      - uses: cachix/cachix-action@v15
+        with:
+          name: mads256h
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Re-add other Cachix caches (cachix-action overwrites substituters)
+        run: |
+          mkdir -p ~/.config/nix
+          cat >> ~/.config/nix/nix.conf <<'EOF'
+            extra-substituters = https://nix-community.cachix.org https://hyprland.cachix.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=
+          EOF
+
+      - name: Show effective Nix config
+        run: nix show-config | grep -iE 'substitut|trusted'
+
+      - name: Enable /dev/kvm
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Build toplevel system closure
+        run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel --fallback
+
+      - name: Build VM
+        run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.vm" -L -o result --fallback
+
+      - name: Boot VM and check for sucessful boot
+        run: |
+          set -o pipefail
+          RUNSCRIPT=$(ls result/bin/run-*-vm)
+          QEMU_OPTS="-nographic -no-reboot" timeout 180 "$RUNSCRIPT" | tee vm.log
+
+          if ! grep -q "CI_BOOT_OK" vm.log; then
+            echo "VM did not reach the boot-success checkpoint."
+            exit 1
+          fi
+
+          if grep -q "CI_UNITS_FAILED" vm.log; then
+            echo "One or more systemd units failed to start. See below:"
+            sed -n '/CI_UNITS_FAILED/,/CI_BOOT_OK/p' vm.log
+            exit 1
+          fi
+
+          echo "All units started successfully."
+
+  build-only:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [wsl]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            extra-substituters = https://mads256h.cachix.org https://nix-community.cachix.org https://hyprland.cachix.org
+            extra-trusted-public-keys = mads256h.cachix.org-1:6kAAfDlu6DSFqADoOQzlkOPQKO1hoptBHgnJGnuEnkI= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=
+      
+      - uses: cachix/cachix-action@v15
+        with:
+          name: mads256h
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Re-add other Cachix caches (cachix-action overwrites substituters)
+        run: |
+          mkdir -p ~/.config/nix
+          cat >> ~/.config/nix/nix.conf <<'EOF'
+            extra-substituters = https://nix-community.cachix.org https://hyprland.cachix.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=
+          EOF
+
+      - name: Show effective Nix config
+        run: nix show-config | grep -iE 'substitut|trusted'
+
+      - name: Build toplevel system closure
+        run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel --fallback
+
