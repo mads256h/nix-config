@@ -14,7 +14,7 @@ jobs:
       matrix:
         host: [desktop-mads, laptop-mads, server-mads]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: cachix/install-nix-action@v31
         with:
@@ -77,7 +77,7 @@ jobs:
       matrix:
         host: [wsl]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: cachix/install-nix-action@v31
         with:
