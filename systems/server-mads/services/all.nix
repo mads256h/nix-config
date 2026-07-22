@@ -15,7 +15,6 @@
     ./radicale.nix
     ./transmission.nix
     ./webdav.nix
-    ./wireguard.nix
     #      ./your_spotify.nix
   ];
 }

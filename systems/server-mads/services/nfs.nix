@@ -27,7 +27,7 @@
   services.rpcbind.enable = true;
 
   # Allow through firewall
-  networking.firewall.interfaces."enp1s0" = {
+  networking.firewall = {
     allowedTCPPorts = [
       111
       2049

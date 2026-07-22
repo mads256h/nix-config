@@ -59,6 +59,7 @@
           };
         };
         modules = [
+          ./modules/ci-vm.nix
           ./systems/desktop-mads/configuration.nix
           nixos-hardware.nixosModules.common-cpu-amd
           nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
@@ -90,6 +91,7 @@
           };
         };
         modules = [
+          ./modules/ci-vm.nix
           ./systems/laptop-mads/configuration.nix
           nixos-hardware.nixosModules.msi-gl62
 
@@ -147,6 +149,7 @@
           };
         };
         modules = [
+          ./modules/ci-vm.nix
           ./systems/server-mads/configuration.nix
           nixos-hardware.nixosModules.common-cpu-intel
           nixos-hardware.nixosModules.common-pc-ssd

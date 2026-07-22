@@ -38,6 +38,10 @@
     withApplet = false; # Workaround
   };
 
+  boot.initrd.systemd.storePaths = [
+    "${pkgs.kbd}/bin/setleds"
+  ];
+
   boot.initrd.systemd.services.enable-numlock = {
     description = "Enable numlock";
     wantedBy = [ "initrd.target" ];
