@@ -24,3 +24,15 @@ jobs:
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  flake-lock-update:
+    runs-on: ubuntu-latest
+    if: >
+      github.actor == 'github-actions[bot]' &&
+      github.event.pull_request.head.ref == 'update-flake-lock'
+    steps:
+      - name: Enable auto-merge for flake.lock updates
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
