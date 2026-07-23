@@ -27,9 +27,7 @@ jobs:
 
   flake-lock-update:
     runs-on: ubuntu-latest
-    if: >
-      github.actor == 'github-actions[bot]' &&
-      github.event.pull_request.head.ref == 'update-flake-lock'
+    if: github.event.pull_request.head.ref == 'update-flake-lock'
     steps:
       - name: Enable auto-merge for flake.lock updates
         run: gh pr merge --auto --squash "$PR_URL"
