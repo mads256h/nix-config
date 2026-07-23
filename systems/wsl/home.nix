@@ -29,6 +29,8 @@
     text = "COMMAND /mnt/c/WINDOWS/explorer.exe";
   };
 
+  home.pointerCursor.enable = false;
+
   programs.git.settings.user = {
     email = lib.mkForce "mbmo@netcompany.com";
     name = lib.mkForce "Mads Beyer Mogensen";
