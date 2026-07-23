@@ -33,10 +33,7 @@
   hardware.graphics.enable32Bit = true;
 
   hardware.bluetooth.enable = true;
-  services.blueman = {
-    enable = true;
-    withApplet = false; # Workaround
-  };
+  services.blueman.enable = true;
 
   boot.initrd.systemd.storePaths = [
     "${pkgs.kbd}/bin/setleds"
