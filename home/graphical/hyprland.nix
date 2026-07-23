@@ -177,6 +177,7 @@
     };
   };
   home.sessionVariables.HYPRCURSOR_THEME = lib.mkForce "rose-pine-hyprcursor";
+  home.pointerCursor.enable = true;
   home.pointerCursor.hyprcursor.enable = true;
 
   stylix.icons = {

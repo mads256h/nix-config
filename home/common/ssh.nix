@@ -8,23 +8,23 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
-      "*".extraOptions.UseRoaming = "no";
-      "github.com".identityFile = "~/.ssh/github_rsa";
+    settings = {
+      "*".UseRoaming = "no";
+      "github.com".IdentityFile = "~/.ssh/github_rsa";
       "home.madsmogensen.dk" = {
-        identityFile = "~/.ssh/server_rsa";
-        port = 2222;
+        IdentityFile = "~/.ssh/server_rsa";
+        Port = 2222;
       };
       "server-mads.lan" = {
-        identityFile = "~/.ssh/server_rsa";
+        IdentityFile = "~/.ssh/server_rsa";
       };
       "desktop-mads.router.lan" = {
-        identityFile = "~/.ssh/desktop_rsa";
+        IdentityFile = "~/.ssh/desktop_rsa";
       };
       "digitalocean 142.93.101.55" = {
-        identityFile = "~/.ssh/digitalocean_ed25519";
-        user = "root";
-        hostname = "142.93.101.55";
+        IdentityFile = "~/.ssh/digitalocean_ed25519";
+        User = "root";
+        Hostname = "142.93.101.55";
       };
     };
   };

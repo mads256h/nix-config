@@ -2,20 +2,20 @@
 {
   imports = [ ../../home/common ];
 
-  programs.ssh.matchBlocks = {
+  programs.ssh.settings = {
     "bitbucket.org" = {
-      user = "git";
-      identityFile = "~/.ssh/bitbucket_rsa";
+      User = "git";
+      IdentityFile = "~/.ssh/bitbucket_rsa";
     };
 
     "*.ibmgst.dk" = {
-      user = "mbmo";
-      identityFile = "~/.ssh/mbmo_gst_servere_rsa";
+      User = "mbmo";
+      IdentityFile = "~/.ssh/mbmo_gst_servere_rsa";
     };
 
     "*.resdmz.dmzroot.dk" = {
-      user = "y166261";
-      identityFile = "~/.ssh/mbmo_sit_servere_rsa";
+      User = "y166261";
+      IdentityFile = "~/.ssh/mbmo_sit_servere_rsa";
     };
   };
 
