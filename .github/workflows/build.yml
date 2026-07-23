@@ -55,7 +55,7 @@ jobs:
         run: |
           set -o pipefail
           RUNSCRIPT=$(ls result/bin/run-*-vm)
-          QEMU_OPTS="-nographic -no-reboot" timeout 180 "$RUNSCRIPT" | tee vm.log
+          QEMU_OPTS="-no-reboot" timeout 180 "$RUNSCRIPT" | tee vm.log
 
           if ! grep -q "CI_BOOT_OK" vm.log; then
             echo "VM did not reach the boot-success checkpoint."
@@ -68,7 +68,18 @@ jobs:
             exit 1
           fi
 
-          echo "All units started successfully."
+          if grep -q "CI_HYPR_NOT_STARTED" vm.log; then
+            echo "Hyprland never started."
+            exit 1
+          fi
+
+          if grep -q "CI_HYPR_ERRORS_FOUND" vm.log; then
+            echo "Hyprland logged errors:"
+            sed -n '/CI_HYPR_ERRORS_FOUND/,/CI_BOOT_OK/p' vm.log
+            exit 1
+          fi
+
+          echo "Boot, units, and Hyprland all clean."
 
   build-only:
     runs-on: ubuntu-latest
