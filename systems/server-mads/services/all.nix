@@ -8,6 +8,7 @@
 
 {
   imports = [
+    ./fail2ban.nix
     ./minidlna.nix
     ./monitoring.nix
     ./nfs.nix
