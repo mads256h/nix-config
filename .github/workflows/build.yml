@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   vm-boot-test:
@@ -18,6 +19,8 @@ jobs:
         host: [desktop-mads, laptop-mads, server-mads]
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - uses: cachix/install-nix-action@v31
         with:
@@ -50,6 +53,54 @@ jobs:
 
       - name: Build toplevel system closure
         run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel --fallback
+
+      - name: Build master toplevel system closure
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        run: |
+          git worktree add /tmp/nix-config-master origin/master
+          nix build "/tmp/nix-config-master#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel-base --fallback
+
+      - name: Generate nvd diff
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        run: |
+          mkdir -p ci-artifacts
+          PR_TOPLEVEL="$(readlink -f result-toplevel)"
+          BASE_TOPLEVEL="$(readlink -f result-toplevel-base)"
+          nix shell nixpkgs#nvd --command nvd diff "$BASE_TOPLEVEL" "$PR_TOPLEVEL" | tee "ci-artifacts/nvd-${{ matrix.host }}.txt"
+          {
+            echo "host=${{ matrix.host }}"
+            echo "base=$BASE_TOPLEVEL"
+            echo "pr=$PR_TOPLEVEL"
+          } > "ci-artifacts/toplevel-${{ matrix.host }}.txt"
+
+      - name: Upload toplevel build artifact
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        uses: actions/upload-artifact@v4
+        with:
+          name: toplevel-${{ matrix.host }}
+          path: ci-artifacts/
+
+      - name: Comment nvd diff on pull request
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const host = '${{ matrix.host }}';
+            const marker = `<!-- nvd-diff:${host} -->`;
+            let diff = fs.readFileSync(`ci-artifacts/nvd-${host}.txt`, 'utf8').trim();
+            if (!diff) diff = 'No differences detected.';
+            if (diff.length > 60000) diff = `${diff.slice(0, 60000)}\n... (truncated)`;
+            const body = `${marker}\n## nvd diff for \`${host}\`\n\`\`\`diff\n${diff}\n\`\`\``;
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number, per_page: 100 });
+            const existing = comments.find((comment) => comment.body && comment.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
 
       - name: Build VM
         run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.vm" -L -o result --fallback
@@ -92,6 +143,8 @@ jobs:
         host: [wsl]
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - uses: cachix/install-nix-action@v31
         with:
@@ -119,3 +172,50 @@ jobs:
       - name: Build toplevel system closure
         run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel --fallback
 
+      - name: Build master toplevel system closure
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        run: |
+          git worktree add /tmp/nix-config-master origin/master
+          nix build "/tmp/nix-config-master#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel-base --fallback
+
+      - name: Generate nvd diff
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        run: |
+          mkdir -p ci-artifacts
+          PR_TOPLEVEL="$(readlink -f result-toplevel)"
+          BASE_TOPLEVEL="$(readlink -f result-toplevel-base)"
+          nix shell nixpkgs#nvd --command nvd diff "$BASE_TOPLEVEL" "$PR_TOPLEVEL" | tee "ci-artifacts/nvd-${{ matrix.host }}.txt"
+          {
+            echo "host=${{ matrix.host }}"
+            echo "base=$BASE_TOPLEVEL"
+            echo "pr=$PR_TOPLEVEL"
+          } > "ci-artifacts/toplevel-${{ matrix.host }}.txt"
+
+      - name: Upload toplevel build artifact
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        uses: actions/upload-artifact@v4
+        with:
+          name: toplevel-${{ matrix.host }}
+          path: ci-artifacts/
+
+      - name: Comment nvd diff on pull request
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const host = '${{ matrix.host }}';
+            const marker = `<!-- nvd-diff:${host} -->`;
+            let diff = fs.readFileSync(`ci-artifacts/nvd-${host}.txt`, 'utf8').trim();
+            if (!diff) diff = 'No differences detected.';
+            if (diff.length > 60000) diff = `${diff.slice(0, 60000)}\n... (truncated)`;
+            const body = `${marker}\n## nvd diff for \`${host}\`\n\`\`\`diff\n${diff}\n\`\`\``;
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number, per_page: 100 });
+            const existing = comments.find((comment) => comment.body && comment.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
