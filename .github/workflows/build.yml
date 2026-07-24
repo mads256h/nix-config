@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   pull-requests: write
 
 jobs:
@@ -54,27 +55,48 @@ jobs:
       - name: Build toplevel system closure
         run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel --fallback
 
-      - name: Build master toplevel system closure
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+      - name: Write toplevel metadata
         run: |
-          git worktree add /tmp/nix-config-master origin/master
-          nix build "/tmp/nix-config-master#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel-base --fallback
+          mkdir -p ci-artifacts
+          PR_TOPLEVEL="$(readlink -f result-toplevel)"
+          {
+            echo "host=${{ matrix.host }}"
+            echo "toplevel=$PR_TOPLEVEL"
+          } > "ci-artifacts/toplevel-${{ matrix.host }}.txt"
+
+      - name: Download master toplevel artifact
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        uses: dawidd6/action-download-artifact@v9
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: build.yml
+          branch: master
+          event: push
+          name: toplevel-${{ matrix.host }}
+          path: base-artifact
+          if_no_artifact_found: warn
 
       - name: Generate nvd diff
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
         run: |
-          mkdir -p ci-artifacts
           PR_TOPLEVEL="$(readlink -f result-toplevel)"
-          BASE_TOPLEVEL="$(readlink -f result-toplevel-base)"
+          BASE_FILE="base-artifact/toplevel-${{ matrix.host }}.txt"
+          if [ ! -f "$BASE_FILE" ]; then
+            echo "No master toplevel artifact found for ${{ matrix.host }}. Skipping nvd comparison." | tee "ci-artifacts/nvd-${{ matrix.host }}.txt"
+            exit 0
+          fi
+
+          BASE_TOPLEVEL="$(sed -n 's/^toplevel=//p' "$BASE_FILE" | head -n1)"
+          if [ -z "$BASE_TOPLEVEL" ]; then
+            echo "Master toplevel artifact for ${{ matrix.host }} did not contain a toplevel path. Skipping nvd comparison." | tee "ci-artifacts/nvd-${{ matrix.host }}.txt"
+            exit 0
+          fi
+
+          nix-store --realise "$BASE_TOPLEVEL" >/dev/null
           nix shell nixpkgs#nvd --command nvd diff "$BASE_TOPLEVEL" "$PR_TOPLEVEL" | tee "ci-artifacts/nvd-${{ matrix.host }}.txt"
-          {
-            echo "host=${{ matrix.host }}"
-            echo "base=$BASE_TOPLEVEL"
-            echo "pr=$PR_TOPLEVEL"
-          } > "ci-artifacts/toplevel-${{ matrix.host }}.txt"
 
       - name: Upload toplevel build artifact
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'pull_request' && github.event.action == 'opened')
         uses: actions/upload-artifact@v4
         with:
           name: toplevel-${{ matrix.host }}
@@ -172,27 +194,48 @@ jobs:
       - name: Build toplevel system closure
         run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel --fallback
 
-      - name: Build master toplevel system closure
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+      - name: Write toplevel metadata
         run: |
-          git worktree add /tmp/nix-config-master origin/master
-          nix build "/tmp/nix-config-master#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel-base --fallback
+          mkdir -p ci-artifacts
+          PR_TOPLEVEL="$(readlink -f result-toplevel)"
+          {
+            echo "host=${{ matrix.host }}"
+            echo "toplevel=$PR_TOPLEVEL"
+          } > "ci-artifacts/toplevel-${{ matrix.host }}.txt"
+
+      - name: Download master toplevel artifact
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        uses: dawidd6/action-download-artifact@v9
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: build.yml
+          branch: master
+          event: push
+          name: toplevel-${{ matrix.host }}
+          path: base-artifact
+          if_no_artifact_found: warn
 
       - name: Generate nvd diff
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
         run: |
-          mkdir -p ci-artifacts
           PR_TOPLEVEL="$(readlink -f result-toplevel)"
-          BASE_TOPLEVEL="$(readlink -f result-toplevel-base)"
+          BASE_FILE="base-artifact/toplevel-${{ matrix.host }}.txt"
+          if [ ! -f "$BASE_FILE" ]; then
+            echo "No master toplevel artifact found for ${{ matrix.host }}. Skipping nvd comparison." | tee "ci-artifacts/nvd-${{ matrix.host }}.txt"
+            exit 0
+          fi
+
+          BASE_TOPLEVEL="$(sed -n 's/^toplevel=//p' "$BASE_FILE" | head -n1)"
+          if [ -z "$BASE_TOPLEVEL" ]; then
+            echo "Master toplevel artifact for ${{ matrix.host }} did not contain a toplevel path. Skipping nvd comparison." | tee "ci-artifacts/nvd-${{ matrix.host }}.txt"
+            exit 0
+          fi
+
+          nix-store --realise "$BASE_TOPLEVEL" >/dev/null
           nix shell nixpkgs#nvd --command nvd diff "$BASE_TOPLEVEL" "$PR_TOPLEVEL" | tee "ci-artifacts/nvd-${{ matrix.host }}.txt"
-          {
-            echo "host=${{ matrix.host }}"
-            echo "base=$BASE_TOPLEVEL"
-            echo "pr=$PR_TOPLEVEL"
-          } > "ci-artifacts/toplevel-${{ matrix.host }}.txt"
 
       - name: Upload toplevel build artifact
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'pull_request' && github.event.action == 'opened')
         uses: actions/upload-artifact@v4
         with:
           name: toplevel-${{ matrix.host }}
