@@ -65,7 +65,7 @@ jobs:
           } > "ci-artifacts/toplevel-${{ matrix.host }}.txt"
 
       - name: Download master toplevel artifact
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        if: github.event_name == 'pull_request' && contains(fromJSON('["opened","synchronize","reopened"]'), github.event.action)
         uses: dawidd6/action-download-artifact@v9
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -77,7 +77,7 @@ jobs:
           if_no_artifact_found: warn
 
       - name: Generate nvd diff
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        if: github.event_name == 'pull_request' && contains(fromJSON('["opened","synchronize","reopened"]'), github.event.action)
         run: |
           PR_TOPLEVEL="$(readlink -f result-toplevel)"
           BASE_FILE="base-artifact/toplevel-${{ matrix.host }}.txt"
@@ -96,14 +96,14 @@ jobs:
           nix shell nixpkgs#nvd --command nvd diff "$BASE_TOPLEVEL" "$PR_TOPLEVEL" | tee "ci-artifacts/nvd-${{ matrix.host }}.txt"
 
       - name: Upload toplevel build artifact
-        if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'pull_request' && github.event.action == 'opened')
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'pull_request' && contains(fromJSON('["opened","synchronize","reopened"]'), github.event.action))
         uses: actions/upload-artifact@v4
         with:
           name: toplevel-${{ matrix.host }}
           path: ci-artifacts/
 
       - name: Comment nvd diff on pull request
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        if: github.event_name == 'pull_request' && contains(fromJSON('["opened","synchronize","reopened"]'), github.event.action)
         uses: actions/github-script@v8
         with:
           script: |
@@ -204,7 +204,7 @@ jobs:
           } > "ci-artifacts/toplevel-${{ matrix.host }}.txt"
 
       - name: Download master toplevel artifact
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        if: github.event_name == 'pull_request' && contains(fromJSON('["opened","synchronize","reopened"]'), github.event.action)
         uses: dawidd6/action-download-artifact@v9
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -216,7 +216,7 @@ jobs:
           if_no_artifact_found: warn
 
       - name: Generate nvd diff
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        if: github.event_name == 'pull_request' && contains(fromJSON('["opened","synchronize","reopened"]'), github.event.action)
         run: |
           PR_TOPLEVEL="$(readlink -f result-toplevel)"
           BASE_FILE="base-artifact/toplevel-${{ matrix.host }}.txt"
@@ -235,14 +235,14 @@ jobs:
           nix shell nixpkgs#nvd --command nvd diff "$BASE_TOPLEVEL" "$PR_TOPLEVEL" | tee "ci-artifacts/nvd-${{ matrix.host }}.txt"
 
       - name: Upload toplevel build artifact
-        if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'pull_request' && github.event.action == 'opened')
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || (github.event_name == 'pull_request' && contains(fromJSON('["opened","synchronize","reopened"]'), github.event.action))
         uses: actions/upload-artifact@v4
         with:
           name: toplevel-${{ matrix.host }}
           path: ci-artifacts/
 
       - name: Comment nvd diff on pull request
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        if: github.event_name == 'pull_request' && contains(fromJSON('["opened","synchronize","reopened"]'), github.event.action)
         uses: actions/github-script@v8
         with:
           script: |
