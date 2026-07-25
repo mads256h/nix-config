@@ -50,6 +50,10 @@
           kb_layout = "dk";
           numlock_by_default = true;
         };
+        debug = {
+          enable_stdout_logs = true;
+          disable_logs = false;
+        };
       };
 
       monitor = {
@@ -480,6 +484,10 @@
         }
       ];
     };
+
+    extraConfig = ''
+      print("CI_HYPR_LOADED")
+      '';
   };
 
   stylix.cursor = {
