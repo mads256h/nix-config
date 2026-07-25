@@ -486,9 +486,9 @@
     };
 
     extraConfig = ''
-      for i=1,50 do
-        print("CI_HYPR_LOADED")
-      end
+      ok_file = io.open("hypr_loaded_ok", "w")
+      ok_file:write("OK")
+      ok_file:close()
       '';
   };
 

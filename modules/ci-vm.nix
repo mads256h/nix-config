@@ -68,15 +68,17 @@
 
           ${lib.optionalString sysconfig.graphical ''
           HYPR_LOG=$(find /run/user/*/hypr -maxdepth 2 -name 'hyprland.log' 2>/dev/null)
+          HYPR_LOADED_OK=$(find /run/user/*/hypr -maxdepth 2 -name 'hypr_loaded_ok' 2>/dev/null)
           if [ -z "$HYPR_LOG" ]; then
             echo "CI_HYPR_NOT_STARTED"
-          elif grep -qE 'CI_HYPR_LOADED' "$HYPR_LOG"; then
-            echo "CI_HYPR_OK"
+          elif [ -z "$HYPR_LOADED_OK"; then
+            echo "CI_HYPR_ERRORS_FOUND"
             echo "----- hyprland.log -----"
             cat "$HYPR_LOG"
             echo "----- end -----"
           else
-            echo "CI_HYPR_ERRORS_FOUND"
+            echo "CI_HYPR_OK"
+            echo "found hypr_loaded_ok at $HYPR_LOADED_OK"
             echo "----- hyprland.log -----"
             cat "$HYPR_LOG"
             echo "----- end -----"
