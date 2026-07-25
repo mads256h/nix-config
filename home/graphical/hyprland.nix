@@ -24,145 +24,462 @@
     ];
 
     settings = {
-      "$mod" = "SUPER";
-      ecosystem.no_update_news = true;
-      general = {
-        "border_size" = 0;
-        "gaps_in" = 15;
-        "gaps_out" = 15;
-        "layout" = "hy3";
+      mod = {
+        _var = "SUPER";
       };
-      decoration = {
-        blur = {
-          enabled = true;
-          size = 4;
-          passes = 2;
-          xray = true;
-          # xray = false;
-          # ignore_opacity = false;
-          # new_optimizations = false;
+
+      config = {
+        ecosystem.no_update_news = true;
+        general = {
+          border_size = 0;
+          gaps_in = 15;
+          gaps_out = 15;
+          layout = "hy3";
         };
-        shadow.enabled = false;
+        decoration = {
+          blur = {
+            enabled = true;
+            size = 4;
+            passes = 2;
+            xray = true;
+          };
+          shadow.enabled = false;
+        };
+        animations.enabled = false;
+        input = {
+          kb_layout = "dk";
+          numlock_by_default = true;
+        };
       };
-      animations.enabled = false;
+
+      monitor = {
+        output = "";
+        mode = "preferred";
+        position = "auto";
+        scale = "1";
+      };
 
       bind = [
-        "$mod+SHIFT, Q, hy3:killactive"
-        "$mod+SHIFT, E, exit"
-        "$mod, return, exec, alacritty -e tmux"
-        "$mod+SHIFT, return, exec, alacritty"
-        "$mod, g, exec, alacritty -e tmux new-session vifmrun"
-        "$mod, W, exec, librewolf"
-        "$mod, s, exec, spotify"
-
-        "$mod, d, exec, rofi -show drun"
-
-        "$mod, t, exec, ${pkgs.slurp}/bin/slurp | ${pkgs.grim}/bin/grim -g - - | ${pkgs.coreutils}/bin/tee ~/Pictures/screenshots/$(date +%s).png | ${pkgs.wl-clipboard}/bin/wl-copy"
-        ''$mod+SHIFT, t, exec, ${package}/bin/hyprctl -j activewindow | ${pkgs.jq}/bin/jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"' | ${pkgs.grim}/bin/grim -g - - | ${pkgs.coreutils}/bin/tee ~/Pictures/screenshots/$(date +%s).png | ${pkgs.wl-clipboard}/bin/wl-copy''
-        ''$mod+CTRL, t, exec, ${pkgs.grim}/bin/grim -o "$(${package}/bin/hyprctl -j activeworkspace | ${pkgs.jq}/bin/jq -r .monitor)" - | ${pkgs.coreutils}/bin/tee ~/Pictures/screenshots/$(date +%s).png | ${pkgs.wl-clipboard}/bin/wl-copy''
-
-        "$mod, l, exec, hyprlock"
-
-        ",XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 10%+"
-        ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%-"
-        ",XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-        ",XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-
-        ",XF86MonBrightnessUp, exec, ${pkgs.brightnessctl}/bin/brightnessctl -q set +10%"
-        ",XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl -q set 10%-"
-
-        ",XF86AudioPrev, exec, ${pkgs.playerctl}/bin/playerctl -p spotify previous"
-        ",XF86AudioNext, exec, ${pkgs.playerctl}/bin/playerctl -p spotify next"
-        ",XF86AudioPlay, exec, ${pkgs.playerctl}/bin/playerctl -p spotify play-pause"
-        "$mod+ALT, left, exec, ${pkgs.playerctl}/bin/playerctl -p spotify previous"
-        "$mod+ALT, right, exec, ${pkgs.playerctl}/bin/playerctl -p spotify next"
-        "$mod+ALT, up, exec, ${pkgs.playerctl}/bin/playerctl -p spotify play-pause"
-        "$mod+ALT, down, exec, ${pkgs.playerctl}/bin/playerctl -p spotify play-pause"
-
-        "$mod+SHIFT, space, togglefloating"
-        "$mod, f, fullscreen, 0"
-
-        "$mod, left, hy3:movefocus, l"
-        "$mod, right, hy3:movefocus, r"
-        "$mod, up, hy3:movefocus, u"
-        "$mod, down, hy3:movefocus, d"
-
-        "$mod, h, hy3:makegroup, h, ephemeral"
-        "$mod, v, hy3:makegroup, v, ephemeral"
-
-        "$mod, code:10, workspace, 1"
-        "$mod, code:11, workspace, 2"
-        "$mod, code:12, workspace, 3"
-        "$mod, code:13, workspace, 4"
-        "$mod, code:14, workspace, 5"
-        "$mod, code:15, workspace, 6"
-        "$mod, code:16, workspace, 7"
-        "$mod, code:17, workspace, 8"
-        "$mod, code:18, workspace, 9"
-        "$mod, code:19, workspace, 10"
-
-        "$mod+SHIFT, code:10, hy3:movetoworkspace, 1"
-        "$mod+SHIFT, code:11, hy3:movetoworkspace, 2"
-        "$mod+SHIFT, code:12, hy3:movetoworkspace, 3"
-        "$mod+SHIFT, code:13, hy3:movetoworkspace, 4"
-        "$mod+SHIFT, code:14, hy3:movetoworkspace, 5"
-        "$mod+SHIFT, code:15, hy3:movetoworkspace, 6"
-        "$mod+SHIFT, code:16, hy3:movetoworkspace, 7"
-        "$mod+SHIFT, code:17, hy3:movetoworkspace, 8"
-        "$mod+SHIFT, code:18, hy3:movetoworkspace, 9"
-        "$mod+SHIFT, code:19, hy3:movetoworkspace, 10"
-
-        "$mod+CTRL, left, movecurrentworkspacetomonitor, l"
-        "$mod+CTRL, right, movecurrentworkspacetomonitor, r"
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + Q\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.kill_active()")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + E\"")
+            (lib.generators.mkLuaInline "hl.dsp.exit()")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + RETURN\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "alacritty -e tmux"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + RETURN\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "alacritty"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + G\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "alacritty -e tmux new-session vifmrun"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + W\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "librewolf"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + S\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "spotify"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + D\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "rofi -show drun"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + T\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${pkgs.slurp}/bin/slurp | ${pkgs.grim}/bin/grim -g - - | ${pkgs.coreutils}/bin/tee ~/Pictures/screenshots/$(date +%s).png | ${pkgs.wl-clipboard}/bin/wl-copy"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + T\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${package}/bin/hyprctl -j activewindow | ${pkgs.jq}/bin/jq -r '\"\\(.at[0]),\\(.at[1]) \\(.size[0])x\\(.size[1])\"' | ${pkgs.grim}/bin/grim -g - - | ${pkgs.coreutils}/bin/tee ~/Pictures/screenshots/$(date +%s).png | ${pkgs.wl-clipboard}/bin/wl-copy"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + CTRL + T\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${pkgs.grim}/bin/grim -o \"$(${package}/bin/hyprctl -j activeworkspace | ${pkgs.jq}/bin/jq -r .monitor)\" - | ${pkgs.coreutils}/bin/tee ~/Pictures/screenshots/$(date +%s).png | ${pkgs.wl-clipboard}/bin/wl-copy"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + L\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "hyprlock"})")
+          ];
+        }
+        {
+          _args = [
+            "XF86AudioRaiseVolume"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 10%+"})")
+          ];
+        }
+        {
+          _args = [
+            "XF86AudioLowerVolume"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%-"})")
+          ];
+        }
+        {
+          _args = [
+            "XF86AudioMute"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"})")
+          ];
+        }
+        {
+          _args = [
+            "XF86AudioMicMute"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"})")
+          ];
+        }
+        {
+          _args = [
+            "XF86MonBrightnessUp"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${pkgs.brightnessctl}/bin/brightnessctl -q set +10%"})")
+          ];
+        }
+        {
+          _args = [
+            "XF86MonBrightnessDown"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${pkgs.brightnessctl}/bin/brightnessctl -q set 10%-"})")
+          ];
+        }
+        {
+          _args = [
+            "XF86AudioPrev"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${pkgs.playerctl}/bin/playerctl -p spotify previous"})")
+          ];
+        }
+        {
+          _args = [
+            "XF86AudioNext"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${pkgs.playerctl}/bin/playerctl -p spotify next"})")
+          ];
+        }
+        {
+          _args = [
+            "XF86AudioPlay"
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${pkgs.playerctl}/bin/playerctl -p spotify play-pause"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + ALT + LEFT\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${pkgs.playerctl}/bin/playerctl -p spotify previous"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + ALT + RIGHT\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${pkgs.playerctl}/bin/playerctl -p spotify next"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + ALT + UP\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${pkgs.playerctl}/bin/playerctl -p spotify play-pause"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + ALT + DOWN\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${pkgs.playerctl}/bin/playerctl -p spotify play-pause"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + SPACE\"")
+            (lib.generators.mkLuaInline "hl.dsp.window.float({ action = \"toggle\" })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + F\"")
+            (lib.generators.mkLuaInline "hl.dsp.window.fullscreen({ mode = \"fullscreen\" })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + LEFT\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_focus(\"l\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + RIGHT\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_focus(\"r\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + UP\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_focus(\"u\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + DOWN\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_focus(\"d\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + H\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.make_group(\"h\", { ephemeral = true })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + V\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.make_group(\"v\", { ephemeral = true })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + code:10\"")
+            (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = \"1\" })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + code:11\"")
+            (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = \"2\" })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + code:12\"")
+            (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = \"3\" })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + code:13\"")
+            (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = \"4\" })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + code:14\"")
+            (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = \"5\" })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + code:15\"")
+            (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = \"6\" })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + code:16\"")
+            (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = \"7\" })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + code:17\"")
+            (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = \"8\" })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + code:18\"")
+            (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = \"9\" })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + code:19\"")
+            (lib.generators.mkLuaInline "hl.dsp.focus({ workspace = \"10\" })")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + code:10\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_to_workspace(\"1\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + code:11\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_to_workspace(\"2\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + code:12\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_to_workspace(\"3\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + code:13\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_to_workspace(\"4\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + code:14\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_to_workspace(\"5\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + code:15\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_to_workspace(\"6\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + code:16\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_to_workspace(\"7\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + code:17\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_to_workspace(\"8\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + code:18\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_to_workspace(\"9\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + SHIFT + code:19\"")
+            (lib.generators.mkLuaInline "hl.plugin.hy3.move_to_workspace(\"10\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + CTRL + LEFT\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${package}/bin/hyprctl dispatch movecurrentworkspacetomonitor l"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + CTRL + RIGHT\"")
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${package}/bin/hyprctl dispatch movecurrentworkspacetomonitor r"})")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + R\"")
+            (lib.generators.mkLuaInline "hl.dsp.submap(\"resize\")")
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline "mod .. \" + mouse:272\"")
+            (lib.generators.mkLuaInline "hl.dsp.window.drag()")
+            { mouse = true; }
+          ];
+        }
       ];
 
-      bindm = [ "$mod, mouse:272, movewindow" ];
-
-      workspace = [
-        "w[tv1], gapsout:0, gapsin:0"
-        "f[1], gapsout:0, gapsin:0"
-      ];
-
-      "monitor" = ",preferred,auto,1";
-      input = {
-        kb_layout = "dk";
-        numlock_by_default = true;
+      define_submap = {
+        _args = [
+          "resize"
+          (lib.generators.mkLuaInline ''
+            function()
+              hl.bind("right", hl.dsp.window.resize({ x = 10, y = 0, relative = true }), { repeating = true })
+              hl.bind("left", hl.dsp.window.resize({ x = -10, y = 0, relative = true }), { repeating = true })
+              hl.bind("up", hl.dsp.window.resize({ x = 0, y = -10, relative = true }), { repeating = true })
+              hl.bind("down", hl.dsp.window.resize({ x = 0, y = 10, relative = true }), { repeating = true })
+              hl.bind("escape", hl.dsp.submap("reset"))
+            end
+          '')
+        ];
       };
 
-      windowrule = [
-        "match:class gamescope, immediate on"
-        "match:class cs2, immediate on"
-        "match:class negative:^Alacritty$, no_blur on"
-        "match:class spotify, workspace 2"
-        "match:class KeePassXC, workspace 10"
-        "match:class ^(ueberzugpp_.*)$, float on"
-        "match:class ^(ueberzugpp_.*)$, no_initial_focus on"
-        "match:class ^(ueberzugpp_.*)$, suppress_event fullscreen maximize activate activatefocus"
-        "match:class ^(ueberzugpp_.*)$, content photo"
-        "match:class ^(ueberzugpp_.*)$, move 9999 9999"
-        "match:class ^(ueberzugpp_.*)$, no_focus on"
+      workspace_rule = [
+        {
+          workspace = "w[tv1]";
+          gaps_out = 0;
+          gaps_in = 0;
+        }
+        {
+          workspace = "f[1]";
+          gaps_out = 0;
+          gaps_in = 0;
+        }
       ];
 
-      # plugin = {
-      #   hyprwinwrap = {
-      #     class = "connecting-dots";
-      #   };
-      # };
+      window_rule = [
+        {
+          match.class = "gamescope";
+          immediate = true;
+        }
+        {
+          match.class = "cs2";
+          immediate = true;
+        }
+        {
+          match.class = "negative:^Alacritty$";
+          no_blur = true;
+        }
+        {
+          match.class = "spotify";
+          workspace = "2";
+        }
+        {
+          match.class = "KeePassXC";
+          workspace = "10";
+        }
+        {
+          match.class = "^(ueberzugpp_.*)$";
+          float = true;
+        }
+        {
+          match.class = "^(ueberzugpp_.*)$";
+          no_initial_focus = true;
+        }
+        {
+          match.class = "^(ueberzugpp_.*)$";
+          suppress_event = "fullscreen maximize activate activatefocus";
+        }
+        {
+          match.class = "^(ueberzugpp_.*)$";
+          content = "photo";
+        }
+        {
+          match.class = "^(ueberzugpp_.*)$";
+          move = "9999 9999";
+        }
+        {
+          match.class = "^(ueberzugpp_.*)$";
+          no_focus = true;
+        }
+      ];
     };
-
-    extraConfig = ''
-      bind = $mod, R, submap, resize
-      submap = resize
-
-      binde = , right, resizeactive, 10 0
-      binde = , left, resizeactive, -10 0
-      binde = , up, resizeactive, 0 -10
-      binde = , down, resizeactive, 0 10
-
-      bind = , escape, submap, reset
-
-      submap = reset
-    '';
   };
 
   stylix.cursor = {
