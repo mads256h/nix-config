@@ -51,7 +51,7 @@
           StandardOutput = "journal+console";
         };
         script = ''
-          sleep 30
+          sleep 60
 
           FAILED=$(${pkgs.systemd}/bin/systemctl list-units --failed --no-legend --plain | ${pkgs.gawk}/bin/awk '{print $1}')
 
