@@ -70,13 +70,13 @@
           HYPR_LOG=$(find /run/user/*/hypr -maxdepth 2 -name 'hyprland.log' 2>/dev/null)
           if [ -z "$HYPR_LOG" ]; then
             echo "CI_HYPR_NOT_STARTED"
-          elif grep -qE '(ERR|CRIT) \]:' "$HYPR_LOG"; then
-            echo "CI_HYPR_ERRORS_FOUND"
+          elif grep -qE 'CI_HYPR_LOADED' "$HYPR_LOG"; then
+            echo "CI_HYPR_OK"
             echo "----- hyprland.log -----"
             cat "$HYPR_LOG"
             echo "----- end -----"
           else
-            echo "CI_HYPR_OK"
+            echo "CI_HYPR_ERRORS_FOUND"
             echo "----- hyprland.log -----"
             cat "$HYPR_LOG"
             echo "----- end -----"
