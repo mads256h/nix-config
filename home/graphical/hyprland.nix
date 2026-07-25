@@ -486,7 +486,8 @@
     };
 
     extraConfig = ''
-      print("CI_HYPR_LOADED")
+      io.write("CI_HYPR_LOADED")
+      io.flush()
       '';
   };
 
