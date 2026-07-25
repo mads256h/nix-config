@@ -19,6 +19,7 @@
 
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelParams = [ "pcie_aspm=off" "pcie_port_pm=off" ];
 
   networking.hostName = "laptop-mads"; # Define your hostname.
   # Pick only one of the below networking options.
