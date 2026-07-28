@@ -2,8 +2,19 @@
   pkgs,
   inputs,
   sysconfig,
+  config,
   ...
 }:
+let
+  strongModuli =
+    pkgs.runCommand "moduli-strong"
+      {
+        nativeBuildInputs = [ pkgs.gawk ];
+      }
+      ''
+        awk '$5 >= 3071' ${config.services.openssh.package}/etc/ssh/moduli > $out
+      '';
+in
 {
   imports = [
     ./cachix.nix
@@ -30,6 +41,7 @@
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCeCSo+ztID41jlKZIy++UdhacKy0I4A/qqCWBBU1RP1NnoKdMcFqXyKJFLsltpuTuWKf9WnTgT+KCidMR8Foysdic5i7lGy4TMP8sa+RqNVUhLM93fM7YHrmGZHVbrg0rNVKnbFv/0lDZLiyp/l7B7vmuBtE3pCYW7nbFvoje+5pWDrpFL16qAFgIM5i3Ly9adkkObVw1Nz4tkjS5i6AJQc5ZYFzipVl5XU9NHdxg2SQrXokeX59AEN0UaUuUm/Ft0Mxyu01MyuHcqLK/b2netJrF/THj4bYu629IqDe+FT+APihhlvp40WI8Py9/dl6OSzB35XaQ1X60WBfqgLFgu6vM3NgItzVjRjb72paJ6YdVkhMJZezMdJxKfxrLXJPTLQELhETB0mFtM4tMb2Mh43Jp3oWPLg9ZtFEcKlafAWuHpbRHRsjD58UawrB3M/uq8+T+jmlh9CSRdcjIlf+Oz1AANk2rU/voUE8jhzeRLOwLNEahAb1d5mBLklOK9351gzRmYJxPuggdR0EiRchE59JiSUAmGxky0bHyOfOoqdLkd5cIxmv8FTqY2BXvHJhe8DpWaxYt/rR9ckTiNyJ+XgkvpGMDbwpoJBh1ELmZ2Iy3mg/r2Gmw83eK4w+q+Wzz3Nhm8flVikL+DAwPnfV8dObzyC62LNTWos1Gb+lY7Aw== mads@DESKTOP-MADS"
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC+dpaPAPx8PiwvhUSKmVf1IGWpFcGGNP3suSaxgy+Cxd0EuqpSZekFbO9RliGHt/yE9/u1MeNjntvwfO95bEIYkq9n12jiGKTdG+Qt6SI7IesE/UrPK/yHe2QogjAaUU6I5rAigCIM9Q7FYosU0nsWWQMjdkbyQ0OtquT3Me5NXOWhFWXRZr/molgO3EQKI4ElSUDlWgp9fJLALGE+3Jp88coPnp+yfxI2UqMY6VyranYBaiIbKv27YlaqMkhh21DNYh+smQCoz4DuSNEZiqrmLFGZoqBEO5qptu+HfIRsLwtBAKYu5s2ucZmjlF54BoRwfzDvAMuvZs6o2AB+TDBw+OANUBH4SLiD/9oBOyvCeNzFQuUViElCBI+QGbdgtXUWc6gwmMYX0lxfbIgcnmkeQL0GL4floawXWg48hvKMhuEvW8WimTHiZBi8f1ZxYaTs57BLmdEynvOSwi2ODhGMjT1au11bo5O2s9AtfQfgl57br7FSgsCzBMstcNsS3S/NcngYA5VXVwPBR1KyJVFicxcGbHRf0fbfdI1GQWgAV2fbxGmDDrqW7IH6w4SAR+6bYqNOEv51ijVvNXU9cBJQ5qlH7hj7TJpEWn5UR7LdTm96lCsaa5AICOlfkXppiOq8qRACkd1TqcT9Dq30fzuFND3Xghg8cuZ9P6zv700uyQ== mads@laptop-mads"
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCPwWRU4SBf36Xb2e5RtwjmsiIHep0lMi0OAqOVA748RgRfP7ZDJ8boj0LF+1VAyU17Ht8Lo1kVKoYx38sMiQlgP2vbEV7NXpyikBdqmAEtCpBWEWJsh04FrPpwyCgdA+rCypjQ8Qw9FhtI0yIppXv2RRCi9MkXZeM5X1/oY7ajpQ4doSJtF1hxyv6npJr7jJkbWO2l6fASqu/tyY3BNdk4sSaPbcUCpYAEqci/FDLlyrlxWE1+TijC08YzctUPeeaBSIMpuf3VVaTgp69FI0IoLvt7Bb34kxLvOvQijSaVBQqRrg9GXk3l1JeEdCQNDJwqd08MP35dAAPbaOpnsgY66kSGwmyDp64J+XLPT+KWG/yHoyvuNpQStNm5/KdmGv6ZAhGWMTvCKwvp6tqHdS8UGJ7fDvHjnALhJ5skT+jb2l//vDlDkPg6lDMB0P+ILqm3M3o8A71EglW6VI8lboxknID4YP6BwE2Xe/cRwRnJs9eNMErMT2wtYv758uQaoqyYJwiNnvvvJqjBZypq4JYKiMlJbvyaDZXXax6qACfsD2FSxUnN/lONASmIh04TNk6PS1WX+HrvnUlBNKB9ou2wkQCFro729OftPqwMLTBBuJ5xI8ZYuDvGi9lT0htrGnSBmO204TVktrPWaCqszv7YpmLnodUGzSJJxA5g3ZaywQ== mads@nixos"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHXyHXxD1lS3XUH5+uTJUzj+WPZXqZh9+G7tYUS0KzU1 mads@nixos"
     ];
   };
 
@@ -50,6 +62,12 @@
 
   services.openssh = {
     enable = true;
+    hostKeys = [
+      {
+        path = "/etc/ssh/ssh_host_ed25519_key";
+        type = "ed25519";
+      }
+    ];
     settings = {
       # Hardening options
       PermitRootLogin = "no";
@@ -58,27 +76,20 @@
 
       # Restrict algorithms to only very secure ones
       KexAlgorithms = [
+        "sntrup761x25519-sha512@openssh.com"
+        "curve25519-sha256"
         "curve25519-sha256@libssh.org"
-        "ecdh-sha2-nistp521"
-        "ecdh-sha2-nistp384"
-        "ecdh-sha2-nistp256"
-        "diffie-hellman-group-exchange-sha256"
       ];
       Ciphers = [
         "chacha20-poly1305@openssh.com"
         "aes256-gcm@openssh.com"
-        "aes128-gcm@openssh.com"
-        "aes256-ctr"
-        "aes192-ctr"
-        "aes128-ctr"
       ];
       Macs = [
         "hmac-sha2-512-etm@openssh.com"
-        "hmac-sha2-256-etm@openssh.com"
-        "umac-128-etm@openssh.com"
-        "hmac-sha2-512"
-        "hmac-sha2-256,umac-128@openssh.com"
       ];
+      HostKeyAlgorithms = "ssh-ed25519,ssh-ed25519-cert-v01@openssh.com";
+
+      ModuliFile = "${strongModuli}";
 
       # Log user fingerprints for audit purposes
       LogLevel = "VERBOSE";
