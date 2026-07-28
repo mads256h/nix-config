@@ -12,10 +12,10 @@
       "*".UseRoaming = "no";
       "github.com".IdentityFile = "~/.ssh/github_rsa";
       "home.madsmogensen.dk" = {
-        IdentityFile = "~/.ssh/server_rsa";
+        IdentityFile = "~/.ssh/server_ed25519";
       };
       "server-mads.lan" = {
-        IdentityFile = "~/.ssh/server_rsa";
+        IdentityFile = "~/.ssh/server_ed25519";
       };
       "desktop-mads.router.lan" = {
         IdentityFile = "~/.ssh/desktop_rsa";
