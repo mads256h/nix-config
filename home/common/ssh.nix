@@ -13,18 +13,12 @@
       "github.com".IdentityFile = "~/.ssh/github_rsa";
       "home.madsmogensen.dk" = {
         IdentityFile = "~/.ssh/server_rsa";
-        Port = 2222;
       };
       "server-mads.lan" = {
         IdentityFile = "~/.ssh/server_rsa";
       };
       "desktop-mads.router.lan" = {
         IdentityFile = "~/.ssh/desktop_rsa";
-      };
-      "digitalocean 142.93.101.55" = {
-        IdentityFile = "~/.ssh/digitalocean_ed25519";
-        User = "root";
-        Hostname = "142.93.101.55";
       };
     };
   };

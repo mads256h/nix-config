@@ -489,7 +489,7 @@
       ok_file = io.open("hypr_loaded_ok", "w")
       ok_file:write("OK")
       ok_file:close()
-      '';
+    '';
   };
 
   stylix.cursor = {
