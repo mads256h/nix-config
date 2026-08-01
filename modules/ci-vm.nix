@@ -39,6 +39,10 @@
       "acme-order-renew-home.madsmogensen.dk".enable = lib.mkForce false;
       "acme-order-renew-webdav.madsmogensen.dk".enable = lib.mkForce false;
       "acme-order-renew-spotify.madsmogensen.dk".enable = lib.mkForce false;
+      "acme-renew-file.madsmogensen.dk".enable = lib.mkForce false;
+      "acme-renew-home.madsmogensen.dk".enable = lib.mkForce false;
+      "acme-renew-webdav.madsmogensen.dk".enable = lib.mkForce false;
+      "acme-renew-spotify.madsmogensen.dk".enable = lib.mkForce false;
     };
 
     systemd.services =
