@@ -13,13 +13,16 @@
       nginx-http-auth.settings.enabled = true;
       nginx-nosuchfile = {
         filter = {
-          Definition.failregex = [
-            "^.*(?:open\\(\\) \".*\" failed|\".*\" is not found) \\(2: No such file or directory\\), client: <HOST>, .*$"
-          ];
+          INCLUDES.before = "nginx-error-common.conf";
+          Definition = {
+            failregex = "^%(__prefix_line)s(?:open\\(\\) \".*\" failed|\".*\" is not found) \\(2: No such file or directory\\), client: <HOST>";
+            ignoreregex = "";
+            datepattern = "{^LN-BEG}";
+            journalmatch = "_SYSTEMD_UNIT=nginx.service + _COMM=nginx";
+          };
         };
         settings = {
           enabled = true;
-          journalmatch = "_SYSTEMD_UNIT=nginx.service";
         };
       };
     };
