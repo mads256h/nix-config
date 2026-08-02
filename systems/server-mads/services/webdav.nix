@@ -11,7 +11,7 @@
     enable = true;
     debug = true;
     settings = {
-      server.listen = [ "127.0.0.1:4918" ];
+      server.listen = [ "127.0.0.1:4918" "[::1]:4918" ];
       accounts = {
         auth-type = "htpasswd.default";
         acct-type = "unix";
