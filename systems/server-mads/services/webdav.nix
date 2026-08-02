@@ -7,39 +7,20 @@
 }:
 
 {
-  services.webdav-server-rs = {
-    enable = true;
-    debug = true;
-    settings = {
-      server.listen = [ "127.0.0.1:4918" "[::1]:4918" ];
-      accounts = {
-        auth-type = "htpasswd.default";
-        acct-type = "unix";
-      };
-
-      htpasswd.default = {
-        htpasswd = "/mnt/data/webdav/htpasswd";
-      };
-      location = [
-        {
-          route = [ "/*path" ];
-          directory = "/mnt/share";
-          handler = "filesystem";
-          methods = [ "webdav-rw" ];
-          autoindex = true;
-          auth = "true";
-          setuid = true;
-        }
-      ];
-    };
-  };
-
   services.nginx.virtualHosts."webdav.madsmogensen.dk".locations."/" = {
-    basicAuthFile = "/mnt/data/grafana/htpasswd";
-    proxyPass = "http://localhost:4918/";
+    root = "/mnt/share";
+    basicAuthFile = "/mnt/data/webdav/htpasswd";
     extraConfig = ''
-      proxy_set_header  X-Script-Name /;
-      proxy_pass_header Authorization;
+      autoindex on;
+
+      dav_methods PUT DELETE MKCOL COPY MOVE;
+      create_full_put_path on;
+      dav_access user:rw group:rw all:r;
+
+      sendfile on;
+      aio threads;
+      directio 8m;
+      output_buffers 1 1m;
     '';
   };
 }
