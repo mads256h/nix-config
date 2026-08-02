@@ -40,6 +40,11 @@
     extraConfig = ''
       proxy_set_header  X-Script-Name /;
       proxy_pass_header Authorization;
+
+      proxy_request_buffering off;
+      proxy_buffering off;
+      proxy_max_temp_file_size 0;
+      client_body_buffer_size 1m;
     '';
   };
 }
