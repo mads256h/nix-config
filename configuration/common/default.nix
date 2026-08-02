@@ -18,6 +18,7 @@ in
 {
   imports = [
     ./cachix.nix
+    ./hardening.nix
     ./stylix.nix
   ];
 
