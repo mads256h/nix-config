@@ -7,7 +7,7 @@
 
   boot.kernelParams = [ "debugfs=off" ];
 
-  # Keep up to date with 
+  # Keep up to date with https://github.com/Kicksecure/security-misc
   boot.blacklistedKernelModules = [
     ## FireWire (IEEE 1394):
     ## Disable IEEE 1394 (FireWire/i.LINK/Lynx) modules to prevent certain DMA attacks.
@@ -138,7 +138,6 @@
     ##
     "sctp"
     "sctp_diag"
-
 
     ## Amateur Radios:
     ##

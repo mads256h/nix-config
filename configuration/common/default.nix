@@ -97,6 +97,8 @@ in
     };
   };
 
+  services.fwupd.enable = sysconfig.baremetal;
+
   hardware.enableRedistributableFirmware = true;
 
   nixpkgs.config.allowUnfree = true;
