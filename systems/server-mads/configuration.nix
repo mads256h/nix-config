@@ -41,6 +41,21 @@
     openFirewall = true;
   };
 
+  # Harden minecraft server
+  systemd.services.minecraft-server.serviceConfig = {
+    RemoveIPC = true;
+    NoNewPrivileges = true;
+    ProtectSystem = "full";
+    SystemCallFilter = [
+      "@system-service"
+      "~@chown"
+      "~@keyring"
+      "~@resources"
+      "~@setuid"
+      "~@privileged"
+    ];
+  };
+
   # Automatically download new youtube videos daily
   # TODO: This stops downloading if any errors occur in the for loop, we should keep going.
   systemd.services."update-yt" = {
