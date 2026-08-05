@@ -184,4 +184,28 @@
     "vt8623fb"
     "udlfb"
   ];
+
+  boot.kernel.sysctl = {
+    # Disable kexec
+    "kernel.kexec_load_disabled" = 1;
+
+    # Only allow CAP_SYS_ADMIN or CAP_BPF to call bpf(), and don't allow changing the value
+    "kernel.unprivileged_bpf_disabled" = 1;
+
+    # Only allow admins CAP_SYS_ADMIN or CAP_SYS_PTRACE to ptrace
+    "kernel.yama.ptrace_scope" = if sysconfig.server then 2 else 1;
+
+    # Harden jit for all users
+    "net.core.bpf_jit_harden" = 2;
+
+    # Protect against time-wait assassination
+    # Drop RST packets for sockets in the time-wait state
+    "net.ipv4.tcp_rfc1337" = 1;
+  };
+
+  # Only allow wheel users to issue su
+  security.pam.services = {
+    su.requireWheel = true;
+    su-l.requireWheel = true;
+  };
 }
