@@ -8,7 +8,8 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    hyprland.url = "github:hyprwm/hyprland?ref=v0.56.0";
+    hyprland.url = "github:hyprwm/hyprland?ref=91f29f23bb691462f8aa6171b964069aebc37910";
+    #hyprland.url = "github:hyprwm/hyprland?ref=v0.56.2";
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
     #hyprland-plugins.url = "github:hyprwm/hyprland-plugins?ref=v0.54.2";
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
