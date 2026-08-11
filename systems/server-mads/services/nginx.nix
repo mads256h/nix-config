@@ -21,6 +21,12 @@
 
     virtualHosts."_" = {
       default = true;
+
+      addSSL = true;
+      sslCertificate = "/var/lib/acme/home.madsmogensen.dk/fullchain.pem";
+      sslCertificateKey = "/var/lib/acme/home.madsmogensen.dk/key.pem";
+      sslTrustedCertificate = "/var/lib/acme/home.madsmogensen.dk/chain.pem";
+
       # Lets fail2ban rule catch this
       extraConfig = "deny all;";
     };
