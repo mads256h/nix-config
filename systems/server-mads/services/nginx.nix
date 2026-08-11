@@ -19,6 +19,12 @@
     # Allow your_spotify to import json files
     clientMaxBodySize = "500M";
 
+    virtualHosts."_" = {
+      default = true;
+      # Lets fail2ban rule catch this
+      extraConfig = "deny all;";
+    };
+
     virtualHosts."home.madsmogensen.dk" = {
       enableACME = true;
       forceSSL = true;
