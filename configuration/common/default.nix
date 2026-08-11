@@ -3,6 +3,7 @@
   inputs,
   sysconfig,
   config,
+  lib,
   ...
 }:
 let
@@ -20,7 +21,8 @@ in
     ./cachix.nix
     ./hardening.nix
     ./stylix.nix
-  ];
+  ]
+  ++ lib.optional sysconfig.server ./audit.nix;
 
   # Set your time zone.
   time.timeZone = "Europe/Copenhagen";
