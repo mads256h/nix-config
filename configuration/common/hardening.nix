@@ -1,7 +1,15 @@
-{ sysconfig, ... }:
+{
+  sysconfig,
+  lib,
+  config,
+  ...
+}:
 {
   security.apparmor.enable = sysconfig.baremetal;
   security.apparmor.killUnconfinedConfinables = true;
+
+  # This is needed for steam or for running containers with podman
+  security.unprivilegedUsernsClone = sysconfig.graphical || config.virtualisation.containers.enable;
 
   nix.settings.allowed-users = [ "@wheel" ];
 
@@ -207,5 +215,11 @@
   security.pam.services = {
     su.requireWheel = true;
     su-l.requireWheel = true;
+  };
+
+  # Hardened memory allocator
+  environment = lib.attrsets.optionalAttrs sysconfig.server {
+    memoryAllocator.provider = "scudo";
+    variables.SCUDO_OPTIONS = "zero_contents=true";
   };
 }
