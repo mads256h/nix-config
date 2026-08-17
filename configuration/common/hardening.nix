@@ -15,7 +15,18 @@
 
   nix.settings.allowed-users = [ "@wheel" ];
 
-  boot.kernelParams = [ "debugfs=off" ];
+  # Disable debugfs
+  # Disable vsyscall
+  boot.kernelParams = [
+    "debugfs=off"
+    "vsyscall=none"
+  ]
+  # Disable 32-bit binaries on servers
+  # Disable hibernation on servers
+  ++ lib.optionals sysconfig.server [
+    "ia32_emulation=0"
+    "nohibernate"
+  ];
 
   # Keep up to date with https://github.com/Kicksecure/security-misc
   boot.blacklistedKernelModules = [
