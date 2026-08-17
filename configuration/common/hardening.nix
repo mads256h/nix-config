@@ -13,6 +13,9 @@
   # This is needed for steam or for running containers with podman
   security.unprivilegedUsernsClone = sysconfig.graphical || config.virtualisation.containers.enable;
 
+  # Disable hibernation on servers
+  security.protectKernelImage = sysconfig.server;
+
   nix.settings.allowed-users = [ "@wheel" ];
 
   # Disable debugfs
@@ -22,10 +25,8 @@
     "vsyscall=none"
   ]
   # Disable 32-bit binaries on servers
-  # Disable hibernation on servers
   ++ lib.optionals sysconfig.server [
     "ia32_emulation=0"
-    "nohibernate"
   ];
 
   # Keep up to date with https://github.com/Kicksecure/security-misc
