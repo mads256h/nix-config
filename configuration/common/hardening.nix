@@ -5,8 +5,10 @@
   ...
 }:
 {
-  security.apparmor.enable = sysconfig.baremetal;
-  security.apparmor.killUnconfinedConfinables = true;
+  security.apparmor = {
+    enable = sysconfig.baremetal;
+    killUnconfinedConfinables = true;
+  };
 
   # This is needed for steam or for running containers with podman
   security.unprivilegedUsernsClone = sysconfig.graphical || config.virtualisation.containers.enable;
@@ -218,8 +220,7 @@
   };
 
   # Hardened memory allocator
-  environment = lib.attrsets.optionalAttrs sysconfig.server {
-    memoryAllocator.provider = "scudo";
-    variables.SCUDO_OPTIONS = "zero_contents=true";
+  environment.memoryAllocator = lib.attrsets.optionalAttrs sysconfig.server {
+    provider = "graphene-hardened";
   };
 }
