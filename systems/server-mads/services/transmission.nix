@@ -10,7 +10,7 @@
     package = pkgs.transmission_4;
     openPeerPorts = true;
     settings = {
-      download-dir = "/mnt/share/torrents/complete";
+      download-dir = "/mnt/torrents";
 
       rpc-bind-address = "127.0.0.1";
       rpc-whitelist = "127.0.0.1,::1";

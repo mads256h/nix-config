@@ -1,7 +1,4 @@
 {
-  config,
-  lib,
-  pkgs,
   ...
 }:
 
@@ -11,6 +8,7 @@
     exports = ''
       /export/share  10.0.1.220(ro,insecure)
       /export/share  10.0.1.0/24(rw)
+      /export/torrents  10.0.1.0/24(ro,insecure)
     '';
     createMountPoints = true;
   };
@@ -19,6 +17,16 @@
   fileSystems."/export/share" = {
     device = "/mnt/share";
     options = [ "bind" ];
+    fsType = "none";
+  };
+
+  # Keep things inside the export directory
+  fileSystems."/export/torrents" = {
+    device = "/mnt/torrents";
+    options = [
+      "bind"
+      "ro"
+    ];
     fsType = "none";
   };
 
