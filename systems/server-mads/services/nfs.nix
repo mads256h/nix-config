@@ -1,4 +1,3 @@
-# vim: ts=2 sw=2 et
 {
   config,
   lib,
@@ -10,7 +9,7 @@
   services.nfs.server = {
     enable = true;
     exports = ''
-      /export/share  10.0.1.217(ro,insecure)
+      /export/share  10.0.1.220(ro,insecure)
       /export/share  10.0.1.0/24(rw)
     '';
     createMountPoints = true;
