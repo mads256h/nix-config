@@ -6,12 +6,12 @@
   ];
 
   wayland.windowManager.hyprland.settings = {
-    input = {
+    config.input = {
       accel_profile = "flat";
       sensitivity = "-0.4";
     };
-    general.allow_tearing = true;
-    monitor = lib.mkForce ", highrr, auto, 1";
+    config.general.allow_tearing = true;
+    monitor.mode = lib.mkForce "highrr";
   };
 
   services.kdeconnect = {
