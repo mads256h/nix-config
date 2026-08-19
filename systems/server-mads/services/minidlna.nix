@@ -10,7 +10,7 @@
   services.minidlna = {
     enable = true;
     settings = {
-      media_dir = [ "/mnt/share/torrents/complete" ];
+      media_dir = [ "/export/torrents" ]; # Use read only bind mount
       inotify = "yes";
     };
     openFirewall = true;

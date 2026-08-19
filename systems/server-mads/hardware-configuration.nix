@@ -49,7 +49,7 @@ in
     fsType = "vfat";
     options = [
       "defaults"
-      "fmask=0077"
+      "fmask=0177"
       "dmask=0077"
       "noexec"
       "nodev"
@@ -68,12 +68,25 @@ in
 
   # Share
   fileSystems."/mnt/share" = {
+    device = "zpool";
+    fsType = "zfs";
+    options = [
+      "defaults"
+      "nodev"
+      "nosuid"
+      "zfsutil"
+    ];
+  };
+
+  # Torrents
+  fileSystems."/mnt/torrents" = {
     device = "/dev/disk/by-uuid/51a551fa-d1ba-4c83-8ad5-bfcab4496f29";
     fsType = "btrfs";
     options = [
       "defaults"
       "nodev"
       "nosuid"
+      "noexec"
     ];
   };
 
