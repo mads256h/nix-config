@@ -11,6 +11,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.consoleMode = "max";
+  boot.loader.systemd-boot.configurationLimit = 3;
 
   # Allow serving as a router. Useful for wireguard.
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
@@ -20,9 +21,6 @@
   #   enable = true;
   #   pkiBundle = "/var/lib/sbctl";
   # };
-
-  # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   networking.hostName = "server-mads";
   networking.useDHCP = false;
