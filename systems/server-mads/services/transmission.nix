@@ -1,7 +1,5 @@
-# vim: ts=2 sw=2 et
 {
   config,
-  lib,
   pkgs,
   ...
 }:
@@ -21,6 +19,9 @@
       rpc-host-whitelist-enabled = true;
     };
   };
+
+  # Transmission should be of least concern. Prioritize streaming.
+  systemd.services.transmission.serviceConfig.IOSchedulingClass = "idle";
 
   services.nginx.virtualHosts."home.madsmogensen.dk" = {
     locations."/transmission/" = {
