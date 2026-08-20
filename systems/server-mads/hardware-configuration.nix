@@ -102,6 +102,14 @@ in
     ];
   };
 
+  services.zfs.autoScrub.enable = true;
+
+  services.zfs.autoSnapshot = {
+    enable = true;
+    # Default flags but with utc
+    flags = "-k -p --utc";
+  };
+
   networking.hostId = "8f846d4c";
 
   services.btrfs.autoScrub.enable = true;
