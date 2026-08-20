@@ -153,7 +153,7 @@
         };
         modules = [
           ./modules/ci-vm.nix
-          ./systems/server-mads/configuration.nix
+          ./systems/server-mads/configuration
           nixos-hardware.nixosModules.common-cpu-intel
           nixos-hardware.nixosModules.common-pc-ssd
 
