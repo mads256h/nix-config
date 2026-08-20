@@ -50,6 +50,16 @@
       port = 9004;
     };
 
+    exporters.fail2ban = {
+      enable = true;
+      port = 9005;
+    };
+
+    exporters.zfs = {
+      enable = true;
+      port = 9006;
+    };
+
     scrapeConfigs = [
       {
         job_name = "server";
@@ -59,6 +69,8 @@
               "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
               "127.0.0.1:${toString config.services.prometheus.exporters.nginx.port}"
               "127.0.0.1:${toString config.services.prometheus.exporters.smartctl.port}"
+              "127.0.0.1:${toString config.services.prometheus.exporters.fail2ban.port}"
+              "127.0.0.1:${toString config.services.prometheus.exporters.zfs.port}"
             ];
           }
         ];
