@@ -3,6 +3,8 @@
   services.fail2ban = {
     enable = true;
     ignoreIP = [ "10.0.1.0/24" ];
+    bantime = "1h";
+    bantime-increment.enable = true;
     jails = {
       sshd.settings = {
         enabled = true;
