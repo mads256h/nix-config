@@ -5,6 +5,8 @@
     eula = true;
     dataDir = "/mnt/data/minecraft-aau";
     openFirewall = true;
+    # Decrease the reserved memory from default 2gb to something more reasonable
+    jvmOpts = "-Xmx2048M -Xms256M";
   };
 
   # Harden minecraft server
