@@ -10,9 +10,6 @@
     killUnconfinedConfinables = true;
   };
 
-  # This is needed for steam or for running containers with podman
-  security.unprivilegedUsernsClone = sysconfig.graphical || config.virtualisation.containers.enable;
-
   # Disable hibernation on servers
   security.protectKernelImage = sysconfig.server;
 
