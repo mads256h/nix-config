@@ -1,15 +1,30 @@
 {
   ...
 }:
-
+let
+  localNetwork = "10.0.1.0/24";
+  tv = "10.0.1.220";
+in
 {
   services.nfs.server = {
     enable = true;
-    exports = ''
-      /export/share  10.0.1.220(ro,insecure)
-      /export/share  10.0.1.0/24(rw)
-      /export/torrents  10.0.1.0/24(ro,insecure)
-    '';
+    exports = {
+      "/export/share" = {
+        "${tv}" = [
+          "ro"
+          "insecure"
+        ];
+
+        "${localNetwork}" = [ "rw" ];
+      };
+
+      "/export/torrents" = {
+        "${localNetwork}" = [
+          "ro"
+          "insecure"
+        ];
+      };
+    };
     createMountPoints = true;
   };
 
