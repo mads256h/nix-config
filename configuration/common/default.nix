@@ -22,7 +22,11 @@ in
     ./hardening.nix
     ./stylix.nix
   ]
-  ++ lib.optional sysconfig.server ./audit.nix;
+  ++ lib.optional sysconfig.baremetal ../baremetal
+  ++ lib.optional sysconfig.graphical ../graphical
+  ++ lib.optional sysconfig.laptop ../laptop
+  ++ lib.optional sysconfig.server ../server
+  ++ lib.optional sysconfig.wsl ../wsl;
 
   # Set your time zone.
   time.timeZone = "Europe/Copenhagen";
