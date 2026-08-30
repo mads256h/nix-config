@@ -35,26 +35,6 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
-  boot.initrd.systemd.storePaths = [
-    "${pkgs.kbd}/bin/setleds"
-  ];
-
-  boot.initrd.systemd.services.enable-numlock = {
-    description = "Enable numlock";
-    wantedBy = [ "initrd.target" ];
-    before = [ "initrd-root-device.target" ];
-    unitConfig = {
-      DefaultDependencies = false;
-    };
-
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.kbd}/bin/setleds -D +num";
-      StandardInput = "tty";
-      TTYPath = "/dev/tty0";
-    };
-  };
-
   # Disabled until nixos gets their finger out of their ass
   # virtualisation.virtualbox.host = {
   #   enable = true;
@@ -106,23 +86,6 @@
     }
   ];
 
-  services.udev = {
-    packages = [
-      pkgs.keychron-udev-rules
-      pkgs.qmk-udev-rules
-    ];
-  };
-
-  services.interception-tools = {
-    enable = true;
-    udevmonConfig = ''
-      - JOB: "${pkgs.interception-tools}/bin/intercept -g $DEVNODE | ${pkgs.interception-tools-plugins.caps2esc}/bin/caps2esc | ${pkgs.interception-tools}/bin/uinput -d $DEVNODE"
-        DEVICE:
-          EVENTS:
-            EV_KEY: [KEY_CAPSLOCK, KEY_ESC]
-    '';
-  };
-
   services.libinput.enable = true;
 
   security.polkit.enable = true;
@@ -135,11 +98,6 @@
     pulse.enable = true;
     jack.enable = true;
   };
-
-  # services.scx = {
-  #   enable = true;
-  #   scheduler = "scx_lavd";
-  # };
 
   security.pam.services.login.gnupg = {
     enable = true;

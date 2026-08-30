@@ -55,10 +55,11 @@
         specialArgs = {
           inherit inputs;
           sysconfig = {
+            baremetal = true;
             graphical = true;
             laptop = false;
             server = false;
-            baremetal = true;
+            wsl = false;
           };
         };
         modules = [
@@ -87,10 +88,11 @@
         specialArgs = {
           inherit inputs;
           sysconfig = {
+            baremetal = true;
             graphical = true;
             laptop = true;
             server = false;
-            baremetal = true;
+            wsl = false;
           };
         };
         modules = [
@@ -117,10 +119,11 @@
         specialArgs = {
           inherit inputs;
           sysconfig = {
+            baremetal = false;
             graphical = false;
             laptop = true;
             server = false;
-            baremetal = false;
+            wsl = true;
           };
         };
         modules = [
@@ -145,10 +148,11 @@
         specialArgs = {
           inherit inputs;
           sysconfig = {
+            baremetal = true;
             graphical = false;
             laptop = false;
             server = true;
-            baremetal = true;
+            wsl = false;
           };
         };
         modules = [

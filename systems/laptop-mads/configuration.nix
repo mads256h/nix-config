@@ -3,7 +3,6 @@
   imports = [
     # Include the results of the hardware scan.
     ../../configuration/common
-    ../../configuration/graphical
     ./hardware-configuration.nix
   ];
 
