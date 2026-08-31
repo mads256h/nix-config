@@ -1,3 +1,4 @@
+# NFSv4
 {
   ...
 }:
@@ -12,6 +13,7 @@ in
       "/export/share" = {
         "${tv}" = [
           "ro"
+          "all_squash"
           "insecure"
         ];
 
@@ -21,11 +23,21 @@ in
       "/export/torrents" = {
         "${localNetwork}" = [
           "ro"
+          "all_squash"
           "insecure"
         ];
       };
     };
     createMountPoints = true;
+  };
+
+  # Enforce v4 only
+  services.nfs.settings.nfsd = {
+    vers3 = false;
+    vers4 = true;
+    "vers4.0" = false;
+    "vers4.1" = false;
+    "vers4.2" = true;
   };
 
   # Keep things inside the export directory
@@ -45,20 +57,6 @@ in
     fsType = "none";
   };
 
-  # rpcbind
-  services.rpcbind.enable = true;
-
   # Allow through firewall
-  networking.firewall = {
-    allowedTCPPorts = [
-      111
-      2049
-      20048
-    ];
-    allowedUDPPorts = [
-      111
-      2049
-      20048
-    ];
-  };
+  networking.firewall.allowedTCPPorts = [ 2049 ];
 }
