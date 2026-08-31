@@ -32,6 +32,7 @@
   programs.git.settings.user = {
     email = lib.mkForce "mbmo@netcompany.com";
     name = lib.mkForce "Mads Beyer Mogensen";
+    signingKey = lib.mkForce "D3734104DA52049A";
   };
 
   programs.gpg.settings = {
