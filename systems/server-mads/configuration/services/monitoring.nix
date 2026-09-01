@@ -1,4 +1,3 @@
-# vim: ts=2 sw=2 et
 {
   config,
   lib,
@@ -23,7 +22,7 @@
 
   services.nginx.virtualHosts.${config.services.grafana.settings.server.domain} = {
     locations."/grafana/" = {
-      basicAuthFile = "/mnt/data/grafana/htpasswd";
+      basicAuthFile = config.age.secrets.htpasswd-nginx.path;
       proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
       proxyWebsockets = true;
       recommendedProxySettings = true;

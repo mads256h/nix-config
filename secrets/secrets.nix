@@ -13,4 +13,7 @@ in
     server-mads
     wsl
   ];
+
+  # htpasswd
+  "htpasswd.age".publicKeys = [ server-mads ];
 }

@@ -25,7 +25,7 @@
 
   services.nginx.virtualHosts."home.madsmogensen.dk" = {
     locations."/transmission/" = {
-      basicAuthFile = "/mnt/data/grafana/htpasswd";
+      basicAuthFile = config.age.secrets.htpasswd-nginx.path;
       proxyPass = "http://127.0.0.1:${toString config.services.transmission.settings.rpc-port}";
       extraConfig = "proxy_pass_header X-Transmission-Session-Id;";
     };

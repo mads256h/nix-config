@@ -1,12 +1,17 @@
-# vim: ts=2 sw=2 et
 {
   config,
-  lib,
-  pkgs,
   ...
 }:
-
 {
+  age.secrets = {
+    htpasswd-webdav = {
+      file = ../../../../secrets/htpasswd.age;
+      owner = "root";
+      group = "webdav";
+      mode = "440";
+    };
+  };
+
   services.webdav-server-rs = {
     enable = true;
     debug = true;
@@ -21,7 +26,7 @@
       };
 
       htpasswd.default = {
-        htpasswd = "/mnt/data/webdav/htpasswd";
+        htpasswd = config.age.secrets.htpasswd-webdav.path;
       };
       location = [
         {
@@ -38,7 +43,7 @@
   };
 
   services.nginx.virtualHosts."webdav.madsmogensen.dk".locations."/" = {
-    basicAuthFile = "/mnt/data/grafana/htpasswd";
+    basicAuthFile = config.age.secrets.htpasswd-nginx.path;
     proxyPass = "http://localhost:4918/";
     extraConfig = ''
       proxy_set_header  X-Script-Name /;
