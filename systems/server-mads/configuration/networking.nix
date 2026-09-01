@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 let
   lanDevName = "enp1s0";
 
@@ -7,6 +7,29 @@ let
   wireguardPort = 51820;
 in
 {
+  age.secrets = {
+    android-mads-wireguard-shared-secret = {
+      file = ../../../secrets/android-mads-wireguard-shared-secret.age;
+      owner = "root";
+      group = "systemd-network";
+      mode = "440";
+    };
+
+    android-mads-wireguard-public-key = {
+      file = ../../../secrets/android-mads-wireguard-public-key.age;
+      owner = "root";
+      group = "systemd-network";
+      mode = "440";
+    };
+
+    server-mads-wireguard-private-key = {
+      file = ../../../secrets/server-mads-wireguard-private-key.age;
+      owner = "root";
+      group = "systemd-network";
+      mode = "440";
+    };
+  };
+
   networking.hostName = "server-mads";
   networking.useDHCP = false;
   networking.useNetworkd = true;
@@ -30,19 +53,18 @@ in
     netdevConfig = {
       Kind = "wireguard";
       Name = wireguardDevName;
-      MTUBytes = "1300";
     };
 
     wireguardConfig = {
-      PrivateKeyFile = "/mnt/data/secrets/wireguard/server-mads.private";
+      PrivateKeyFile = config.age.secrets.server-mads-wireguard-private-key.path;
       ListenPort = wireguardPort;
     };
 
     wireguardPeers = [
       # android-mads
       {
-        PublicKeyFile = "/mnt/data/secrets/wireguard/android-mads.public";
-        PresharedKeyFile = "/mnt/data/secrets/wireguard/android-mads.preshared";
+        PublicKeyFile = config.age.secrets.android-mads-wireguard-public-key.path;
+        PresharedKeyFile = config.age.secrets.android-mads-wireguard-shared-secret.path;
         AllowedIPs = [ "10.1.1.2" ];
       }
       # todo: work
