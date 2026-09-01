@@ -1,12 +1,17 @@
-# vim: ts=2 sw=2 et
 {
-  config,
-  lib,
-  pkgs,
   ...
 }:
 
 {
+  age.secrets = {
+    htpasswd-nginx = {
+      file = ../../../../secrets/htpasswd.age;
+      owner = "root";
+      group = "nginx";
+      mode = "440";
+    };
+  };
+
   services.nginx = {
     enable = true;
 
