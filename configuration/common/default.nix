@@ -18,6 +18,7 @@ let
 in
 {
   imports = [
+    ./agenix.nix
     ./cachix.nix
     ./hardening.nix
     ./stylix.nix
