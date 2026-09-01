@@ -1,11 +1,9 @@
 {
   pkgs,
-  inputs,
   ...
 }:
 {
   imports = [
-    inputs.agenix.homeManagerModules.default
     ./bash.nix
     ./neovim.nix
     ./vifm.nix

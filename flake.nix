@@ -53,138 +53,107 @@
       hyprland,
       ...
     }:
+    let
+      makeSystem =
+        hostname: sysconfig: extraModules:
+        nixpkgs.lib.nixosSystem rec {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs;
+            sysconfig = sysconfig;
+          };
+
+          modules = [
+            (./systems + "/${hostname}/configuration")
+
+            ./configuration/common
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.extraSpecialArgs = specialArgs;
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.mads = {
+                imports = [
+                  (./systems + "/${hostname}/home.nix")
+                  agenix.homeManagerModules.default
+                ];
+              };
+            }
+
+            agenix.nixosModules.default
+
+            stylix.nixosModules.stylix
+          ]
+          ++ extraModules;
+        };
+
+      makeBaremetalSystem =
+        hostname: sysconfig: extraModules:
+        makeSystem hostname
+          (
+            {
+              baremetal = true;
+              wsl = false;
+            }
+            // sysconfig
+          )
+          (
+            [
+              ./modules/ci-vm.nix
+              lanzaboote.nixosModules.lanzaboote
+            ]
+            ++ extraModules
+          );
+    in
     {
-      nixosConfigurations."desktop-mads" = nixpkgs.lib.nixosSystem rec {
-        system = "x86_64-linux";
-        specialArgs = {
-          inherit inputs;
-          sysconfig = {
-            baremetal = true;
+      nixosConfigurations."desktop-mads" =
+        makeBaremetalSystem "desktop-mads"
+          {
             graphical = true;
             laptop = false;
             server = false;
-            wsl = false;
-          };
-        };
-        modules = [
-          ./modules/ci-vm.nix
-          ./systems/desktop-mads/configuration.nix
-          nixos-hardware.nixosModules.common-cpu-amd
-          nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
-          nixos-hardware.nixosModules.common-pc-ssd
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.extraSpecialArgs = specialArgs;
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.mads = ./systems/desktop-mads/home.nix;
           }
+          [
+            nixos-hardware.nixosModules.common-cpu-amd
+            nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+            nixos-hardware.nixosModules.common-pc-ssd
+          ];
 
-          agenix.nixosModules.default
-
-          stylix.nixosModules.stylix
-
-          lanzaboote.nixosModules.lanzaboote
-        ];
-      };
-
-      nixosConfigurations."laptop-mads" = nixpkgs.lib.nixosSystem rec {
-        system = "x86_64-linux";
-        specialArgs = {
-          inherit inputs;
-          sysconfig = {
-            baremetal = true;
+      nixosConfigurations."laptop-mads" =
+        makeBaremetalSystem "laptop-mads"
+          {
             graphical = true;
             laptop = true;
             server = false;
-            wsl = false;
-          };
-        };
-        modules = [
-          ./modules/ci-vm.nix
-          ./systems/laptop-mads/configuration.nix
-          nixos-hardware.nixosModules.msi-gl62
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.extraSpecialArgs = specialArgs;
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.mads = ./systems/laptop-mads/home.nix;
           }
+          [
+            nixos-hardware.nixosModules.msi-gl62
+          ];
 
-          agenix.nixosModules.default
-
-          stylix.nixosModules.stylix
-
-          lanzaboote.nixosModules.lanzaboote
-        ];
-      };
-
-      nixosConfigurations."wsl" = nixpkgs.lib.nixosSystem rec {
-        system = "x86_64-linux";
-        specialArgs = {
-          inherit inputs;
-          sysconfig = {
+      nixosConfigurations."wsl" =
+        makeSystem "wsl"
+          {
             baremetal = false;
             graphical = false;
             laptop = true;
             server = false;
             wsl = true;
-          };
-        };
-        modules = [
-          ./systems/wsl/configuration.nix
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.extraSpecialArgs = specialArgs;
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.mads = ./systems/wsl/home.nix;
           }
+          [
+            nixos-wsl.nixosModules.default
+          ];
 
-          agenix.nixosModules.default
-
-          stylix.nixosModules.stylix
-
-          nixos-wsl.nixosModules.default
-        ];
-      };
-
-      nixosConfigurations."server-mads" = nixpkgs.lib.nixosSystem rec {
-        system = "x86_64-linux";
-        specialArgs = {
-          inherit inputs;
-          sysconfig = {
-            baremetal = true;
+      nixosConfigurations."server-mads" =
+        makeBaremetalSystem "server-mads"
+          {
             graphical = false;
             laptop = false;
             server = true;
-            wsl = false;
-          };
-        };
-        modules = [
-          ./modules/ci-vm.nix
-          ./systems/server-mads/configuration
-          nixos-hardware.nixosModules.common-cpu-intel
-          nixos-hardware.nixosModules.common-pc-ssd
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.extraSpecialArgs = specialArgs;
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.mads = ./systems/server-mads/home.nix;
           }
-
-          agenix.nixosModules.default
-
-          stylix.nixosModules.stylix
-
-          lanzaboote.nixosModules.lanzaboote
-        ];
-      };
+          [
+            nixos-hardware.nixosModules.common-cpu-intel
+            nixos-hardware.nixosModules.common-pc-ssd
+          ];
     };
 }
