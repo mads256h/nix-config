@@ -8,6 +8,9 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
+
     hyprland.url = "github:hyprwm/hyprland?ref=45c8510c9c52aee541ac2b31c2b716d61c526241";
     #hyprland.url = "github:hyprwm/hyprland?ref=v0.56.2";
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
@@ -43,6 +46,7 @@
       nixpkgs,
       nixos-hardware,
       home-manager,
+      agenix,
       stylix,
       lanzaboote,
       nixos-wsl,
@@ -77,6 +81,8 @@
             home-manager.users.mads = ./systems/desktop-mads/home.nix;
           }
 
+          agenix.nixosModules.default
+
           stylix.nixosModules.stylix
 
           lanzaboote.nixosModules.lanzaboote
@@ -108,6 +114,8 @@
             home-manager.users.mads = ./systems/laptop-mads/home.nix;
           }
 
+          agenix.nixosModules.default
+
           stylix.nixosModules.stylix
 
           lanzaboote.nixosModules.lanzaboote
@@ -136,6 +144,8 @@
             home-manager.useUserPackages = true;
             home-manager.users.mads = ./systems/wsl/home.nix;
           }
+
+          agenix.nixosModules.default
 
           stylix.nixosModules.stylix
 
@@ -168,6 +178,8 @@
             home-manager.useUserPackages = true;
             home-manager.users.mads = ./systems/server-mads/home.nix;
           }
+
+          agenix.nixosModules.default
 
           stylix.nixosModules.stylix
 
