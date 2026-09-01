@@ -1,7 +1,6 @@
 { ... }:
 {
   imports = [
-    ../../../configuration/common
     ./services
     ./bootloader.nix
     ./filesystems.nix
