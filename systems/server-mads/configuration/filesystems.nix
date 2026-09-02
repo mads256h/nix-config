@@ -73,6 +73,14 @@
       # Default flags but with utc
       flags = "-k -p --utc";
     };
+
+    zed = {
+      enableMail = true;
+      settings = {
+        ZED_EMAIL_ADDR = "mads256h" + "@" + "pro" + "to" + "nmail" + ".com";
+        ZED_NOTIFY_VERBOSE = true;
+      };
+    };
   };
 
   boot.supportedFilesystems = [ "zfs" ];
