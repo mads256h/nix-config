@@ -35,9 +35,6 @@ in
   services.nfs.settings.nfsd = {
     vers3 = false;
     vers4 = true;
-    "vers4.0" = false;
-    "vers4.1" = false;
-    "vers4.2" = true;
   };
 
   # Keep things inside the export directory
