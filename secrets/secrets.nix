@@ -16,4 +16,7 @@ in
 
   # htpasswd
   "htpasswd.age".publicKeys = [ server-mads ];
+
+  # sendmail
+  "sendmail-password.age".publicKeys = [ server-mads ];
 }
