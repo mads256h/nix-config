@@ -1,5 +1,4 @@
 {
-  lib,
   config,
   ...
 }:
@@ -22,9 +21,5 @@ in
       authorizedKeys = config.users.users.mads.openssh.authorizedKeys.keys;
       hostKeys = [ "/etc/secrets/initrd/ssh_host_ed25519_key" ];
     };
-
-    postCommands = lib.optionalString (config.boot.initrd.luks.devices != { }) ''
-      echo "cryptsetup-askpass" >> /root/.profile
-    '';
   };
 }
