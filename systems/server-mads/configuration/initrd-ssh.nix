@@ -6,12 +6,9 @@ let
   lanDevName = "enp1s0";
 in
 {
-  boot.initrd.systemd = {
+  boot.initrd.systemd.network = {
     enable = true;
-    network = {
-      enable = true;
-      networks."${lanDevName}" = config.systemd.network.networks.${lanDevName};
-    };
+    networks."${lanDevName}" = config.systemd.network.networks.${lanDevName};
   };
 
   boot.initrd.network = {
@@ -22,4 +19,6 @@ in
       hostKeys = [ "/etc/secrets/initrd/ssh_host_ed25519_key" ];
     };
   };
+
+  boot.initrd.availableKernelModules = [ "r8169" ];
 }

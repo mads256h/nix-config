@@ -22,6 +22,8 @@
     # Don't try to load a real GPU driver or secure boot in containers CI
     services.xserver.videoDrivers = lib.mkForce [ ];
     boot.lanzaboote.enable = lib.mkForce false;
+    boot.initrd.network.ssh.hostKeys = lib.mkForce [ ];
+    boot.initrd.network.ssh.ignoreEmptyHostKeys = true;
 
     services.btrfs.autoScrub.enable = lib.mkForce false;
 
