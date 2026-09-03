@@ -3,6 +3,10 @@
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/258ba2f6-9932-47e3-9b34-e11cc747e127";
     fsType = "btrfs";
+    options = [
+      "defaults"
+      "space_cache=v2"
+    ];
   };
 
   fileSystems."/boot" = {
@@ -49,6 +53,8 @@
       "nodev"
       "nosuid"
       "noexec"
+      "noatime"
+      "space_cache=v2"
     ];
   };
 
