@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   age.secrets = {
     sendmail-password = {
@@ -19,7 +19,7 @@
       port = 587;
       from = config.programs.msmtp.accounts.default.user;
       user = "mads256h" + "@" + "gm" + "ail" + ".com";
-      passwordeval = "cat ${config.age.secrets.sendmail-password.path}";
+      passwordeval = "${pkgs.coreutils}/bin/cat ${config.age.secrets.sendmail-password.path}";
     };
   };
 }
