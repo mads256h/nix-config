@@ -32,6 +32,7 @@
     networking.interfaces = lib.mkForce { };
     services.minecraft-server.enable = lib.mkForce false;
     services.radicale.enable = lib.mkForce false;
+    services.smartd.enable = lib.mkForce false; # There are no smart devices on vms
     services.transmission.settings.download-dir = lib.mkForce "${config.services.transmission.home}/Downloads";
 
     systemd.timers = lib.optionalAttrs sysconfig.server {
