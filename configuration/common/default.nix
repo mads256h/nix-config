@@ -29,6 +29,10 @@ in
   ++ lib.optional sysconfig.server ../server
   ++ lib.optional sysconfig.wsl ../wsl;
 
+  age.secrets = {
+    user-mads-password.file = ../../secrets/user-mads-password.age;
+  };
+
   # Set your time zone.
   time.timeZone = "Europe/Copenhagen";
 
@@ -39,6 +43,7 @@ in
     keyMap = "dk";
     #   useXkbConfig = true; # use xkb.options in tty.
   };
+  users.mutableUsers = false;
 
   users.users.mads = {
     isNormalUser = true;
@@ -51,6 +56,8 @@ in
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCPwWRU4SBf36Xb2e5RtwjmsiIHep0lMi0OAqOVA748RgRfP7ZDJ8boj0LF+1VAyU17Ht8Lo1kVKoYx38sMiQlgP2vbEV7NXpyikBdqmAEtCpBWEWJsh04FrPpwyCgdA+rCypjQ8Qw9FhtI0yIppXv2RRCi9MkXZeM5X1/oY7ajpQ4doSJtF1hxyv6npJr7jJkbWO2l6fASqu/tyY3BNdk4sSaPbcUCpYAEqci/FDLlyrlxWE1+TijC08YzctUPeeaBSIMpuf3VVaTgp69FI0IoLvt7Bb34kxLvOvQijSaVBQqRrg9GXk3l1JeEdCQNDJwqd08MP35dAAPbaOpnsgY66kSGwmyDp64J+XLPT+KWG/yHoyvuNpQStNm5/KdmGv6ZAhGWMTvCKwvp6tqHdS8UGJ7fDvHjnALhJ5skT+jb2l//vDlDkPg6lDMB0P+ILqm3M3o8A71EglW6VI8lboxknID4YP6BwE2Xe/cRwRnJs9eNMErMT2wtYv758uQaoqyYJwiNnvvvJqjBZypq4JYKiMlJbvyaDZXXax6qACfsD2FSxUnN/lONASmIh04TNk6PS1WX+HrvnUlBNKB9ou2wkQCFro729OftPqwMLTBBuJ5xI8ZYuDvGi9lT0htrGnSBmO204TVktrPWaCqszv7YpmLnodUGzSJJxA5g3ZaywQ== mads@nixos"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHXyHXxD1lS3XUH5+uTJUzj+WPZXqZh9+G7tYUS0KzU1 mads@nixos"
     ];
+
+    hashedPasswordFile = config.age.secrets.user-mads-password.path;
   };
 
   # Only allow people from the wheel group to even execute sudo
