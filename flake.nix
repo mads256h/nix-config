@@ -63,30 +63,36 @@
             sysconfig = sysconfig;
           };
 
-          modules = [
-            (./systems + "/${hostname}/configuration")
-
-            ./configuration/common
-
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.extraSpecialArgs = specialArgs;
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.mads = {
-                imports = [
-                  (./systems + "/${hostname}/home.nix")
-                  agenix.homeManagerModules.default
-                ];
-              };
-            }
-
-            agenix.nixosModules.default
-
-            stylix.nixosModules.stylix
-          ]
-          ++ extraModules;
+          modules = makeSystemModules hostname sysconfig extraModules;
         };
+
+      makeSystemModules =
+        hostname: sysconfig: extraModules:
+        [
+          (./systems + "/${hostname}/configuration")
+
+          ./configuration/common
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.extraSpecialArgs = {
+              inherit inputs sysconfig;
+            };
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.mads = {
+              imports = [
+                (./systems + "/${hostname}/home.nix")
+                agenix.homeManagerModules.default
+              ];
+            };
+          }
+
+          agenix.nixosModules.default
+
+          stylix.nixosModules.stylix
+        ]
+        ++ extraModules;
 
       makeBaremetalSystem =
         hostname: sysconfig: extraModules:
@@ -105,6 +111,52 @@
             ]
             ++ extraModules
           );
+
+      makeBootTest =
+        hostname: sysconfig: extraModules:
+        let
+          hostSysconfig = {
+            baremetal = true;
+            wsl = false;
+          } // sysconfig;
+          pkgs = import nixpkgs { system = "x86_64-linux"; };
+        in
+        pkgs.testers.runNixOSTest {
+          name = "${hostname}-boot-test";
+          nodes.machine = {
+            lib,
+            ...
+          }: {
+            _module.args = {
+              inherit inputs;
+              sysconfig = hostSysconfig;
+            };
+            imports =
+              makeSystemModules hostname hostSysconfig (
+                [
+                  ./modules/ci-vm.nix
+                  lanzaboote.nixosModules.lanzaboote
+                ]
+                ++ extraModules
+                ++ [
+                  {
+                    systemd.services.ci-boot-success.enable = lib.mkForce false;
+                  }
+                ]
+              );
+          };
+          testScript = ''
+            start_all()
+            machine.wait_for_unit("multi-user.target")
+            machine.wait_until_succeeds("test -z \"$(systemctl list-units --failed --no-legend --plain)\"")
+
+            ${nixpkgs.lib.optionalString sysconfig.graphical ''
+              machine.wait_until_succeeds("find /run/user/*/hypr -maxdepth 2 -name hypr_loaded_ok | grep -q .")
+              machine.succeed("su - mads -c 'export XDG_RUNTIME_DIR=/run/user/1000; export HYPRLAND_INSTANCE_SIGNATURE=$(${pkgs.coreutils}/bin/ls -1 /run/user/1000/hypr | ${pkgs.coreutils}/bin/head -n1); ${pkgs.hyprland}/bin/hyprctl dispatch exec \"sh -lc \\\"touch /tmp/hy3-exec-ok\\\"\"'")
+              machine.wait_for_file("/tmp/hy3-exec-ok")
+            ''}
+          '';
+        };
     in
     {
       nixosConfigurations."desktop-mads" =
@@ -155,5 +207,40 @@
             nixos-hardware.nixosModules.common-cpu-intel
             nixos-hardware.nixosModules.common-pc-ssd
           ];
+
+      checks.x86_64-linux = {
+        desktop-mads-boot-test = makeBootTest "desktop-mads"
+          {
+            graphical = true;
+            laptop = false;
+            server = false;
+          }
+          [
+            nixos-hardware.nixosModules.common-cpu-amd
+            nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+            nixos-hardware.nixosModules.common-pc-ssd
+          ];
+
+        laptop-mads-boot-test = makeBootTest "laptop-mads"
+          {
+            graphical = true;
+            laptop = true;
+            server = false;
+          }
+          [
+            nixos-hardware.nixosModules.msi-gl62
+          ];
+
+        server-mads-boot-test = makeBootTest "server-mads"
+          {
+            graphical = false;
+            laptop = false;
+            server = true;
+          }
+          [
+            nixos-hardware.nixosModules.common-cpu-intel
+            nixos-hardware.nixosModules.common-pc-ssd
+          ];
+      };
     };
 }

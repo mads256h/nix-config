@@ -51,38 +51,8 @@ jobs:
       - name: Build toplevel system closure
         run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel --fallback
 
-      - name: Build VM
-        run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.vm" -L -o result --fallback
-
-      - name: Boot VM and check for sucessful boot
-        run: |
-          set -o pipefail
-          RUNSCRIPT=$(ls result/bin/run-*-vm)
-          QEMU_OPTS="-no-reboot" timeout 180 "$RUNSCRIPT" | tee vm.log
-
-          if ! grep -q "CI_BOOT_OK" vm.log; then
-            echo "VM did not reach the boot-success checkpoint."
-            exit 1
-          fi
-
-          if grep -q "CI_UNITS_FAILED" vm.log; then
-            echo "One or more systemd units failed to start. See below:"
-            sed -n '/CI_UNITS_FAILED/,/CI_BOOT_OK/p' vm.log
-            exit 1
-          fi
-
-          if grep -q "CI_HYPR_NOT_STARTED" vm.log; then
-            echo "Hyprland never started."
-            exit 1
-          fi
-
-          if grep -q "CI_HYPR_ERRORS_FOUND" vm.log; then
-            echo "Hyprland logged errors:"
-            sed -n '/CI_HYPR_ERRORS_FOUND/,/CI_BOOT_OK/p' vm.log
-            exit 1
-          fi
-
-          echo "Boot, units, and Hyprland all clean."
+      - name: Run NixOS VM boot test
+        run: nix build ".#checks.x86_64-linux.${{ matrix.host }}-boot-test" -L --fallback
 
   build-only:
     runs-on: ubuntu-latest
@@ -118,4 +88,3 @@ jobs:
 
       - name: Build toplevel system closure
         run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel --fallback
-
