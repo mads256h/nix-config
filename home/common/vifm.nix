@@ -12,7 +12,7 @@ let
   imageViewer = "${pkgs.imv}/bin/imv";
   browser = "${config.programs.librewolf.finalPackage}/bin/librewolf";
   torrentClient = "${pkgs.tremc}/bin/tremc";
-  office = "${pkgs.libreoffice-fresh}/bin/libreoffice";
+  office = "${pkgs.libreoffice}/bin/libreoffice";
 
   bash = "${pkgs.bash}/bin/bash";
   file = "${pkgs.file}/bin/file";
