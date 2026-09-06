@@ -17,7 +17,7 @@
   home.packages = with pkgs; [
     gcr
     tremc
-    libreoffice-fresh
+    libreoffice
     vifmimg
     ueberzugpp
     seahorse
