@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   vm-boot-test:
@@ -84,6 +85,57 @@ jobs:
 
           echo "Boot, units, and Hyprland all clean."
 
+      - name: Checkout base and head revisions
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+
+      - name: Build base system for nvd
+        if: github.event_name == 'pull_request'
+        id: vm_nvd_build
+        run: |
+          set -euo pipefail
+          BASE_PATH=$(nix build "./base#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L --fallback --no-link --print-out-paths)
+          PR_PATH=$(readlink -f result-toplevel)
+          echo "base_path=$BASE_PATH" >> "$GITHUB_OUTPUT"
+          echo "pr_path=$PR_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Diff with nvd
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          nix run nixpkgs#nvd -- diff "${{ steps.vm_nvd_build.outputs.base_path }}" "${{ steps.vm_nvd_build.outputs.pr_path }}" > nvd.out
+
+      - name: Comment nvd output on PR
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          MARKER="<!-- nvd-diff:${{ matrix.host }} -->"
+          {
+            echo "$MARKER"
+            echo
+            echo "### nvd package diff for \`${{ matrix.host }}\`"
+            echo
+            echo "Base: \`${{ github.event.pull_request.base.sha }}\`"
+            echo "Head: \`${{ github.event.pull_request.head.sha }}\`"
+            echo
+            echo '```'
+            sed -n '1,350p' nvd.out
+            echo '```'
+          } > comment.md
+          COMMENT_BODY="$(cat comment.md)"
+          COMMENTS_ENDPOINT="repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
+          COMMENT_ID="$(gh api "$COMMENTS_ENDPOINT" --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | contains(\"$MARKER\"))) | .id" | head -n 1 || true)"
+          if [ -n "$COMMENT_ID" ]; then
+            gh api --method PATCH "repos/${{ github.repository }}/issues/comments/$COMMENT_ID" --raw-field body="$COMMENT_BODY"
+          else
+            gh api --method POST "$COMMENTS_ENDPOINT" --raw-field body="$COMMENT_BODY"
+          fi
+
   build-only:
     runs-on: ubuntu-latest
     strategy:
@@ -119,3 +171,53 @@ jobs:
       - name: Build toplevel system closure
         run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel --fallback
 
+      - name: Checkout base and head revisions
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+
+      - name: Build base system for nvd
+        if: github.event_name == 'pull_request'
+        id: build_only_nvd_build
+        run: |
+          set -euo pipefail
+          BASE_PATH=$(nix build "./base#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L --fallback --no-link --print-out-paths)
+          PR_PATH=$(readlink -f result-toplevel)
+          echo "base_path=$BASE_PATH" >> "$GITHUB_OUTPUT"
+          echo "pr_path=$PR_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Diff with nvd
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          nix run nixpkgs#nvd -- diff "${{ steps.build_only_nvd_build.outputs.base_path }}" "${{ steps.build_only_nvd_build.outputs.pr_path }}" > nvd.out
+
+      - name: Comment nvd output on PR
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          MARKER="<!-- nvd-diff:${{ matrix.host }} -->"
+          {
+            echo "$MARKER"
+            echo
+            echo "### nvd package diff for \`${{ matrix.host }}\`"
+            echo
+            echo "Base: \`${{ github.event.pull_request.base.sha }}\`"
+            echo "Head: \`${{ github.event.pull_request.head.sha }}\`"
+            echo
+            echo '```'
+            sed -n '1,350p' nvd.out
+            echo '```'
+          } > comment.md
+          COMMENT_BODY="$(cat comment.md)"
+          COMMENTS_ENDPOINT="repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
+          COMMENT_ID="$(gh api "$COMMENTS_ENDPOINT" --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | contains(\"$MARKER\"))) | .id" | head -n 1 || true)"
+          if [ -n "$COMMENT_ID" ]; then
+            gh api --method PATCH "repos/${{ github.repository }}/issues/comments/$COMMENT_ID" --raw-field body="$COMMENT_BODY"
+          else
+            gh api --method POST "$COMMENTS_ENDPOINT" --raw-field body="$COMMENT_BODY"
+          fi
