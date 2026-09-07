@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   vm-boot-test:
@@ -119,3 +120,74 @@ jobs:
       - name: Build toplevel system closure
         run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel --fallback
 
+  nvd-diff:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [desktop-mads, laptop-mads, server-mads, wsl]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: pr
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            extra-substituters = https://mads256h.cachix.org https://nix-community.cachix.org https://hyprland.cachix.org
+            extra-trusted-public-keys = mads256h.cachix.org-1:6kAAfDlu6DSFqADoOQzlkOPQKO1hoptBHgnJGnuEnkI= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: mads256h
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Re-add other Cachix caches (cachix-action overwrites substituters)
+        run: |
+          mkdir -p ~/.config/nix
+          cat >> ~/.config/nix/nix.conf <<'EOF'
+            extra-substituters = https://nix-community.cachix.org https://hyprland.cachix.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=
+          EOF
+
+      - name: Show effective Nix config
+        run: nix show-config | grep -iE 'substitut|trusted'
+
+      - name: Build base and PR systems
+        id: build
+        run: |
+          set -euo pipefail
+          BASE_PATH=$(nix build "./base#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L --fallback --no-link --print-out-paths)
+          PR_PATH=$(nix build "./pr#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L --fallback --no-link --print-out-paths)
+          echo "base_path=$BASE_PATH" >> "$GITHUB_OUTPUT"
+          echo "pr_path=$PR_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Diff with nvd
+        run: |
+          set -euo pipefail
+          nix run nixpkgs#nvd -- diff "${{ steps.build.outputs.base_path }}" "${{ steps.build.outputs.pr_path }}" > nvd.out
+
+      - name: Comment nvd output on PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          {
+            echo "### nvd package diff for \`${{ matrix.host }}\`"
+            echo
+            echo "Base: \`${{ github.event.pull_request.base.sha }}\`"
+            echo "Head: \`${{ github.event.pull_request.head.sha }}\`"
+            echo
+            echo '```'
+            sed -n '1,350p' nvd.out
+            echo '```'
+          } > comment.md
+          gh pr comment "${{ github.event.pull_request.number }}" --body-file comment.md
