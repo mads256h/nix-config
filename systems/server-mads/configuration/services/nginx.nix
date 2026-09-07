@@ -58,6 +58,13 @@
     };
 
     virtualHosts."server-mads.lan" = {
+      locations."/torrents/" = {
+        root = "/mnt";
+
+        extraConfig = ''
+          autoindex on;
+        '';
+      };
       # Only allow local connections to this virtual host
       extraConfig = ''
         allow 10.0.1.0/24;
