@@ -92,20 +92,13 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           path: base
 
-      - name: Checkout PR revision
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          path: pr
-
-      - name: Build base and PR systems for nvd
+      - name: Build base system for nvd
         if: github.event_name == 'pull_request'
         id: vm_nvd_build
         run: |
           set -euo pipefail
           BASE_PATH=$(nix build "./base#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L --fallback --no-link --print-out-paths)
-          PR_PATH=$(nix build "./pr#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L --fallback --no-link --print-out-paths)
+          PR_PATH=$(readlink -f result-toplevel)
           echo "base_path=$BASE_PATH" >> "$GITHUB_OUTPUT"
           echo "pr_path=$PR_PATH" >> "$GITHUB_OUTPUT"
 
@@ -185,20 +178,13 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           path: base
 
-      - name: Checkout PR revision
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          path: pr
-
-      - name: Build base and PR systems for nvd
+      - name: Build base system for nvd
         if: github.event_name == 'pull_request'
         id: build_only_nvd_build
         run: |
           set -euo pipefail
           BASE_PATH=$(nix build "./base#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L --fallback --no-link --print-out-paths)
-          PR_PATH=$(nix build "./pr#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L --fallback --no-link --print-out-paths)
+          PR_PATH=$(readlink -f result-toplevel)
           echo "base_path=$BASE_PATH" >> "$GITHUB_OUTPUT"
           echo "pr_path=$PR_PATH" >> "$GITHUB_OUTPUT"
 
