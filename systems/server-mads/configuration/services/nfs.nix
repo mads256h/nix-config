@@ -9,6 +9,12 @@ in
 {
   services.nfs.server = {
     enable = true;
+    # Fixed ports for firewall
+
+    lockdPort = 4001;
+    mountdPort = 4002;
+    statdPort = 4000;
+
     exports = {
       "/export/share" = {
         "${tv}" = [
@@ -31,11 +37,6 @@ in
     createMountPoints = true;
   };
 
-  # Enforce v4 only
-  services.nfs.settings.nfsd = {
-    vers3 = false;
-    vers4 = true;
-  };
 
   # Keep things inside the export directory
   fileSystems."/export/share" = {
@@ -55,5 +56,8 @@ in
   };
 
   # Allow through firewall
-  networking.firewall.allowedTCPPorts = [ 2049 ];
+  networking.firewall = {
+    allowedTCPPorts = [ 111 2049 4000 4001 4002 20048 ];
+    allowedUDPPorts = [ 111 2049 4000 4001 4002 20048 ];
+  };
 }
