@@ -15,7 +15,6 @@
   ];
 
   home.packages = with pkgs; [
-    gcr
     tremc
     libreoffice
     vifmimg
