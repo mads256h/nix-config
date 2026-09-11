@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./arr.nix
     ./fail2ban.nix
     ./minecraft-server.nix
     ./monitoring.nix
