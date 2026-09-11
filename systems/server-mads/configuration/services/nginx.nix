@@ -68,6 +68,7 @@
       # Only allow local connections to this virtual host
       extraConfig = ''
         allow 10.0.1.0/24;
+        allow fdea:ab9e:9c44::/64;
         deny all;
       '';
     };
