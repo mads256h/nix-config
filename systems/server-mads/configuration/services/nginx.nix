@@ -24,6 +24,10 @@
     # Allow your_spotify to import json files
     clientMaxBodySize = "500M";
 
+    appendHttpConfig = ''
+      charset UTF-8;
+    '';
+
     virtualHosts."_" = {
       default = true;
 
