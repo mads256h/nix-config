@@ -11,6 +11,7 @@
     openPeerPorts = true;
     settings = {
       download-dir = "/mnt/torrents";
+      incomplete-dir-enabled = false;
 
       rpc-bind-address = "127.0.0.1";
       rpc-whitelist = "127.0.0.1,::1";
