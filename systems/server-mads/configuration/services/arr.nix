@@ -20,19 +20,28 @@ in
 {
   services.prowlarr = {
     enable = true;
-    settings.server.urlbase = "/arr/prowlarr";
+    settings.server = {
+      urlbase = "/arr/prowlarr";
+      bindaddress = "localhost";
+    };
   };
 
   services.sonarr = {
     enable = true;
-    settings.server.urlbase = "/arr/sonarr";
+    settings.server = {
+      urlbase = "/arr/sonarr";
+      bindaddress = "localhost";
+    };
     user = "transmission";
     group = "transmission";
   };
 
   services.radarr = {
     enable = true;
-    settings.server.urlbase = "/arr/radarr";
+    settings.server = {
+      urlbase = "/arr/radarr";
+      bindaddress = "localhost";
+    };
     user = "transmission";
     group = "transmission";
   };
