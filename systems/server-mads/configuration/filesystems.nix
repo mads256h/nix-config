@@ -46,15 +46,14 @@
 
   # Torrents
   fileSystems."/mnt/torrents" = {
-    device = "/dev/disk/by-uuid/51a551fa-d1ba-4c83-8ad5-bfcab4496f29";
-    fsType = "btrfs";
+    device = "/dev/disk/by-uuid/675e7fc0-9e81-4e38-9809-d133df8cb36c";
+    fsType = "ext4";
     options = [
       "defaults"
       "nodev"
       "nosuid"
       "noexec"
       "noatime"
-      "space_cache=v2"
     ];
   };
 
