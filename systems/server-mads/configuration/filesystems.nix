@@ -91,4 +91,7 @@
 
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs.forceImportRoot = false;
+  
+  boot.swraid.enable = true;
+  boot.swraid.mdadmConf = "MAILADDR mads" + "256" + "h" + "@pro" + "tonm" + "ail" + ".com";
 }
