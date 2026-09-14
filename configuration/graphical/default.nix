@@ -145,8 +145,8 @@
     in
     {
       "/home/mads/mnt" = {
-        device = "${pkgs.sshfs-fuse}/bin/sshfs#mads@home.madsmogensen.dk:/mnt/share";
-        fsType = "fuse";
+        device = "mads@home.madsmogensen.dk:/mnt/share";
+        fsType = "fuse.sshfs";
         inherit options;
       };
     };
