@@ -385,13 +385,13 @@
         {
           _args = [
             (lib.generators.mkLuaInline "mod .. \" + CTRL + LEFT\"")
-            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${package}/bin/hyprctl dispatch movecurrentworkspacetomonitor l"})")
+            (lib.generators.mkLuaInline "hl.dsp.workspace.move({ monitor = \"-1\"})")
           ];
         }
         {
           _args = [
             (lib.generators.mkLuaInline "mod .. \" + CTRL + RIGHT\"")
-            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(${builtins.toJSON "${package}/bin/hyprctl dispatch movecurrentworkspacetomonitor r"})")
+            (lib.generators.mkLuaInline "hl.dsp.workspace.move({ monitor = \"+1\"})")
           ];
         }
         {

@@ -1,8 +1,12 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   imports = [
     ../../home/common
     ../../home/graphical
+  ];
+
+  home.packages = [
+    pkgs.ckan
   ];
 
   wayland.windowManager.hyprland.settings = {
