@@ -24,6 +24,7 @@
     boot.lanzaboote.enable = lib.mkForce false;
     boot.initrd.network.ssh.hostKeys = lib.mkForce [ ];
     boot.initrd.network.ssh.ignoreEmptyHostKeys = true;
+    boot.zswap.enable = lib.mkForce false;
 
     services.btrfs.autoScrub.enable = lib.mkForce false;
 
