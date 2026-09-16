@@ -10,6 +10,18 @@
     inputs.rose-pine-hyprcursor.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
+  # Enable ntsync for better performance in proton
+  boot.kernelModules = [ "ntsync" ];
+
+  # make ntsync device accessible
+  services.udev.packages = [
+    (pkgs.writeTextFile {
+      name = "ntsync-udev-rules";
+      text = ''KERNEL=="ntsync", MODE="0660", TAG+="uaccess"'';
+      destination = "/etc/udev/rules.d/70-ntsync.rules";
+    })
+  ];
+
   programs.steam = {
     enable = true;
     extest.enable = true;
