@@ -15,7 +15,7 @@
   };
 
   # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_zen;
 
   networking.hostName = "desktop-mads"; # Define your hostname.
   # Pick only one of the below networking options.
