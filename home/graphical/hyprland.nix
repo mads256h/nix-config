@@ -710,7 +710,10 @@
   services.hyprpolkitagent.enable = true;
   programs.hyprlock.enable = true;
   services.hyprpaper.enable = true;
-  services.hyprpaper.settings.ipc = "on";
+  services.hyprpaper.settings = {
+    ipc = "on";
+    splash = false;
+  };
 
   systemd.user.services.hyprpaper.Service.ExecStartPost =
     "${pkgs.writeShellScript "random-wallpaper" ''
