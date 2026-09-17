@@ -54,106 +54,164 @@
       ...
     }:
     let
+      makeModules =
+        hostname: sysconfig:
+        [
+          (./systems + "/${hostname}/configuration")
+          ./configuration/common
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.extraSpecialArgs = {
+              inherit inputs sysconfig;
+            };
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.mads = {
+              imports = [
+                (./systems + "/${hostname}/home.nix")
+                agenix.homeManagerModules.default
+              ];
+            };
+          }
+          agenix.nixosModules.default
+          stylix.nixosModules.stylix
+        ];
+
       makeSystem =
         hostname: sysconfig: extraModules:
-        nixpkgs.lib.nixosSystem rec {
+        nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = {
-            inherit inputs;
-            sysconfig = sysconfig;
+            inherit inputs sysconfig;
           };
-
-          modules = [
-            (./systems + "/${hostname}/configuration")
-
-            ./configuration/common
-
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.extraSpecialArgs = specialArgs;
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.mads = {
-                imports = [
-                  (./systems + "/${hostname}/home.nix")
-                  agenix.homeManagerModules.default
-                ];
-              };
-            }
-
-            agenix.nixosModules.default
-
-            stylix.nixosModules.stylix
-          ]
-          ++ extraModules;
+          modules = makeModules hostname sysconfig ++ extraModules;
         };
+
+      makeBaremetalSysconfig =
+        sysconfig:
+        {
+          baremetal = true;
+          wsl = false;
+        }
+        // sysconfig;
 
       makeBaremetalSystem =
         hostname: sysconfig: extraModules:
-        makeSystem hostname
-          (
-            {
-              baremetal = true;
-              wsl = false;
-            }
-            // sysconfig
-          )
-          (
-            [
-              ./modules/ci-vm.nix
-              lanzaboote.nixosModules.lanzaboote
-            ]
-            ++ extraModules
-          );
+        makeSystem hostname (makeBaremetalSysconfig sysconfig) (
+          [
+            ./modules/ci-vm.nix
+            lanzaboote.nixosModules.lanzaboote
+          ]
+          ++ extraModules
+        );
+
+      desktopSysconfig = {
+        graphical = true;
+        laptop = false;
+        server = false;
+      };
+      laptopSysconfig = {
+        graphical = true;
+        laptop = true;
+        server = false;
+      };
+      serverSysconfig = {
+        graphical = false;
+        laptop = false;
+        server = true;
+      };
+      wslSysconfig = {
+        baremetal = false;
+        graphical = false;
+        laptop = true;
+        server = false;
+        wsl = true;
+      };
+
+      desktopExtraModules = [
+        nixos-hardware.nixosModules.common-cpu-amd
+        nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+        nixos-hardware.nixosModules.common-pc-ssd
+      ];
+      laptopExtraModules = [
+        nixos-hardware.nixosModules.msi-gl62
+      ];
+      serverExtraModules = [
+        nixos-hardware.nixosModules.common-cpu-intel
+        nixos-hardware.nixosModules.common-pc-ssd
+      ];
+
+      desktopFullSysconfig = makeBaremetalSysconfig desktopSysconfig;
+      laptopFullSysconfig = makeBaremetalSysconfig laptopSysconfig;
+      serverFullSysconfig = makeBaremetalSysconfig serverSysconfig;
+
+      desktopModules =
+        makeModules "desktop-mads" desktopFullSysconfig
+        ++ [
+          ./modules/ci-vm.nix
+          lanzaboote.nixosModules.lanzaboote
+        ]
+        ++ desktopExtraModules;
+      laptopModules =
+        makeModules "laptop-mads" laptopFullSysconfig
+        ++ [
+          ./modules/ci-vm.nix
+          lanzaboote.nixosModules.lanzaboote
+        ]
+        ++ laptopExtraModules;
+      serverModules =
+        makeModules "server-mads" serverFullSysconfig
+        ++ [
+          ./modules/ci-vm.nix
+          lanzaboote.nixosModules.lanzaboote
+        ]
+        ++ serverExtraModules;
+
+      desktopSystem = makeBaremetalSystem "desktop-mads" desktopSysconfig desktopExtraModules;
+      laptopSystem = makeBaremetalSystem "laptop-mads" laptopSysconfig laptopExtraModules;
+      wslSystem = makeSystem "wsl" wslSysconfig [ nixos-wsl.nixosModules.default ];
+      serverSystem = makeBaremetalSystem "server-mads" serverSysconfig serverExtraModules;
+
+      mkVmBootTest =
+        name: modules: sysconfig: graphical:
+        nixpkgs.legacyPackages.x86_64-linux.testers.runNixOSTest {
+          name = "${name}-vm-boot";
+          node.pkgsReadOnly = false;
+          node.specialArgs = {
+            inherit inputs sysconfig;
+          };
+          nodes.machine = { ... }: {
+            imports = modules ++ [ { ciVm.applyToCurrentSystem = true; } ];
+          };
+          testScript =
+            ''
+              machine.start()
+              machine.wait_for_console_text("CI_BOOT_OK")
+              machine.wait_for_shutdown()
+
+              console_log = machine.get_console_log()
+              assert "CI_UNITS_FAILED" not in console_log, "One or more systemd units failed to start."
+            ''
+            + nixpkgs.lib.optionalString graphical ''
+              assert "CI_HYPR_NOT_STARTED" not in console_log, "Hyprland never started."
+              assert "CI_HYPR_ERRORS_FOUND" not in console_log, "Hyprland logged errors."
+              assert "CI_HYPR_OK" in console_log, "Hyprland did not report success."
+            '';
+        };
     in
     {
-      nixosConfigurations."desktop-mads" =
-        makeBaremetalSystem "desktop-mads"
-          {
-            graphical = true;
-            laptop = false;
-            server = false;
-          }
-          [
-            nixos-hardware.nixosModules.common-cpu-amd
-            nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
-            nixos-hardware.nixosModules.common-pc-ssd
-          ];
+      nixosConfigurations."desktop-mads" = desktopSystem;
+      nixosConfigurations."laptop-mads" = laptopSystem;
+      nixosConfigurations."wsl" = wslSystem;
+      nixosConfigurations."server-mads" = serverSystem;
 
-      nixosConfigurations."laptop-mads" =
-        makeBaremetalSystem "laptop-mads"
-          {
-            graphical = true;
-            laptop = true;
-            server = false;
-          }
-          [
-            nixos-hardware.nixosModules.msi-gl62
-          ];
-
-      nixosConfigurations."wsl" =
-        makeSystem "wsl"
-          {
-            baremetal = false;
-            graphical = false;
-            laptop = true;
-            server = false;
-            wsl = true;
-          }
-          [
-            nixos-wsl.nixosModules.default
-          ];
-
-      nixosConfigurations."server-mads" =
-        makeBaremetalSystem "server-mads"
-          {
-            graphical = false;
-            laptop = false;
-            server = true;
-          }
-          [
-            nixos-hardware.nixosModules.common-cpu-intel
-            nixos-hardware.nixosModules.common-pc-ssd
-          ];
+      checks.x86_64-linux = {
+        desktop-mads-vm-boot =
+          mkVmBootTest "desktop-mads" desktopModules desktopFullSysconfig true;
+        laptop-mads-vm-boot =
+          mkVmBootTest "laptop-mads" laptopModules laptopFullSysconfig true;
+        server-mads-vm-boot =
+          mkVmBootTest "server-mads" serverModules serverFullSysconfig false;
+      };
     };
 }

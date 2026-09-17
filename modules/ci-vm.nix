@@ -6,7 +6,14 @@
   ...
 }:
 {
-  virtualisation.vmVariant = {
+  options.ciVm.applyToCurrentSystem = lib.mkOption {
+    type = lib.types.bool;
+    default = false;
+  };
+
+  config =
+    let
+      vmConfig = {
     virtualisation.graphics = false;
     virtualisation.memorySize = 2048;
     virtualisation.cores = 2;
@@ -88,7 +95,7 @@
               HYPR_LOADED_OK=$(find /run/user/*/hypr -maxdepth 2 -name 'hypr_loaded_ok' 2>/dev/null)
               if [ -z "$HYPR_LOG" ]; then
                 echo "CI_HYPR_NOT_STARTED"
-              elif [ -z "$HYPR_LOADED_OK"; then
+              elif [ -z "$HYPR_LOADED_OK" ]; then
                 echo "CI_HYPR_ERRORS_FOUND"
                 echo "----- hyprland.log -----"
                 cat "$HYPR_LOG"
@@ -107,5 +114,12 @@
           '';
         };
       };
-  };
+      };
+    in
+    lib.mkMerge [
+      {
+        virtualisation.vmVariant = vmConfig;
+      }
+      (lib.mkIf config.ciVm.applyToCurrentSystem vmConfig)
+    ];
 }
