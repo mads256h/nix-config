@@ -153,6 +153,16 @@
             + nixpkgs.lib.optionalString graphical ''
               machine.wait_until_succeeds("find /run/user/*/hypr -maxdepth 2 -name 'hyprland.log' 2>/dev/null | grep -q .")
               machine.wait_until_succeeds("find /run/user/*/hypr -maxdepth 2 -name 'hypr_loaded_ok' 2>/dev/null | grep -q .")
+              machine.wait_until_succeeds("ls /run/user/1000/wayland-* >/dev/null 2>&1")
+              machine.succeed("""
+                su - mads -c '
+                  export XDG_RUNTIME_DIR=/run/user/1000
+                  export WAYLAND_DISPLAY="$(basename "$(ls /run/user/1000/wayland-* | head -n 1)")"
+                  librewolf about:blank >/tmp/librewolf-ci.log 2>&1 &
+                '
+              """)
+              machine.sleep(10)
+              machine.screenshot("librewolf-ci.png")
             '';
         };
     in

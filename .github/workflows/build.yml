@@ -55,6 +55,47 @@ jobs:
       - name: Run VM boot test
         run: nix build ".#checks.x86_64-linux.${{ matrix.host }}-vm-boot" -L --fallback
 
+      - name: Collect graphical VM screenshot
+        if: matrix.host == 'desktop-mads' || matrix.host == 'laptop-mads'
+        run: |
+          set -euo pipefail
+          test -f result/librewolf-ci.png
+          cp result/librewolf-ci.png "librewolf-ci-${{ matrix.host }}.png"
+
+      - name: Upload graphical VM screenshot
+        if: github.event_name == 'pull_request' && (matrix.host == 'desktop-mads' || matrix.host == 'laptop-mads')
+        id: vm_screenshot_artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: librewolf-ci-${{ matrix.host }}
+          path: librewolf-ci-${{ matrix.host }}.png
+
+      - name: Comment screenshot on PR
+        if: github.event_name == 'pull_request' && (matrix.host == 'desktop-mads' || matrix.host == 'laptop-mads')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          MARKER="<!-- vm-screenshot:${{ matrix.host }} -->"
+          ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.vm_screenshot_artifact.outputs.artifact-id }}"
+          {
+            echo "$MARKER"
+            echo
+            echo "### Librewolf screenshot for \`${{ matrix.host }}\`"
+            echo
+            echo "After Hyprland startup, Librewolf was opened and a screenshot was captured."
+            echo
+            echo "[Download screenshot artifact]($ARTIFACT_URL)"
+          } > screenshot-comment.md
+          COMMENT_BODY="$(cat screenshot-comment.md)"
+          COMMENTS_ENDPOINT="repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
+          COMMENT_ID="$(gh api "$COMMENTS_ENDPOINT" --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | contains(\"$MARKER\"))) | .id" | head -n 1 || true)"
+          if [ -n "$COMMENT_ID" ]; then
+            gh api --method PATCH "repos/${{ github.repository }}/issues/comments/$COMMENT_ID" --raw-field body="$COMMENT_BODY"
+          else
+            gh api --method POST "$COMMENTS_ENDPOINT" --raw-field body="$COMMENT_BODY"
+          fi
+
       - name: Checkout base and head revisions
         if: github.event_name == 'pull_request'
         uses: actions/checkout@v7
