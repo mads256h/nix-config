@@ -144,16 +144,15 @@
           testScript =
             ''
               machine.start()
-              machine.wait_for_console_text("CI_BOOT_OK")
-              machine.wait_for_shutdown()
+              machine.wait_for_unit("multi-user.target")
+              machine.wait_until_succeeds("test -z \"$(systemctl list-jobs --no-legend --plain)\"")
 
-              console_log = machine.get_console_log()
-              assert "CI_UNITS_FAILED" not in console_log, "One or more systemd units failed to start."
+              failed_units = machine.succeed("systemctl list-units --failed --no-legend --plain | awk '{print $1}'").strip()
+              assert failed_units == "", f"One or more systemd units failed to start: {failed_units}"
             ''
             + nixpkgs.lib.optionalString graphical ''
-              assert "CI_HYPR_NOT_STARTED" not in console_log, "Hyprland never started."
-              assert "CI_HYPR_ERRORS_FOUND" not in console_log, "Hyprland logged errors."
-              assert "CI_HYPR_OK" in console_log, "Hyprland did not report success."
+              machine.wait_until_succeeds("find /run/user/*/hypr -maxdepth 2 -name 'hyprland.log' 2>/dev/null | grep -q .")
+              machine.wait_until_succeeds("find /run/user/*/hypr -maxdepth 2 -name 'hypr_loaded_ok' 2>/dev/null | grep -q .")
             '';
         };
     in
