@@ -37,6 +37,7 @@ let
     services.radicale.enable = lib.mkForce false;
     services.smartd.enable = lib.mkForce false; # There are no smart devices on vms
     services.transmission.settings.download-dir = lib.mkForce "${config.services.transmission.home}/Downloads";
+    home-manager.users.mads.services.hyprpaper.enable = lib.mkForce false;
 
     systemd.timers = lib.optionalAttrs sysconfig.server {
       "acme-order-renew-file.madsmogensen.dk".enable = lib.mkForce false;
