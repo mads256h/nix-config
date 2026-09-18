@@ -54,38 +54,44 @@
       ...
     }:
     let
+      makeModules =
+        hostname: sysconfig:
+        [
+          (./systems + "/${hostname}/configuration")
+
+          ./configuration/common
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.extraSpecialArgs = {
+              inherit inputs;
+              inherit sysconfig;
+            };
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.mads = {
+              imports = [
+                (./systems + "/${hostname}/home.nix")
+                agenix.homeManagerModules.default
+              ];
+            };
+          }
+
+          agenix.nixosModules.default
+
+          stylix.nixosModules.stylix
+        ];
+
       makeSystem =
         hostname: sysconfig: extraModules:
-        nixpkgs.lib.nixosSystem rec {
+        nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = {
             inherit inputs;
             sysconfig = sysconfig;
           };
 
-          modules = [
-            (./systems + "/${hostname}/configuration")
-
-            ./configuration/common
-
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.extraSpecialArgs = specialArgs;
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.mads = {
-                imports = [
-                  (./systems + "/${hostname}/home.nix")
-                  agenix.homeManagerModules.default
-                ];
-              };
-            }
-
-            agenix.nixosModules.default
-
-            stylix.nixosModules.stylix
-          ]
-          ++ extraModules;
+          modules = makeModules hostname sysconfig ++ extraModules;
         };
 
       makeBaremetalSystem =
@@ -105,6 +111,60 @@
             ]
             ++ extraModules
           );
+
+      mkVmBootTest =
+        name: hostname: sysconfig: extraModules: graphical:
+        let
+          vmSysconfig =
+            {
+              baremetal = true;
+              wsl = false;
+            }
+            // sysconfig;
+        in
+        nixpkgs.legacyPackages.x86_64-linux.testers.runNixOSTest {
+          name = "${name}-vm-boot";
+          node.pkgsReadOnly = false;
+          node.specialArgs = {
+            inherit inputs;
+            sysconfig = vmSysconfig;
+          };
+          nodes.machine = { ... }: {
+            imports =
+              makeModules hostname vmSysconfig
+              ++ [
+                ./modules/ci-vm.nix
+                lanzaboote.nixosModules.lanzaboote
+              ]
+              ++ extraModules
+              ++ [
+                { ciVm.applyToCurrentSystem = true; }
+              ];
+          };
+          testScript =
+            ''
+              machine.start()
+              machine.wait_for_unit("multi-user.target")
+              machine.wait_until_succeeds("test -z \"$(systemctl list-jobs --no-legend --plain)\"")
+
+              failed_units = machine.succeed("systemctl list-units --failed --no-legend --plain | awk '{print $1}'").strip()
+              assert failed_units == "", f"One or more systemd units failed to start: {failed_units}"
+            ''
+            + nixpkgs.lib.optionalString graphical ''
+              machine.wait_until_succeeds("find /run/user/*/hypr -maxdepth 2 -name 'hyprland.log' 2>/dev/null | grep -q .")
+              machine.wait_until_succeeds("find /run/user/*/hypr -maxdepth 2 -name 'hypr_loaded_ok' 2>/dev/null | grep -q .")
+              machine.wait_until_succeeds("ls /run/user/1000/wayland-* >/dev/null 2>&1")
+              machine.succeed("""
+                su - mads -c '
+                  export XDG_RUNTIME_DIR=/run/user/1000
+                  export WAYLAND_DISPLAY="$(basename "$(ls /run/user/1000/wayland-* | head -n 1)")"
+                  librewolf about:blank >/tmp/librewolf-ci.log 2>&1 &
+                '
+              """)
+              machine.sleep(10)
+              machine.screenshot("librewolf-ci.png")
+            '';
+        };
     in
     {
       nixosConfigurations."desktop-mads" =
@@ -155,5 +215,46 @@
             nixos-hardware.nixosModules.common-cpu-intel
             nixos-hardware.nixosModules.common-pc-ssd
           ];
+
+      checks.x86_64-linux = {
+        desktop-mads-vm-boot =
+          mkVmBootTest "desktop-mads" "desktop-mads"
+            {
+              graphical = true;
+              laptop = false;
+              server = false;
+            }
+            [
+              nixos-hardware.nixosModules.common-cpu-amd
+              nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+              nixos-hardware.nixosModules.common-pc-ssd
+            ]
+            true;
+
+        laptop-mads-vm-boot =
+          mkVmBootTest "laptop-mads" "laptop-mads"
+            {
+              graphical = true;
+              laptop = true;
+              server = false;
+            }
+            [
+              nixos-hardware.nixosModules.msi-gl62
+            ]
+            true;
+
+        server-mads-vm-boot =
+          mkVmBootTest "server-mads" "server-mads"
+            {
+              graphical = false;
+              laptop = false;
+              server = true;
+            }
+            [
+              nixos-hardware.nixosModules.common-cpu-intel
+              nixos-hardware.nixosModules.common-pc-ssd
+            ]
+            false;
+      };
     };
 }
