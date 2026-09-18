@@ -7,7 +7,7 @@
 }:
 let
   vmVariantConfig = {
-    virtualisation.graphics = false;
+    virtualisation.graphics = sysconfig.graphical;
     virtualisation.memorySize = 2048;
     virtualisation.cores = 2;
     virtualisation.resolution = lib.optionalAttrs sysconfig.graphical {
