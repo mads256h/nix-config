@@ -5,123 +5,120 @@
   sysconfig,
   ...
 }:
+let
+  vmVariantConfig = {
+    virtualisation.graphics = false;
+    virtualisation.memorySize = 2048;
+    virtualisation.cores = 2;
+    virtualisation.resolution = lib.optionalAttrs sysconfig.graphical {
+      x = 1920;
+      y = 1080;
+    };
+    virtualisation.qemu.options = lib.optional sysconfig.graphical "-vga none -device virtio-gpu-pci";
+
+    # Auto login
+    services.getty.autologinUser = lib.mkForce "mads";
+
+    # Don't try to load a real GPU driver or secure boot in containers CI
+    services.xserver.videoDrivers = lib.mkForce [ ];
+    boot.lanzaboote.enable = lib.mkForce false;
+    boot.initrd.network.ssh.hostKeys = lib.mkForce [ ];
+    boot.initrd.network.ssh.ignoreEmptyHostKeys = true;
+    boot.zswap.enable = lib.mkForce false;
+
+    services.btrfs.autoScrub.enable = lib.mkForce false;
+
+    # No NIC at all -> no DHCP wait, no interface-naming stall
+    virtualisation.qemu.networkingOptions = lib.mkForce [ ];
+    systemd.network.wait-online.enable = lib.mkForce false;
+    networking.useDHCP = lib.mkForce false;
+    networking.interfaces = lib.mkForce { };
+    services.minecraft-server.enable = lib.mkForce false;
+    services.radicale.enable = lib.mkForce false;
+    services.smartd.enable = lib.mkForce false; # There are no smart devices on vms
+    services.transmission.settings.download-dir = lib.mkForce "${config.services.transmission.home}/Downloads";
+
+    systemd.timers = lib.optionalAttrs sysconfig.server {
+      "acme-order-renew-file.madsmogensen.dk".enable = lib.mkForce false;
+      "acme-order-renew-home.madsmogensen.dk".enable = lib.mkForce false;
+      "acme-order-renew-webdav.madsmogensen.dk".enable = lib.mkForce false;
+      "acme-order-renew-spotify.madsmogensen.dk".enable = lib.mkForce false;
+      "acme-renew-file.madsmogensen.dk".enable = lib.mkForce false;
+      "acme-renew-home.madsmogensen.dk".enable = lib.mkForce false;
+      "acme-renew-webdav.madsmogensen.dk".enable = lib.mkForce false;
+      "acme-renew-spotify.madsmogensen.dk".enable = lib.mkForce false;
+    };
+
+    systemd.services =
+      lib.optionalAttrs sysconfig.server {
+        "acme-order-renew-file.madsmogensen.dk".enable = lib.mkForce false;
+        "acme-order-renew-home.madsmogensen.dk".enable = lib.mkForce false;
+        "acme-order-renew-webdav.madsmogensen.dk".enable = lib.mkForce false;
+        "acme-order-renew-spotify.madsmogensen.dk".enable = lib.mkForce false;
+        "nfs-mountd".enable = lib.mkForce false; # Flaky :(
+      }
+      // {
+        # Auto-shutdown once we've successfully reached multi-user.target
+        ci-boot-success = {
+          description = "Signal successful boot for CI, then poweroff";
+          wantedBy = [ "multi-user.target" ];
+          after = [ "multi-user.target" ];
+          serviceConfig = {
+            Type = "oneshot";
+            StandardOutput = "journal+console";
+          };
+          script = ''
+            sleep 60
+
+            FAILED=$(${pkgs.systemd}/bin/systemctl list-units --failed --no-legend --plain | ${pkgs.gawk}/bin/awk '{print $1}')
+
+            if [ -n "$FAILED" ]; then
+              echo "CI_UNITS_FAILED"
+              for unit in $FAILED; do
+                echo "----- journalctl -u $unit -----"
+                ${pkgs.systemd}/bin/journalctl -u "$unit" --no-pager -b
+                echo "----- end $unit -----"
+              done
+            else
+              echo "CI_UNITS_OK"
+            fi
+
+            ${lib.optionalString sysconfig.graphical ''
+              HYPR_LOG=$(find /run/user/*/hypr -maxdepth 2 -name 'hyprland.log' 2>/dev/null)
+              HYPR_LOADED_OK=$(find /run/user/*/hypr -maxdepth 2 -name 'hypr_loaded_ok' 2>/dev/null)
+              if [ -z "$HYPR_LOG" ]; then
+                echo "CI_HYPR_NOT_STARTED"
+              elif [ -z "$HYPR_LOADED_OK" ]; then
+                echo "CI_HYPR_ERRORS_FOUND"
+                echo "----- hyprland.log -----"
+                cat "$HYPR_LOG"
+                echo "----- end -----"
+              else
+                echo "CI_HYPR_OK"
+                echo "found hypr_loaded_ok at $HYPR_LOADED_OK"
+                echo "----- hyprland.log -----"
+                cat "$HYPR_LOG"
+                echo "----- end -----"
+              fi
+            ''}
+
+            echo "CI_BOOT_OK"
+            ${pkgs.systemd}/bin/systemctl poweroff
+          '';
+        };
+      };
+  };
+in
 {
   options.ciVm.applyToCurrentSystem = lib.mkOption {
     type = lib.types.bool;
     default = false;
   };
 
-  config =
-    let
-      vmOnlyConfig = {
-        virtualisation.graphics = false;
-        virtualisation.memorySize = 2048;
-        virtualisation.cores = 2;
-        virtualisation.resolution = lib.optionalAttrs sysconfig.graphical {
-          x = 1920;
-          y = 1080;
-        };
-        virtualisation.qemu.options = lib.optional sysconfig.graphical "-vga none -device virtio-gpu-pci";
-        virtualisation.qemu.networkingOptions = lib.mkForce [ ];
-      };
-
-      ciCommonConfig = {
-        # Auto login
-        services.getty.autologinUser = lib.mkForce "mads";
-
-        # Don't try to load a real GPU driver or secure boot in containers CI
-        services.xserver.videoDrivers = lib.mkForce [ ];
-        boot.lanzaboote.enable = lib.mkForce false;
-        boot.initrd.network.ssh.hostKeys = lib.mkForce [ ];
-        boot.initrd.network.ssh.ignoreEmptyHostKeys = true;
-        boot.zswap.enable = lib.mkForce false;
-
-        services.btrfs.autoScrub.enable = lib.mkForce false;
-
-        # No NIC at all -> no DHCP wait, no interface-naming stall
-        systemd.network.wait-online.enable = lib.mkForce false;
-        networking.useDHCP = lib.mkForce false;
-        networking.interfaces = lib.mkForce { };
-        services.minecraft-server.enable = lib.mkForce false;
-        services.radicale.enable = lib.mkForce false;
-        services.smartd.enable = lib.mkForce false; # There are no smart devices on vms
-        services.transmission.settings.download-dir = lib.mkForce "${config.services.transmission.home}/Downloads";
-
-        systemd.timers = lib.optionalAttrs sysconfig.server {
-          "acme-order-renew-file.madsmogensen.dk".enable = lib.mkForce false;
-          "acme-order-renew-home.madsmogensen.dk".enable = lib.mkForce false;
-          "acme-order-renew-webdav.madsmogensen.dk".enable = lib.mkForce false;
-          "acme-order-renew-spotify.madsmogensen.dk".enable = lib.mkForce false;
-          "acme-renew-file.madsmogensen.dk".enable = lib.mkForce false;
-          "acme-renew-home.madsmogensen.dk".enable = lib.mkForce false;
-          "acme-renew-webdav.madsmogensen.dk".enable = lib.mkForce false;
-          "acme-renew-spotify.madsmogensen.dk".enable = lib.mkForce false;
-        };
-
-        systemd.services =
-          lib.optionalAttrs sysconfig.server {
-            "acme-order-renew-file.madsmogensen.dk".enable = lib.mkForce false;
-            "acme-order-renew-home.madsmogensen.dk".enable = lib.mkForce false;
-            "acme-order-renew-webdav.madsmogensen.dk".enable = lib.mkForce false;
-            "acme-order-renew-spotify.madsmogensen.dk".enable = lib.mkForce false;
-            "nfs-mountd".enable = lib.mkForce false; # Flaky :(
-          }
-          // {
-            # Auto-shutdown once we've successfully reached multi-user.target
-            ci-boot-success = {
-              description = "Signal successful boot for CI, then poweroff";
-              wantedBy = [ "multi-user.target" ];
-              after = [ "multi-user.target" ];
-              serviceConfig = {
-                Type = "oneshot";
-                StandardOutput = "journal+console";
-              };
-              script = ''
-                sleep 60
-
-                FAILED=$(${pkgs.systemd}/bin/systemctl list-units --failed --no-legend --plain | ${pkgs.gawk}/bin/awk '{print $1}')
-
-                if [ -n "$FAILED" ]; then
-                  echo "CI_UNITS_FAILED"
-                  for unit in $FAILED; do
-                    echo "----- journalctl -u $unit -----"
-                    ${pkgs.systemd}/bin/journalctl -u "$unit" --no-pager -b
-                    echo "----- end $unit -----"
-                  done
-                else
-                  echo "CI_UNITS_OK"
-                fi
-
-                ${lib.optionalString sysconfig.graphical ''
-                  HYPR_LOG=$(find /run/user/*/hypr -maxdepth 2 -name 'hyprland.log' 2>/dev/null)
-                  HYPR_LOADED_OK=$(find /run/user/*/hypr -maxdepth 2 -name 'hypr_loaded_ok' 2>/dev/null)
-                  if [ -z "$HYPR_LOG" ]; then
-                    echo "CI_HYPR_NOT_STARTED"
-                  elif [ -z "$HYPR_LOADED_OK" ]; then
-                    echo "CI_HYPR_ERRORS_FOUND"
-                    echo "----- hyprland.log -----"
-                    cat "$HYPR_LOG"
-                    echo "----- end -----"
-                  else
-                    echo "CI_HYPR_OK"
-                    echo "found hypr_loaded_ok at $HYPR_LOADED_OK"
-                    echo "----- hyprland.log -----"
-                    cat "$HYPR_LOG"
-                    echo "----- end -----"
-                  fi
-                ''}
-
-                echo "CI_BOOT_OK"
-                ${pkgs.systemd}/bin/systemctl poweroff
-              '';
-            };
-          };
-        };
-    in
-    lib.mkMerge [
-      {
-        virtualisation.vmVariant = vmOnlyConfig // ciCommonConfig;
-      }
-      (lib.mkIf config.ciVm.applyToCurrentSystem ciCommonConfig)
-    ];
+  config = lib.mkMerge [
+    {
+      virtualisation.vmVariant = vmVariantConfig;
+    }
+    (lib.mkIf config.ciVm.applyToCurrentSystem (builtins.removeAttrs vmVariantConfig [ "virtualisation" ]))
+  ];
 }
