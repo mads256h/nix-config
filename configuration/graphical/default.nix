@@ -2,8 +2,7 @@
 {
   fonts.packages = with pkgs; [
     font-awesome
-    corefonts
-    vista-fonts
+    nur.repos.hexadecimalDinosaur.ttf-ms-win11.all
   ];
 
   environment.systemPackages = [

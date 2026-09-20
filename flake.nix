@@ -8,6 +8,11 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -46,6 +51,7 @@
       nixpkgs,
       nixos-hardware,
       home-manager,
+      nur,
       agenix,
       stylix,
       lanzaboote,
@@ -82,6 +88,8 @@
             }
 
             agenix.nixosModules.default
+
+            nur.modules.nixos.default
 
             stylix.nixosModules.stylix
           ]
