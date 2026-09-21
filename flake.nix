@@ -16,7 +16,7 @@
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
 
-    hyprland.url = "github:hyprwm/hyprland?ref=45c8510c9c52aee541ac2b31c2b716d61c526241";
+    hyprland.url = "github:hyprwm/hyprland?ref=5fbb2a7acce2d6f155d18cf5b590fc553a8e7abc";
     #hyprland.url = "github:hyprwm/hyprland?ref=v0.56.2";
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
     #hyprland-plugins.url = "github:hyprwm/hyprland-plugins?ref=v0.54.2";
