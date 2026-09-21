@@ -20,7 +20,7 @@ let
     services.getty.autologinUser = lib.mkForce "mads";
 
     # Don't try to load a real GPU driver or secure boot in containers CI
-    services.xserver.videoDrivers = lib.mkForce [ ];
+    services.xserver.videoDrivers = lib.mkForce [ "modesetting" ];
     boot.lanzaboote.enable = lib.mkForce false;
     boot.initrd.network.ssh.hostKeys = lib.mkForce [ ];
     boot.initrd.network.ssh.ignoreEmptyHostKeys = true;
@@ -38,6 +38,11 @@ let
     services.smartd.enable = lib.mkForce false; # There are no smart devices on vms
     services.transmission.settings.download-dir = lib.mkForce "${config.services.transmission.home}/Downloads";
     home-manager.users.mads.services.hyprpaper.enable = lib.mkForce false;
+    home-manager.users.mads.wayland.windowManager.hyprland.settings.env = lib.mkAfter [
+      "AQ_DRM_DEVICES,/dev/dri/card1:/dev/dri/card0"
+      "AQ_NO_MODIFIERS,1"
+      "WLR_RENDERER_ALLOW_SOFTWARE,1"
+    ];
 
     systemd.timers = lib.optionalAttrs sysconfig.server {
       "acme-order-renew-file.madsmogensen.dk".enable = lib.mkForce false;
