@@ -163,7 +163,6 @@
             + nixpkgs.lib.optionalString graphical ''
               machine.wait_until_succeeds("find /run/user/*/hypr -maxdepth 2 -name 'hyprland.log' 2>/dev/null | grep -q .")
               machine.wait_until_succeeds("ls /run/user/1000/wayland-* >/dev/null 2>&1")
-              machine.wait_until_succeeds("su - mads -c 'XDG_RUNTIME_DIR=/run/user/1000 hyprctl -j monitors >/dev/null 2>&1'")
               machine.succeed("""
                 su - mads -c '
                   export XDG_RUNTIME_DIR=/run/user/1000
