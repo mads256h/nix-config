@@ -17,17 +17,19 @@
     agenix.inputs.nixpkgs.follows = "nixpkgs";
 
     hyprland.url = "github:hyprwm/hyprland?ref=5fbb2a7acce2d6f155d18cf5b590fc553a8e7abc";
-    #hyprland.url = "github:hyprwm/hyprland?ref=v0.56.2";
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
-    #hyprland-plugins.url = "github:hyprwm/hyprland-plugins?ref=v0.54.2";
+
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
     hyprland-plugins.inputs.hyprland.follows = "hyprland";
+
     rose-pine-hyprcursor = {
       url = "github:ndom91/rose-pine-hyprcursor";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.hyprlang.follows = "hyprland/hyprlang";
     };
-    hy3.url = "github:outfoxxed/hy3?ref=hl0.56.0.1";
+
+    hy3.url = "github:elafarge/hy3?ref=378fb240479d631bed749554417cf9d12e5e0ef6";
+    #hy3.url = "github:outfoxxed/hy3?ref=12a73ab0adddbc39f839da320dcc2b028769fc58";
     hy3.inputs.hyprland.follows = "hyprland";
 
     stylix.url = "github:nix-community/stylix";

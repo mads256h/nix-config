@@ -393,16 +393,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1784785174,
-        "narHash": "sha256-iK0vERuy5aXisDXm/bzcJP0dgaIot5MLPoVG62DjqO4=",
-        "owner": "outfoxxed",
+        "lastModified": 1789304606,
+        "narHash": "sha256-ndNFWiQU+cz2CYEHB0091twm74l0jRjhiJPjuB4whP8=",
+        "owner": "elafarge",
         "repo": "hy3",
-        "rev": "42b7ed8fd9aefd3f36e5f617afd5071245c67853",
+        "rev": "378fb240479d631bed749554417cf9d12e5e0ef6",
         "type": "github"
       },
       "original": {
-        "owner": "outfoxxed",
-        "ref": "hl0.56.0.1",
+        "owner": "elafarge",
+        "ref": "378fb240479d631bed749554417cf9d12e5e0ef6",
         "repo": "hy3",
         "type": "github"
       }
