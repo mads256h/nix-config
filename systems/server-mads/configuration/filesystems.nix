@@ -46,7 +46,7 @@
 
   # Torrents
   fileSystems."/mnt/torrents" = {
-    device = "/dev/disk/by-uuid/675e7fc0-9e81-4e38-9809-d133df8cb36c";
+    device = "/dev/disk/by-uuid/804fe9f8-1d31-4af9-9f7f-bd8fa9df42f5";
     fsType = "ext4";
     options = [
       "defaults"
@@ -92,5 +92,9 @@
   boot.zfs.forceImportRoot = false;
 
   boot.swraid.enable = true;
-  boot.swraid.mdadmConf = "MAILADDR mads" + "256" + "h" + "@pro" + "tonm" + "ail" + ".com";
+  boot.swraid.mdadmConf = ''
+    DEVICE partitions
+    ARRAY /dev/md/torrents metadata=1.2 UUID=0091a52e:70a459d2:25d515d3:31cf5a8c
+    MAILADDR ${"mads" + "256" + "h" + "@pro" + "tonm" + "ail" + ".com"}
+  '';
 }
