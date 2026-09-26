@@ -181,7 +181,16 @@
                   librewolf about:blank >/dev/null 2>&1 &
                 '
               """)
-              machine.sleep(20)
+              my_log("Waiting for Librewolf window in Hyprland")
+              machine.wait_until_succeeds("""
+                su - mads -c '
+                  export XDG_RUNTIME_DIR=/run/user/1000
+                  export WAYLAND_DISPLAY="$(basename "$(ls /run/user/1000/wayland-* | head -n 1)")"
+                  export HYPRLAND_INSTANCE_SIGNATURE="$(basename "$(ls -d /run/user/1000/hypr/* | head -n 1)")"
+                  timeout 5s hyprctl clients 2>/dev/null | grep -qi librewolf
+                '
+              """)
+              machine.sleep(5)
               my_log("Taking screenshot")
               machine.screenshot("librewolf-ci.png")
             '';
