@@ -54,7 +54,6 @@ let
       "acme-order-renew-home.madsmogensen.dk".enable = lib.mkForce false;
       "acme-order-renew-webdav.madsmogensen.dk".enable = lib.mkForce false;
       "acme-order-renew-spotify.madsmogensen.dk".enable = lib.mkForce false;
-      "nfs-mountd".enable = lib.mkForce false; # Flaky :(
     };
   };
 in
