@@ -153,27 +153,27 @@
           };
           testScript =
             ''
-              def log(message):
+              def my_log(message):
                 machine.succeed(f"echo 'nix tests: {message}' | systemd-cat")
 
               machine.start()
-              log("Waiting for multi-user.target")
+              my_log("Waiting for multi-user.target")
               machine.wait_for_unit("multi-user.target")
-              log("Waiting until all services are started")
+              my_log("Waiting until all services are started")
               machine.wait_until_succeeds("test -z \"$(systemctl list-jobs --no-legend --plain)\"")
 
-              log("Checking if all services are startedd correctly")
+              my_log("Checking if all services are startedd correctly")
               failed_units = machine.succeed("systemctl list-units --failed --no-legend --plain | awk '{print $1}'").strip()
               assert failed_units == "", f"One or more systemd units failed to start: {failed_units}"
             ''
             + nixpkgs.lib.optionalString graphical ''
-              log("Checking to see if hyprland has started")
+              my_log("Checking to see if hyprland has started")
               machine.wait_until_succeeds("find /run/user/*/hypr -maxdepth 2 -name 'hyprland.log' 2>/dev/null | grep -q .")
-              log("Checking to see if wayland directories / files is created")
+              my_log("Checking to see if wayland directories / files is created")
               machine.wait_until_succeeds("ls /run/user/1000/wayland-* >/dev/null 2>&1")
-              log("Checking to see if hyprland-session.target is reached")
+              my_log("Checking to see if hyprland-session.target is reached")
               machine.wait_until_succeeds("su - mads -c 'XDG_RUNTIME_DIR=/run/user/1000 systemctl --user is-active hyprland-session.target'")
-              log("Starting librewolf")
+              my_log("Starting librewolf")
               machine.succeed("""
                 su - mads -c '
                   export XDG_RUNTIME_DIR=/run/user/1000
@@ -182,7 +182,7 @@
                 '
               """)
               machine.sleep(10)
-              log("Taking screenshot")
+              my_log("Taking screenshot")
               machine.screenshot("librewolf-ci.png")
             '';
         };
