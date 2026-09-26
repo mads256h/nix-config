@@ -52,38 +52,49 @@ jobs:
       - name: Build toplevel system closure
         run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel --fallback
 
-      - name: Build VM
-        run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.vm" -L -o result --fallback
+      - name: Run VM boot test
+        run: nix build ".#checks.x86_64-linux.${{ matrix.host }}-vm-boot" -L --fallback
 
-      - name: Boot VM and check for sucessful boot
+      - name: Collect graphical VM screenshot
+        if: matrix.host == 'desktop-mads' || matrix.host == 'laptop-mads'
         run: |
-          set -o pipefail
-          RUNSCRIPT=$(ls result/bin/run-*-vm)
-          QEMU_OPTS="-no-reboot" timeout 180 "$RUNSCRIPT" | tee vm.log
+          set -euo pipefail
+          test -f result/librewolf-ci.png
+          cp result/librewolf-ci.png "librewolf-ci-${{ matrix.host }}.png"
 
-          if ! grep -q "CI_BOOT_OK" vm.log; then
-            echo "VM did not reach the boot-success checkpoint."
-            exit 1
+      - name: Upload graphical VM screenshot
+        if: github.event_name == 'pull_request' && (matrix.host == 'desktop-mads' || matrix.host == 'laptop-mads')
+        id: vm_screenshot_artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: librewolf-ci-${{ matrix.host }}
+          path: librewolf-ci-${{ matrix.host }}.png
+
+      - name: Comment screenshot on PR
+        if: github.event_name == 'pull_request' && (matrix.host == 'desktop-mads' || matrix.host == 'laptop-mads')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          MARKER="<!-- vm-screenshot:${{ matrix.host }} -->"
+          ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.vm_screenshot_artifact.outputs.artifact-id }}"
+          {
+            echo "$MARKER"
+            echo
+            echo "### Librewolf screenshot for \`${{ matrix.host }}\`"
+            echo
+            echo "After Hyprland startup, Librewolf was opened and a screenshot was captured."
+            echo
+            echo "[Download screenshot artifact]($ARTIFACT_URL)"
+          } > screenshot-comment.md
+          COMMENT_BODY="$(cat screenshot-comment.md)"
+          COMMENTS_ENDPOINT="repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
+          COMMENT_ID="$(gh api "$COMMENTS_ENDPOINT" --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | contains(\"$MARKER\"))) | .id" | head -n 1 || true)"
+          if [ -n "$COMMENT_ID" ]; then
+            gh api --method PATCH "repos/${{ github.repository }}/issues/comments/$COMMENT_ID" --raw-field body="$COMMENT_BODY"
+          else
+            gh api --method POST "$COMMENTS_ENDPOINT" --raw-field body="$COMMENT_BODY"
           fi
-
-          if grep -q "CI_UNITS_FAILED" vm.log; then
-            echo "One or more systemd units failed to start. See below:"
-            sed -n '/CI_UNITS_FAILED/,/CI_BOOT_OK/p' vm.log
-            exit 1
-          fi
-
-          if grep -q "CI_HYPR_NOT_STARTED" vm.log; then
-            echo "Hyprland never started."
-            exit 1
-          fi
-
-          if grep -q "CI_HYPR_ERRORS_FOUND" vm.log; then
-            echo "Hyprland logged errors:"
-            sed -n '/CI_HYPR_ERRORS_FOUND/,/CI_BOOT_OK/p' vm.log
-            exit 1
-          fi
-
-          echo "Boot, units, and Hyprland all clean."
 
       - name: Checkout base and head revisions
         if: github.event_name == 'pull_request'
