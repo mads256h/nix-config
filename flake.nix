@@ -178,7 +178,7 @@
                 su - mads -c '
                   export XDG_RUNTIME_DIR=/run/user/1000
                   export WAYLAND_DISPLAY="$(basename "$(ls /run/user/1000/wayland-* | head -n 1)")"
-                  librewolf about:blank &
+                  librewolf about:blank >/dev/null 2>&1 &
                 '
               """)
               machine.sleep(20)
