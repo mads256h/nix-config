@@ -33,6 +33,7 @@
     steamtinkerlaunch
     signal-desktop
     steamguard-cli
+    rpcs3
   ];
 
   # Enable for websites incompatible with librewolf (default config)

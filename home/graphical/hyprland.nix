@@ -35,6 +35,11 @@
           gaps_in = 15;
           gaps_out = 15;
           layout = "hy3";
+          allow_tearing = true;
+        };
+        render = {
+          #async_commit = true;
+          direct_scanout = 2;
         };
         decoration = {
           blur = {
@@ -49,6 +54,10 @@
         input = {
           kb_layout = "dk";
           numlock_by_default = true;
+        };
+        misc = {
+          disable_hyprland_logo = true;
+          disable_splash_rendering = true;
         };
         debug = {
           enable_stdout_logs = true;
@@ -440,10 +449,17 @@
       window_rule = [
         {
           match.class = "gamescope";
+          content = "game";
           immediate = true;
         }
         {
           match.class = "cs2";
+          content = "game";
+          immediate = true;
+        }
+        {
+          match.class ="^(steam_app_.*)$";
+          content = "game";
           immediate = true;
         }
         {
@@ -455,31 +471,16 @@
           workspace = "2";
         }
         {
-          match.class = "KeePassXC";
+          match.class = "org.keepassxc.KeePassXC";
           workspace = "10";
         }
         {
           match.class = "^(ueberzugpp_.*)$";
           float = true;
-        }
-        {
-          match.class = "^(ueberzugpp_.*)$";
           no_initial_focus = true;
-        }
-        {
-          match.class = "^(ueberzugpp_.*)$";
           suppress_event = "fullscreen maximize activate activatefocus";
-        }
-        {
-          match.class = "^(ueberzugpp_.*)$";
           content = "photo";
-        }
-        {
-          match.class = "^(ueberzugpp_.*)$";
           move = "9999 9999";
-        }
-        {
-          match.class = "^(ueberzugpp_.*)$";
           no_focus = true;
         }
       ];
