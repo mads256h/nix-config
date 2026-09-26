@@ -178,10 +178,10 @@
                 su - mads -c '
                   export XDG_RUNTIME_DIR=/run/user/1000
                   export WAYLAND_DISPLAY="$(basename "$(ls /run/user/1000/wayland-* | head -n 1)")"
-                  librewolf about:blank >/tmp/librewolf-ci.log 2>&1 &
+                  librewolf about:blank &
                 '
               """)
-              machine.sleep(10)
+              machine.sleep(20)
               my_log("Taking screenshot")
               machine.screenshot("librewolf-ci.png")
             '';
