@@ -65,7 +65,7 @@ jobs:
       - name: Upload graphical VM screenshot
         if: github.event_name == 'pull_request' && (matrix.host == 'desktop-mads' || matrix.host == 'laptop-mads')
         id: vm_screenshot_artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: librewolf-ci-${{ matrix.host }}
           path: librewolf-ci-${{ matrix.host }}.png
