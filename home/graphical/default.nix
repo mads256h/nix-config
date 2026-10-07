@@ -34,6 +34,7 @@
     signal-desktop
     steamguard-cli
     rpcs3
+    rusty-psn-gui
   ];
 
   # Enable for websites incompatible with librewolf (default config)

@@ -1,5 +1,9 @@
 { pkgs, inputs, ... }:
 {
+  imports = [
+    ./limits.nix
+  ];
+
   fonts.packages = with pkgs; [
     font-awesome
     nur.repos.hexadecimalDinosaur.ttf-ms-win11.all

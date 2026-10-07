@@ -67,6 +67,8 @@ in
     {
       virtualisation.vmVariant = vmVariantConfig;
     }
-    (lib.mkIf config.ciVm.applyToCurrentSystem (builtins.removeAttrs vmVariantConfig [ "virtualisation" ]))
+    (lib.mkIf config.ciVm.applyToCurrentSystem (
+      builtins.removeAttrs vmVariantConfig [ "virtualisation" ]
+    ))
   ];
 }

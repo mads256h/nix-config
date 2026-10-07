@@ -458,7 +458,7 @@
           immediate = true;
         }
         {
-          match.class ="^(steam_app_.*)$";
+          match.class = "^(steam_app_.*)$";
           content = "game";
           immediate = true;
         }
