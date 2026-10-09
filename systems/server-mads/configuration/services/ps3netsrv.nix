@@ -20,7 +20,7 @@ in
     serviceConfig = {
       DynamicUser = true;
       SupplementaryGroups = "users"; # Access to ps3 folder
-      ExecStart = "${lib.getExe pkgs.ps3netsrv-go} server --root=${lib.escapeShellArg sharePath} --strict-root --log-level=debug";
+      ExecStart = "${lib.getExe pkgs.ps3netsrv-go} server --root=${lib.escapeShellArg sharePath} --strict-root";
       CapabilityBoundingSet = [ "" ];
       DeviceAllow = [ "" ];
       LockPersonality = true;
