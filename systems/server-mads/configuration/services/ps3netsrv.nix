@@ -6,7 +6,6 @@
 
 let
   sharePath = "/mnt/share/Delte Filer/Spil/ps3";
-  whitelistIp = "10.1.1.2";
   port = 38008;
 in
 {
@@ -20,7 +19,7 @@ in
 
     serviceConfig = {
       DynamicUser = true;
-      ExecStart = "${lib.getExe pkgs.ps3netsrv} ${lib.escapeShellArg sharePath} ${toString port} ${whitelistIp}";
+      ExecStart = "${lib.getExe pkgs.ps3netsrv-go} --root=${lib.escapeShellArg sharePath} --strict-root --log-level=debug";
       NoNewPrivileges = true;
       PrivateDevices = true;
       PrivateTmp = true;
@@ -30,7 +29,6 @@ in
       ProtectKernelModules = true;
       ProtectKernelTunables = true;
       ProtectSystem = "strict";
-      ReadOnlyPaths = [ sharePath ];
       RestrictAddressFamilies = [
         "AF_INET"
         "AF_INET6"

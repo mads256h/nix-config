@@ -35,6 +35,7 @@
     steamguard-cli
     rpcs3
     rusty-psn-gui
+    ps3netsrv-go
   ];
 
   # Enable for websites incompatible with librewolf (default config)
