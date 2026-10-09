@@ -29,6 +29,7 @@ in
       ProtectKernelModules = true;
       ProtectKernelTunables = true;
       ProtectSystem = "strict";
+      ReadOnlyPaths = [ (lib.escapeShellArg sharePath) ];
       RestrictAddressFamilies = [
         "AF_INET"
         "AF_INET6"
