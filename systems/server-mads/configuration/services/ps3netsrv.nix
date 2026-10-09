@@ -19,7 +19,7 @@ in
 
     serviceConfig = {
       DynamicUser = true;
-      ExecStart = "${lib.getExe pkgs.ps3netsrv-go} --root=${lib.escapeShellArg sharePath} --strict-root --log-level=debug";
+      ExecStart = "${lib.getExe pkgs.ps3netsrv-go} server --root=${lib.escapeShellArg sharePath} --strict-root --log-level=debug";
       NoNewPrivileges = true;
       PrivateDevices = true;
       PrivateTmp = true;
