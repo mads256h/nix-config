@@ -24,12 +24,16 @@ in
       CapabilityBoundingSet = [ "" ];
       DeviceAllow = [ "" ];
       LockPersonality = true;
+      MemoryDenyWriteExecute = true;
       NoNewPrivileges = true;
       PrivateDevices = true;
       PrivateTmp = true;
+      PrivateUsers = true;
+      ProcSubset = "pid";
       ProtectClock = true;
       ProtectControlGroups = true;
       ProtectHome = true;
+      ProtectHostname = true;
       ProtectKernelLogs = true;
       ProtectKernelModules = true;
       ProtectKernelTunables = true;
@@ -51,6 +55,7 @@ in
         "~@setuid"
         "~@privileged"
       ];
+      UMask=0077; # Wont be writing anything anyhow
     };
   };
 }
