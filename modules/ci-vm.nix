@@ -54,6 +54,9 @@ let
       "acme-order-renew-home.madsmogensen.dk".enable = lib.mkForce false;
       "acme-order-renew-webdav.madsmogensen.dk".enable = lib.mkForce false;
       "acme-order-renew-spotify.madsmogensen.dk".enable = lib.mkForce false;
+      "ps3netsrv".serviceConfig.ExecStartPre = [
+        "+${pkgs.coreutils}/bin/install -d -o root -g users ${(lib.escapeShellArg "/mnt/share/Delte Filer/Spil/ps3")}"
+      ];
     };
   };
 in
