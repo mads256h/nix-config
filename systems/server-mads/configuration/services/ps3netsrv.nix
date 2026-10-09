@@ -19,17 +19,17 @@ in
 
     serviceConfig = {
       DynamicUser = true;
+      SupplementaryGroups = "users";
       ExecStart = "${lib.getExe pkgs.ps3netsrv-go} server --root=${lib.escapeShellArg sharePath} --strict-root --log-level=debug";
       NoNewPrivileges = true;
       PrivateDevices = true;
-      PrivateTmp = true;
       ProtectControlGroups = true;
       ProtectHome = true;
       ProtectKernelLogs = true;
       ProtectKernelModules = true;
       ProtectKernelTunables = true;
       ProtectSystem = "strict";
-      ReadOnlyPaths = [ (lib.escapeShellArg sharePath) ];
+      #ReadOnlyPaths = [ (lib.escapeShellArg sharePath) ];
       RestrictAddressFamilies = [
         "AF_INET"
         "AF_INET6"
