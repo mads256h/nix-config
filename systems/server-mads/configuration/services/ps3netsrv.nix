@@ -19,24 +19,38 @@ in
 
     serviceConfig = {
       DynamicUser = true;
-      SupplementaryGroups = "users";
+      SupplementaryGroups = "users"; # Access to ps3 folder
       ExecStart = "${lib.getExe pkgs.ps3netsrv-go} server --root=${lib.escapeShellArg sharePath} --strict-root --log-level=debug";
+      CapabilityBoundingSet = [ "" ];
+      DeviceAllow = [ "" ];
+      LockPersonality = true;
       NoNewPrivileges = true;
       PrivateDevices = true;
+      PrivateTmp = true;
+      ProtectClock = true;
       ProtectControlGroups = true;
       ProtectHome = true;
       ProtectKernelLogs = true;
       ProtectKernelModules = true;
       ProtectKernelTunables = true;
+      ProtectProc = "invisible";
       ProtectSystem = "strict";
-      #ReadOnlyPaths = [ (lib.escapeShellArg sharePath) ];
+      RemoveIPC = true;
       RestrictAddressFamilies = [
         "AF_INET"
-        "AF_INET6"
       ];
       RestrictNamespaces = true;
+      RestrictRealtime = true;
+      RestrictSUIDSGID = true;
       SystemCallArchitectures = "native";
-      SystemCallFilter = [ "@system-service" ];
+      SystemCallFilter = [ 
+        "@system-service"
+        "~@chown"
+        "~@keyring"
+        "~@resources"
+        "~@setuid"
+        "~@privileged"
+      ];
     };
   };
 }
