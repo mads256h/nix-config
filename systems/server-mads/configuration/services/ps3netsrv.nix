@@ -47,7 +47,7 @@ in
       RestrictRealtime = true;
       RestrictSUIDSGID = true;
       SystemCallArchitectures = "native";
-      SystemCallFilter = [ 
+      SystemCallFilter = [
         "@system-service"
         "~@chown"
         "~@keyring"
@@ -55,7 +55,7 @@ in
         "~@setuid"
         "~@privileged"
       ];
-      UMask=0077; # Wont be writing anything anyhow
+      UMask = 0077; # Wont be writing anything anyhow
     };
   };
 }
