@@ -11,11 +11,13 @@
         "privacy.clearOnShutdown_v2.cookiesAndStorage" = false;
         "media.videocontrols.picture-in-picture.video-toggle.enabled" = false;
       };
+      # Fix color theme
+      extensions.settings."FirefoxColor@mozilla.com".force = true;
     };
   };
 
   stylix.targets.librewolf = {
-    # colorTheme.enable = true;
+    colorTheme.enable = true;
     profileNames = [ "default" ];
   };
 

@@ -8,6 +8,7 @@
   stylix = {
     enable = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/onedark.yaml";
+    polarity = "dark";
     fonts.sizes.applications = 10;
     fonts.sizes.terminal = 11;
     fonts.serif = {

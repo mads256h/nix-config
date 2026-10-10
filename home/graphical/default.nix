@@ -57,8 +57,6 @@
     alwaysEnableDevTools = true;
   };
 
-  stylix.targets.spicetify.enable = false;
-
   programs.keepassxc = {
     enable = true;
     settings = {
