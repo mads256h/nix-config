@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   imports = [
     # Include the results of the hardware scan.
@@ -21,6 +21,9 @@
     "pcie_aspm=off"
     "pcie_port_pm=off"
   ];
+
+  hardware.nvidia.package =
+    pkgs.nvidia-patch.auto-patch config.boot.kernelPackages.nvidiaPackages.stable;
 
   networking.hostName = "laptop-mads"; # Define your hostname.
   # Pick only one of the below networking options.

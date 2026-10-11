@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 {
   imports = [
     # Include the results of the hardware scan.
@@ -22,6 +27,10 @@
   environment.variables = {
     "__GL_SHADER_DISK_CACHE_SKIP_CLEANUP" = 1;
   };
+
+  hardware.nvidia.package = lib.mkForce (
+    pkgs.nvidia-patch.auto-patch config.boot.kernelPackages.nvidiaPackages.legacy_580
+  );
 
   networking.hostName = "desktop-mads"; # Define your hostname.
   # Pick only one of the below networking options.

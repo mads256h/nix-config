@@ -117,7 +117,10 @@ in
 
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.overlays = [ (import ../../overlays/packages) ];
+  nixpkgs.overlays = [
+    inputs.nvidia-patch.overlays.default
+    (import ../../overlays/packages)
+  ];
 
   nix.settings.experimental-features = [
     "nix-command"
