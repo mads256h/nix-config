@@ -45,6 +45,9 @@
 
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-sbom-helper.url = "github:cyberus-technology/nix-sbom-helper";
+    nix-sbom-helper.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -58,6 +61,7 @@
       stylix,
       lanzaboote,
       nixos-wsl,
+      nix-sbom-helper,
       hyprland,
       ...
     }:
@@ -281,6 +285,21 @@
               nixos-hardware.nixosModules.common-pc-ssd
             ]
             false;
+      };
+
+      sboms.x86_64-linux = {
+        desktop-mads = nix-sbom-helper.support.x86_64-linux.buildSbom {
+          input = self.nixosConfigurations."desktop-mads".config.system.build.toplevel;
+        };
+        laptop-mads = nix-sbom-helper.support.x86_64-linux.buildSbom {
+          input = self.nixosConfigurations."laptop-mads".config.system.build.toplevel;
+        };
+        server-mads = nix-sbom-helper.support.x86_64-linux.buildSbom {
+          input = self.nixosConfigurations."server-mads".config.system.build.toplevel;
+        };
+        wsl = nix-sbom-helper.support.x86_64-linux.buildSbom {
+          input = self.nixosConfigurations."wsl".config.system.build.toplevel;
+        };
       };
     };
 }
