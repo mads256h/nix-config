@@ -11,6 +11,63 @@ permissions:
   pull-requests: write
 
 jobs:
+  sbom-submit:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [desktop-mads, laptop-mads, server-mads, wsl]
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            extra-substituters = https://mads256h.cachix.org https://nix-community.cachix.org https://hyprland.cachix.org
+            extra-trusted-public-keys = mads256h.cachix.org-1:6kAAfDlu6DSFqADoOQzlkOPQKO1hoptBHgnJGnuEnkI= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: mads256h
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Re-add other Cachix caches (cachix-action overwrites substituters)
+        run: |
+          mkdir -p ~/.config/nix
+          cat >> ~/.config/nix/nix.conf <<'EOF'
+            extra-substituters = https://nix-community.cachix.org https://hyprland.cachix.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=
+          EOF
+
+      - name: Generate SPDX SBOM with nix-sbom-helper
+        env:
+          SBOM_HOST: ${{ matrix.host }}
+        run: |
+          set -euo pipefail
+          SBOM_OUT="$(nix build --no-link --print-out-paths --expr '
+            let
+              helper = builtins.getFlake "github:cyberus-technology/nix-sbom-helper";
+              flake = builtins.getFlake (toString ./.);
+              host = builtins.getEnv "SBOM_HOST";
+            in
+              helper.outputs.support.x86_64-linux.buildSbom {
+                input = (builtins.getAttr host flake.outputs.nixosConfigurations).config.system.build.toplevel;
+              }
+          ')"
+          mkdir -p sbom
+          cp "$SBOM_OUT"/*.spdx.json sbom/
+
+      - name: Submit SBOM to GitHub dependency graph
+        uses: advanced-security/spdx-dependency-submission-action@v0.3.2
+        with:
+          filePath: sbom
+          filePattern: "*.spdx.json"
+          correlator: sbom-${{ matrix.host }}
+
   vm-boot-test:
     runs-on: ubuntu-latest
     strategy:
