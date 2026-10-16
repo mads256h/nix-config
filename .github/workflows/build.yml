@@ -45,20 +45,9 @@ jobs:
           EOF
 
       - name: Generate SPDX SBOM with nix-sbom-helper
-        env:
-          SBOM_HOST: ${{ matrix.host }}
         run: |
           set -euo pipefail
-          SBOM_OUT="$(nix build --no-link --print-out-paths --expr '
-            let
-              helper = builtins.getFlake "github:cyberus-technology/nix-sbom-helper";
-              flake = builtins.getFlake (toString ./.);
-              host = builtins.getEnv "SBOM_HOST";
-            in
-              helper.outputs.support.x86_64-linux.buildSbom {
-                input = (builtins.getAttr host flake.outputs.nixosConfigurations).config.system.build.toplevel;
-              }
-          ')"
+          SBOM_OUT="$(nix build --no-link --print-out-paths ".#sboms.x86_64-linux.${{ matrix.host }}")"
           mkdir -p sbom
           cp "$SBOM_OUT"/*.spdx.json sbom/
 

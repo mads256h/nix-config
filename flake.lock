@@ -136,6 +136,21 @@
         "type": "github"
       }
     },
+    "dried-nix-flakes": {
+      "locked": {
+        "lastModified": 1755791902,
+        "narHash": "sha256-KphNt3kMLfCR4wlguKAAA30uDHOzMC2vNGxVzSjG3m8=",
+        "owner": "cyberus-technology",
+        "repo": "dried-nix-flakes",
+        "rev": "d6cd1f71a8bcdb77757766c70ffd54e39dc8e9bd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cyberus-technology",
+        "repo": "dried-nix-flakes",
+        "type": "github"
+      }
+    },
     "firefox-gnome-theme": {
       "flake": false,
       "locked": {
@@ -737,6 +752,27 @@
         "type": "github"
       }
     },
+    "nix-sbom-helper": {
+      "inputs": {
+        "dried-nix-flakes": "dried-nix-flakes",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1755868513,
+        "narHash": "sha256-I+AQP7jub60v1+kUAyI0jYcKHBen0clIPfQUPpTg7DI=",
+        "owner": "cyberus-technology",
+        "repo": "nix-sbom-helper",
+        "rev": "dba16eab2c57870bd726e69ee935ec82709c139a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cyberus-technology",
+        "repo": "nix-sbom-helper",
+        "type": "github"
+      }
+    },
     "nixos-hardware": {
       "inputs": {
         "nixpkgs": [
@@ -931,6 +967,7 @@
         "hyprland": "hyprland",
         "hyprland-plugins": "hyprland-plugins",
         "lanzaboote": "lanzaboote",
+        "nix-sbom-helper": "nix-sbom-helper",
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
