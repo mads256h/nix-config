@@ -13,7 +13,6 @@ permissions:
 
 jobs:
   sbom-submit:
-    if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -44,7 +43,7 @@ jobs:
             extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=
           EOF
 
-      - name: Generate SPDX SBOM with nix-sbom-helper
+      - name: Generate SPDX SBOM with sbomnix
         run: |
           set -euo pipefail
           SBOM_OUT="$(nix build --no-link --print-out-paths ".#sboms.x86_64-linux.${{ matrix.host }}")"
@@ -52,6 +51,7 @@ jobs:
           cp "$SBOM_OUT"/*.spdx.json sbom/
 
       - name: Submit SBOM to GitHub dependency graph
+        if: github.ref == 'refs/heads/master'
         uses: advanced-security/spdx-dependency-submission-action@v0.3.2
         with:
           filePath: sbom
