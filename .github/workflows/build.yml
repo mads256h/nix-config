@@ -46,9 +46,12 @@ jobs:
       - name: Generate SPDX SBOM with sbomnix
         run: |
           set -euo pipefail
-          SBOM_OUT="$(nix build --no-link --print-out-paths ".#sboms.x86_64-linux.${{ matrix.host }}")"
           mkdir -p sbom
-          cp "$SBOM_OUT"/*.spdx.json sbom/
+          SYSTEM_PATH="$(nix build --no-link --print-out-paths ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel")"
+          nix run .#sbomnix -- "$SYSTEM_PATH" \
+            --spdx "sbom/${{ matrix.host }}.spdx.json" \
+            --cdx "sbom/${{ matrix.host }}.cdx.json" \
+            --csv "sbom/${{ matrix.host }}.csv"
 
       - name: Submit SBOM to GitHub dependency graph
         if: github.ref == 'refs/heads/master'

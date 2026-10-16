@@ -287,26 +287,6 @@
             false;
       };
 
-      sboms.x86_64-linux =
-        let
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          sbomnixPkg = sbomnix.packages.x86_64-linux.sbomnix;
-          mkSbom =
-            host:
-            pkgs.runCommand "sbom-${host}"
-              {
-                nativeBuildInputs = [ sbomnixPkg ];
-                nixRef = self.nixosConfigurations.${host}.config.system.build.toplevel;
-              }
-              ''
-                sbomnix "$nixRef" --spdx "$out/${host}.spdx.json"
-              '';
-        in
-        {
-          desktop-mads = mkSbom "desktop-mads";
-          laptop-mads = mkSbom "laptop-mads";
-          server-mads = mkSbom "server-mads";
-          wsl = mkSbom "wsl";
-        };
+      packages.x86_64-linux.sbomnix = sbomnix.packages.x86_64-linux.sbomnix;
     };
 }
