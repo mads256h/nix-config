@@ -46,8 +46,6 @@ in
     group = "transmission";
   };
 
-  services.flaresolverr.enable = true;
-
   services.nginx = lib.mkMerge [
     (makeProxy "prowlarr" config.services.prowlarr.settings.server.port)
     (makeProxy "sonarr" config.services.sonarr.settings.server.port)
