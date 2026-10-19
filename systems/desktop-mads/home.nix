@@ -7,6 +7,7 @@
 
   home.packages = [
     pkgs.ckan
+    pkgs.furmark
   ];
 
   wayland.windowManager.hyprland.settings = {

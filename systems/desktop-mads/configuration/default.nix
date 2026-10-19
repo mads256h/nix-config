@@ -23,6 +23,9 @@
     "__GL_SHADER_DISK_CACHE_SKIP_CLEANUP" = 1;
   };
 
+  # GPU Overclock
+  services.lact.enable = true;
+
   networking.hostName = "desktop-mads"; # Define your hostname.
   # Pick only one of the below networking options.
   #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
