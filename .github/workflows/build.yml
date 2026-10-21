@@ -55,7 +55,7 @@ jobs:
 
       - name: Submit SBOM to GitHub dependency graph
         if: github.ref == 'refs/heads/master'
-        uses: advanced-security/spdx-dependency-submission-action@v0.3.2
+        uses: advanced-security/spdx-dependency-submission-action@v0.4.0
         with:
           filePath: sbom
           filePattern: "*.spdx.json"
