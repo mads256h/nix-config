@@ -16,7 +16,7 @@
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
 
-    hyprland.url = "github:hyprwm/hyprland?ref=c6f11721168908e3608b2517e84df62c9c35064f";
+    hyprland.url = "github:hyprwm/hyprland?ref=v0.57.0";
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
 
     hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
@@ -28,8 +28,7 @@
       inputs.hyprlang.follows = "hyprland/hyprlang";
     };
 
-    hy3.url = "github:elafarge/hy3?ref=378fb240479d631bed749554417cf9d12e5e0ef6";
-    #hy3.url = "github:outfoxxed/hy3?ref=12a73ab0adddbc39f839da320dcc2b028769fc58";
+    hy3.url = "github:outfoxxed/hy3?ref=hl0.57.0";
     hy3.inputs.hyprland.follows = "hyprland";
 
     stylix.url = "github:nix-community/stylix";
