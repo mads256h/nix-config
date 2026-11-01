@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 {
   imports = [ inputs.nixvim.homeModules.nixvim ];
 
@@ -6,6 +6,8 @@
     enable = true;
 
     defaultEditor = true;
+
+    nixpkgs.pkgs = pkgs;
 
     viAlias = true;
     vimAlias = true;

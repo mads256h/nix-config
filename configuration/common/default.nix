@@ -117,7 +117,29 @@ in
 
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.overlays = [ (import ../../overlays/packages) ];
+  nixpkgs.overlays = [
+    (import ../../overlays/packages)
+    # Disable aws support in nix
+    (final: prev: {
+  nix = prev.nix.overrideScope (
+    finalScope: prevScope: {
+      nix-store = prevScope.nix-store.override {
+        withAWS = false;
+      };
+    }
+  );
+
+  nixVersions = prev.nixVersions // {
+    latest = prev.nixVersions.latest.overrideScope (
+      finalScope: prevScope: {
+        nix-store = prevScope.nix-store.override {
+          withAWS = false;
+        };
+      }
+    );
+  };
+})
+  ];
 
   nix.settings.experimental-features = [
     "nix-command"
