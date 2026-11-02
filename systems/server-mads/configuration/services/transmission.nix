@@ -41,7 +41,6 @@ in
   security.apparmor.includes."local/bin.transmission-daemon" = lib.mkForce ''
     ${config.systemd.services.transmission.environment.CURL_CA_BUNDLE} r,
 
-    owner ${cfg.home}/${settingsDir}/ rk,
     owner ${cfg.home}/${settingsDir}/** rwk,
     ${cfg.settings.download-dir}/** rw,
     ${optionalString cfg.settings.incomplete-dir-enabled ''

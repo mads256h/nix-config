@@ -49,7 +49,6 @@ let
       "acme-renew-spotify.madsmogensen.dk".enable = lib.mkForce false;
     };
 
-
     systemd.services = lib.optionalAttrs sysconfig.server {
       "acme-order-renew-file.madsmogensen.dk".enable = lib.mkForce false;
       "acme-order-renew-home.madsmogensen.dk".enable = lib.mkForce false;
