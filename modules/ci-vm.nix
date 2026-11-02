@@ -54,7 +54,11 @@ let
       "acme-order-renew-home.madsmogensen.dk".enable = lib.mkForce false;
       "acme-order-renew-webdav.madsmogensen.dk".enable = lib.mkForce false;
       "acme-order-renew-spotify.madsmogensen.dk".enable = lib.mkForce false;
-      transmission.enable = lib.mkForce false;
+      transmission.serviceConfig.ExecStartPre = lib.mkBefore [
+        "+${pkgs.coreutils}/bin/rm -f /var/lib/transmission/.config/transmission-daemon/daemon.lock /var/lib/transmission/.config/transmission-daemon/transmission-daemon.pid"
+      ];
+      transmission.serviceConfig.Restart = lib.mkForce "on-failure";
+      transmission.serviceConfig.RestartSec = lib.mkForce "3s";
       "ps3netsrv".serviceConfig.ExecStartPre = [
         "+${pkgs.coreutils}/bin/install -d -o root -g users ${(lib.escapeShellArg "/mnt/share/Delte Filer/Spil/ps3")}"
       ];
