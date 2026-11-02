@@ -264,6 +264,7 @@
     };
     lsp.servers.ltex = {
       enable = true;
+      package = pkgs.ltex-ls-plus;
       config.filetypes = [
         "markdown"
         "text"
