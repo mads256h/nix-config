@@ -49,6 +49,38 @@ let
       "acme-renew-spotify.madsmogensen.dk".enable = lib.mkForce false;
     };
 
+    security.apparmor.includes = lib.optionalAttrs sysconfig.server {
+      "local/bin.transmission-daemon" = lib.mkForce ''
+        ${config.systemd.services.transmission.environment.CURL_CA_BUNDLE} r,
+
+        owner ${config.services.transmission.home}/.config/transmission-daemon/** rwk,
+        ${config.services.transmission.settings.download-dir}/** rwk,
+        ${lib.optionalString config.services.transmission.settings.incomplete-dir-enabled ''
+          ${config.services.transmission.settings.incomplete-dir}/** rwk,
+        ''}
+        ${lib.optionalString config.services.transmission.settings.watch-dir-enabled ''
+          ${config.services.transmission.settings.watch-dir}/** r${lib.optionalString config.services.transmission.settings.trash-original-torrent-files "w"}k,
+        ''}
+        profile dirs {
+          ${config.services.transmission.settings.download-dir}/** rwk,
+          ${lib.optionalString config.services.transmission.settings.incomplete-dir-enabled ''
+            ${config.services.transmission.settings.incomplete-dir}/** rwk,
+          ''}
+          ${lib.optionalString config.services.transmission.settings.watch-dir-enabled ''
+            ${config.services.transmission.settings.watch-dir}/** r${lib.optionalString config.services.transmission.settings.trash-original-torrent-files "w"}k,
+          ''}
+        }
+
+        ${lib.optionalString (config.services.transmission.settings.script-torrent-done-enabled && config.services.transmission.settings.script-torrent-done-filename != null) ''
+          ${config.services.transmission.settings.script-torrent-done-filename} px -> &@{dirs},
+        ''}
+
+        ${lib.optionalString (config.services.transmission.webHome != null) ''
+          ${config.services.transmission.webHome}/** r,
+        ''}
+      '';
+    };
+
     systemd.services = lib.optionalAttrs sysconfig.server {
       "acme-order-renew-file.madsmogensen.dk".enable = lib.mkForce false;
       "acme-order-renew-home.madsmogensen.dk".enable = lib.mkForce false;
