@@ -1,5 +1,9 @@
 { config, lib, ... }:
 let
+  sonarrApiKey = "server-mads-sonarr-exportarr";
+  radarrApiKey = "server-mads-radarr-exportarr";
+  prowlarrApiKey = "server-mads-prowlarr-exportarr";
+
   makeProxy =
     name: port:
     let
@@ -24,6 +28,7 @@ in
       urlbase = "/arr/prowlarr";
       bindaddress = "localhost";
     };
+    settings.auth.apikey = prowlarrApiKey;
   };
 
   services.sonarr = {
@@ -32,6 +37,7 @@ in
       urlbase = "/arr/sonarr";
       bindaddress = "localhost";
     };
+    settings.auth.apikey = sonarrApiKey;
     user = "transmission";
     group = "transmission";
   };
@@ -42,6 +48,7 @@ in
       urlbase = "/arr/radarr";
       bindaddress = "localhost";
     };
+    settings.auth.apikey = radarrApiKey;
     user = "transmission";
     group = "transmission";
   };

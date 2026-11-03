@@ -63,18 +63,21 @@
       enable = true;
       port = 9007;
       url = "http://127.0.0.1:${toString config.services.sonarr.settings.server.port}${config.services.sonarr.settings.server.urlbase}";
+      environment.API_KEY = config.services.sonarr.settings.auth.apikey;
     };
 
     exporters."exportarr-radarr" = {
       enable = true;
       port = 9008;
       url = "http://127.0.0.1:${toString config.services.radarr.settings.server.port}${config.services.radarr.settings.server.urlbase}";
+      environment.API_KEY = config.services.radarr.settings.auth.apikey;
     };
 
     exporters."exportarr-prowlarr" = {
       enable = true;
       port = 9009;
       url = "http://127.0.0.1:${toString config.services.prowlarr.settings.server.port}${config.services.prowlarr.settings.server.urlbase}";
+      environment.API_KEY = config.services.prowlarr.settings.auth.apikey;
     };
 
     scrapeConfigs = [
@@ -112,51 +115,4 @@
       --collector.f2b.socket=${config.services.prometheus.exporters.fail2ban.fail2banSocket}
   '';
 
-  systemd.services."prometheus-exportarr-sonarr-exporter" = {
-    wants = [ "sonarr.service" ];
-    after = [ "sonarr.service" ];
-    serviceConfig = {
-      User = lib.mkForce "transmission";
-      Group = lib.mkForce "transmission";
-      ExecStart = lib.mkForce ''
-        ${pkgs.bash}/bin/bash -euc '
-          api_key="$(${pkgs.gnused}/bin/sed -n "s:.*<ApiKey>\\(.*\\)</ApiKey>.*:\\1:p" /var/lib/sonarr/.config/NzbDrone/config.xml | ${pkgs.coreutils}/bin/head -n 1)"
-          export API_KEY="$api_key"
-          exec ${lib.getExe config.services.prometheus.exporters."exportarr-sonarr".package} sonarr
-        '
-      '';
-    };
-  };
-
-  systemd.services."prometheus-exportarr-radarr-exporter" = {
-    wants = [ "radarr.service" ];
-    after = [ "radarr.service" ];
-    serviceConfig = {
-      User = lib.mkForce "transmission";
-      Group = lib.mkForce "transmission";
-      ExecStart = lib.mkForce ''
-        ${pkgs.bash}/bin/bash -euc '
-          api_key="$(${pkgs.gnused}/bin/sed -n "s:.*<ApiKey>\\(.*\\)</ApiKey>.*:\\1:p" /var/lib/radarr/.config/Radarr/config.xml | ${pkgs.coreutils}/bin/head -n 1)"
-          export API_KEY="$api_key"
-          exec ${lib.getExe config.services.prometheus.exporters."exportarr-radarr".package} radarr
-        '
-      '';
-    };
-  };
-
-  systemd.services."prometheus-exportarr-prowlarr-exporter" = {
-    wants = [ "prowlarr.service" ];
-    after = [ "prowlarr.service" ];
-    serviceConfig = {
-      User = lib.mkForce "root";
-      Group = lib.mkForce "root";
-      ExecStart = lib.mkForce ''
-        ${pkgs.bash}/bin/bash -euc '
-          api_key="$(${pkgs.gnused}/bin/sed -n "s:.*<ApiKey>\\(.*\\)</ApiKey>.*:\\1:p" /var/lib/prowlarr/config.xml | ${pkgs.coreutils}/bin/head -n 1)"
-          export API_KEY="$api_key"
-          exec ${lib.getExe config.services.prometheus.exporters."exportarr-prowlarr".package} prowlarr
-        '
-      '';
-    };
-  };
 }
