@@ -71,6 +71,12 @@
       url = "http://127.0.0.1:${toString config.services.radarr.settings.server.port}${config.services.radarr.settings.server.urlbase}";
     };
 
+    exporters."exportarr-prowlarr" = {
+      enable = true;
+      port = 9009;
+      url = "http://127.0.0.1:${toString config.services.prowlarr.settings.server.port}${config.services.prowlarr.settings.server.urlbase}";
+    };
+
     scrapeConfigs = [
       {
         job_name = "server";
@@ -84,6 +90,7 @@
               "127.0.0.1:${toString config.services.prometheus.exporters.zfs.port}"
               "127.0.0.1:${toString config.services.prometheus.exporters."exportarr-sonarr".port}"
               "127.0.0.1:${toString config.services.prometheus.exporters."exportarr-radarr".port}"
+              "127.0.0.1:${toString config.services.prometheus.exporters."exportarr-prowlarr".port}"
             ];
           }
         ];
@@ -132,6 +139,22 @@
           api_key="$(${pkgs.gnused}/bin/sed -n "s:.*<ApiKey>\\(.*\\)</ApiKey>.*:\\1:p" /var/lib/radarr/.config/Radarr/config.xml | ${pkgs.coreutils}/bin/head -n 1)"
           export API_KEY="$api_key"
           exec ${lib.getExe config.services.prometheus.exporters."exportarr-radarr".package} radarr
+        '
+      '';
+    };
+  };
+
+  systemd.services."prometheus-exportarr-prowlarr-exporter" = {
+    wants = [ "prowlarr.service" ];
+    after = [ "prowlarr.service" ];
+    serviceConfig = {
+      User = lib.mkForce "root";
+      Group = lib.mkForce "root";
+      ExecStart = lib.mkForce ''
+        ${pkgs.bash}/bin/bash -euc '
+          api_key="$(${pkgs.gnused}/bin/sed -n "s:.*<ApiKey>\\(.*\\)</ApiKey>.*:\\1:p" /var/lib/prowlarr/config.xml | ${pkgs.coreutils}/bin/head -n 1)"
+          export API_KEY="$api_key"
+          exec ${lib.getExe config.services.prometheus.exporters."exportarr-prowlarr".package} prowlarr
         '
       '';
     };
