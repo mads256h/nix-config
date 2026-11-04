@@ -170,13 +170,13 @@ jobs:
           fi
 
       - name: Diff with nvd
-        if: github.event_name == 'pull_request' && steps.vm_nvd_build.outputs.same_store_path != 'true'
+        if: github.event_name == 'pull_request'
         run: |
           set -euo pipefail
           nix run nixpkgs#nvd -- diff "${{ steps.vm_nvd_build.outputs.base_path }}" "${{ steps.vm_nvd_build.outputs.pr_path }}" > nvd.out
 
       - name: Comment nvd output on PR
-        if: github.event_name == 'pull_request' && steps.vm_nvd_build.outputs.same_store_path != 'true'
+        if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -261,13 +261,13 @@ jobs:
           fi
 
       - name: Diff with nvd
-        if: github.event_name == 'pull_request' && steps.build_only_nvd_build.outputs.same_store_path != 'true'
+        if: github.event_name == 'pull_request'
         run: |
           set -euo pipefail
           nix run nixpkgs#nvd -- diff "${{ steps.build_only_nvd_build.outputs.base_path }}" "${{ steps.build_only_nvd_build.outputs.pr_path }}" > nvd.out
 
       - name: Comment nvd output on PR
-        if: github.event_name == 'pull_request' && steps.build_only_nvd_build.outputs.same_store_path != 'true'
+        if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
