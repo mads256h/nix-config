@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  lanDevName = "enp1s0";
+  lanDevName = "enp3s0";
 
   wireguardDevName = "wg0";
   wireguardAddress = "10.1.1.1/24";

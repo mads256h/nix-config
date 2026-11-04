@@ -3,7 +3,7 @@
   ...
 }:
 let
-  lanDevName = "enp1s0";
+  lanDevName = "enp3s0";
 in
 {
   boot.initrd.systemd.network = {
@@ -20,5 +20,5 @@ in
     };
   };
 
-  boot.initrd.availableKernelModules = [ "r8169" ];
+  boot.initrd.availableKernelModules = [ "igb" ];
 }
