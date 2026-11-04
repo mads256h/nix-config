@@ -59,6 +59,27 @@
       port = 9006;
     };
 
+    exporters."exportarr-sonarr" = {
+      enable = true;
+      port = 9007;
+      url = "http://127.0.0.1:${toString config.services.sonarr.settings.server.port}${config.services.sonarr.settings.server.urlbase}";
+      environment.API_KEY = config.services.sonarr.settings.auth.apikey;
+    };
+
+    exporters."exportarr-radarr" = {
+      enable = true;
+      port = 9008;
+      url = "http://127.0.0.1:${toString config.services.radarr.settings.server.port}${config.services.radarr.settings.server.urlbase}";
+      environment.API_KEY = config.services.radarr.settings.auth.apikey;
+    };
+
+    exporters."exportarr-prowlarr" = {
+      enable = true;
+      port = 9009;
+      url = "http://127.0.0.1:${toString config.services.prowlarr.settings.server.port}${config.services.prowlarr.settings.server.urlbase}";
+      environment.API_KEY = config.services.prowlarr.settings.auth.apikey;
+    };
+
     scrapeConfigs = [
       {
         job_name = "server";
@@ -70,6 +91,9 @@
               "127.0.0.1:${toString config.services.prometheus.exporters.smartctl.port}"
               "127.0.0.1:${toString config.services.prometheus.exporters.fail2ban.port}"
               "127.0.0.1:${toString config.services.prometheus.exporters.zfs.port}"
+              "127.0.0.1:${toString config.services.prometheus.exporters."exportarr-sonarr".port}"
+              "127.0.0.1:${toString config.services.prometheus.exporters."exportarr-radarr".port}"
+              "127.0.0.1:${toString config.services.prometheus.exporters."exportarr-prowlarr".port}"
             ];
           }
         ];
@@ -90,4 +114,5 @@
       --web.listen-address="${config.services.prometheus.exporters.fail2ban.host}:${toString config.services.prometheus.exporters.fail2ban.port}" \
       --collector.f2b.socket=${config.services.prometheus.exporters.fail2ban.fail2banSocket}
   '';
+
 }
