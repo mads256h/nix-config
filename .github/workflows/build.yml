@@ -102,18 +102,41 @@ jobs:
       - name: Build toplevel system closure
         run: nix build ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L -o result-toplevel --fallback
 
+      - name: Checkout base and head revisions
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+
+      - name: Build base system and compare store paths
+        if: github.event_name == 'pull_request'
+        id: vm_nvd_build
+        run: |
+          set -euo pipefail
+          BASE_PATH=$(nix build "./base#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L --fallback --no-link --print-out-paths)
+          PR_PATH=$(readlink -f result-toplevel)
+          echo "base_path=$BASE_PATH" >> "$GITHUB_OUTPUT"
+          echo "pr_path=$PR_PATH" >> "$GITHUB_OUTPUT"
+          if [ "$BASE_PATH" = "$PR_PATH" ]; then
+            echo "same_store_path=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "same_store_path=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Run VM boot test
+        if: github.event_name != 'pull_request' || steps.vm_nvd_build.outputs.same_store_path != 'true'
         run: nix build ".#checks.x86_64-linux.${{ matrix.host }}-vm-boot" -L --fallback
 
       - name: Collect graphical VM screenshot
-        if: matrix.host == 'desktop-mads' || matrix.host == 'laptop-mads'
+        if: (matrix.host == 'desktop-mads' || matrix.host == 'laptop-mads') && (github.event_name != 'pull_request' || steps.vm_nvd_build.outputs.same_store_path != 'true')
         run: |
           set -euo pipefail
           test -f result/librewolf-ci.png
           cp result/librewolf-ci.png "librewolf-ci-${{ matrix.host }}.png"
 
       - name: Upload graphical VM screenshot
-        if: github.event_name == 'pull_request' && (matrix.host == 'desktop-mads' || matrix.host == 'laptop-mads')
+        if: github.event_name == 'pull_request' && (matrix.host == 'desktop-mads' || matrix.host == 'laptop-mads') && steps.vm_nvd_build.outputs.same_store_path != 'true'
         id: vm_screenshot_artifact
         uses: actions/upload-artifact@v7
         with:
@@ -121,7 +144,7 @@ jobs:
           path: librewolf-ci-${{ matrix.host }}.png
 
       - name: Comment screenshot on PR
-        if: github.event_name == 'pull_request' && (matrix.host == 'desktop-mads' || matrix.host == 'laptop-mads')
+        if: github.event_name == 'pull_request' && (matrix.host == 'desktop-mads' || matrix.host == 'laptop-mads') && steps.vm_nvd_build.outputs.same_store_path != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -146,31 +169,14 @@ jobs:
             gh api --method POST "$COMMENTS_ENDPOINT" --raw-field body="$COMMENT_BODY"
           fi
 
-      - name: Checkout base and head revisions
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.base.sha }}
-          path: base
-
-      - name: Build base system for nvd
-        if: github.event_name == 'pull_request'
-        id: vm_nvd_build
-        run: |
-          set -euo pipefail
-          BASE_PATH=$(nix build "./base#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" -L --fallback --no-link --print-out-paths)
-          PR_PATH=$(readlink -f result-toplevel)
-          echo "base_path=$BASE_PATH" >> "$GITHUB_OUTPUT"
-          echo "pr_path=$PR_PATH" >> "$GITHUB_OUTPUT"
-
       - name: Diff with nvd
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.vm_nvd_build.outputs.same_store_path != 'true'
         run: |
           set -euo pipefail
           nix run nixpkgs#nvd -- diff "${{ steps.vm_nvd_build.outputs.base_path }}" "${{ steps.vm_nvd_build.outputs.pr_path }}" > nvd.out
 
       - name: Comment nvd output on PR
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.vm_nvd_build.outputs.same_store_path != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -239,7 +245,7 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           path: base
 
-      - name: Build base system for nvd
+      - name: Build base system and compare store paths
         if: github.event_name == 'pull_request'
         id: build_only_nvd_build
         run: |
@@ -248,15 +254,20 @@ jobs:
           PR_PATH=$(readlink -f result-toplevel)
           echo "base_path=$BASE_PATH" >> "$GITHUB_OUTPUT"
           echo "pr_path=$PR_PATH" >> "$GITHUB_OUTPUT"
+          if [ "$BASE_PATH" = "$PR_PATH" ]; then
+            echo "same_store_path=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "same_store_path=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Diff with nvd
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.build_only_nvd_build.outputs.same_store_path != 'true'
         run: |
           set -euo pipefail
           nix run nixpkgs#nvd -- diff "${{ steps.build_only_nvd_build.outputs.base_path }}" "${{ steps.build_only_nvd_build.outputs.pr_path }}" > nvd.out
 
       - name: Comment nvd output on PR
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.build_only_nvd_build.outputs.same_store_path != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
