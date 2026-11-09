@@ -16,6 +16,7 @@
         root_url = "https://home.madsmogensen.dk/grafana/";
         serve_from_sub_path = true;
       };
+      plugins.disable_plugins = "grafana_cloudwatch_datasource,grafana_elasticsearch_datasource,grafana_postgresql_datasource,grafana-pyroscope-datasource,grafana-jaeger-datasource,grafana-mssql-datasource,grafana-mysql-datasource,grafana-opentsdb-datasource,grafana_cloudmonitoring_datasource,grafana-tempo-datasource,grafana-zipkin-datasource";
       security.secret_key = "SW2YcwTIb9zpOOhoPsMm"; # TODO: Replace this default key from nixos
     };
   };
