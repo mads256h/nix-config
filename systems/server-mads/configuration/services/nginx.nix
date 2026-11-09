@@ -89,6 +89,9 @@
   security.acme = {
     acceptTerms = true;
     defaults.email = "mail@madsmogensen.dk";
+    # 6 days validity
+    # See https://letsencrypt.org/docs/profiles/
+    defaults.profile = "shortlived";
   };
 
   networking.firewall.allowedTCPPorts = [
