@@ -1,17 +1,18 @@
 {
-  config,
   pkgs,
   lib,
   inputs,
   sysconfig,
   ...
 }:
+let
+  hyprPkgs = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system};
+in
 {
   wayland.windowManager.hyprland = rec {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage =
-      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    package = hyprPkgs.hyprland;
+    portalPackage = hyprPkgs.xdg-desktop-portal-hyprland;
 
     systemd.enable = true;
     systemd.enableXdgAutostart = true;
@@ -20,7 +21,6 @@
 
     plugins = [
       inputs.hy3.packages.x86_64-linux.hy3
-      # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprwinwrap
     ];
 
     settings = {
@@ -725,7 +725,7 @@
       WALLPAPER_DIR="$HOME/Pictures/wallpapers/"
       WALLPAPER=$(${pkgs.findutils}/bin/find "$WALLPAPER_DIR" -type f | ${pkgs.coreutils}/bin/shuf -n 1)
 
-      ${pkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ,"$WALLPAPER"
+      ${hyprPkgs.hyprland}/bin/hyprctl hyprpaper wallpaper ,"$WALLPAPER"
     ''}";
 
   services.hypridle = {
