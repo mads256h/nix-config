@@ -860,6 +860,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-small": {
+      "locked": {
+        "lastModified": 1795067293,
+        "narHash": "sha256-E2/LZ61nkxegI0MoDz6NElmhfwIaMjoXG91FAQxXJy0=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "25f9ec8bb05173adf0d499f1f14a48bd474b1f76",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable-small",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixvim": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -890,11 +906,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795074689,
-        "narHash": "sha256-ahe76/3FgO1+kmLUCjU5fo7/+zJ93BhD+DQnKANPlUg=",
+        "lastModified": 1795076516,
+        "narHash": "sha256-VYMI1i4Zmg3+LsGtub7o4+Vmfq8JxQhNptDQq88jrWY=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "006bd5b1efaeb8ef5d91602ac3391571eab1cf97",
+        "rev": "ff118cd8bc5cc9fc00c58db5ac521a2407b5d3ce",
         "type": "github"
       },
       "original": {
@@ -983,6 +999,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-small": "nixpkgs-small",
         "nixvim": "nixvim",
         "nur": "nur",
         "rose-pine-hyprcursor": "rose-pine-hyprcursor",
