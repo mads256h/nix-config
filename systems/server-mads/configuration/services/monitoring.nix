@@ -27,6 +27,11 @@
       proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
       proxyWebsockets = true;
       recommendedProxySettings = true;
+
+      # Don't pass Authorization
+      extraConfig = ''
+        proxy_set_header Authorization "";
+      '';
     };
   };
 
