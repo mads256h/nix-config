@@ -58,6 +58,9 @@ in
         misc = {
           disable_hyprland_logo = true;
           disable_splash_rendering = true;
+
+          # Mouse is fucked
+          middle_click_paste = false;
         };
         debug = {
           enable_stdout_logs = true;
