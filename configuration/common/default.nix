@@ -139,13 +139,6 @@ in
         );
       };
     })
-
-    # Fix for nginx while nixos-unstable gets updated
-    (_: _: {
-      nginx = inputs.nixpkgs-small.legacyPackages.x86_64-linux.nginxStable;
-      nginxStable = inputs.nixpkgs-small.legacyPackages.x86_64-linux.nginxStable;
-      nginxMainline = inputs.nixpkgs-small.legacyPackages.x86_64-linux.nginxMainline;
-    })
   ];
 
   nix.settings.experimental-features = [
