@@ -79,8 +79,8 @@ in
     enable = true;
     hostKeys = [
       {
-        path = "/etc/ssh/ssh_host_ed25519_key";
-        type = "ed25519";
+        path = "/etc/ssh/ssh_host_mldsa44-ed25519_key";
+        type = "mldsa44-ed25519";
       }
     ];
     settings = {
@@ -91,9 +91,8 @@ in
 
       # Restrict algorithms to only very secure ones
       KexAlgorithms = [
-        "sntrup761x25519-sha512@openssh.com"
-        "curve25519-sha256"
-        "curve25519-sha256@libssh.org"
+        "mlkem768x25519-sha256"
+        "sntrup761x25519-sha512"
       ];
       Ciphers = [
         "chacha20-poly1305@openssh.com"
@@ -102,7 +101,7 @@ in
       Macs = [
         "hmac-sha2-512-etm@openssh.com"
       ];
-      HostKeyAlgorithms = "ssh-ed25519,ssh-ed25519-cert-v01@openssh.com";
+      HostKeyAlgorithms = "ssh-mldsa44-ed25519";
 
       ModuliFile = "${strongModuli}";
 
