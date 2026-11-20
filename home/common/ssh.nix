@@ -15,10 +15,10 @@
       };
       "github.com".IdentityFile = "~/.ssh/github_rsa";
       "home.madsmogensen.dk" = {
-        IdentityFile = "~/.ssh/server_ed25519";
+        IdentityFile = "~/.ssh/server_mldsa44-ed25519";
       };
       "server-mads.lan" = {
-        IdentityFile = "~/.ssh/server_ed25519";
+        IdentityFile = "~/.ssh/server_mldsa44-ed25519";
       };
       "desktop-mads.router.lan" = {
         IdentityFile = "~/.ssh/desktop_rsa";
