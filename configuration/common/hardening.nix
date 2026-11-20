@@ -42,6 +42,8 @@
     "raw1394"
     "sbp2"
     "video1394"
+    "nosy"
+    "firedtv"
 
     ## Global Positioning Systems (GPS):
     ## Disable GPS-related modules like GNSS (Global Navigation Satellite System).
@@ -62,6 +64,7 @@
     "intel-wmi-thunderbolt"
     "thunderbolt"
     "thunderbolt_net"
+    "thunderbolt_stream"
 
     ## File Systems:
     ## Disable uncommon file systems to reduce attack surface.
@@ -96,6 +99,20 @@
     "ufs"
     "zonefs"
 
+    "cifs"
+    "cifs_md4"
+    "ksmbd"
+
+    # https://documentation.suse.com/sle-ha/12-SP5/html/SLE-HA-all/cha-ha-storage-dlm.html
+    "dlm"
+    # https://en.wikipedia.org/wiki/OCFS2
+    "ocfs2_dlm"
+    "ocfs2_dlmfs"
+    "ocfs2_nodemanager"
+    "ocfs2_stackglue"
+    "ocfs2_stack_o2cb"
+    "ocfs2_stack_user"
+
     ## Network Protocols:
     ## Disable rare and unneeded network protocols that are a common source of unknown vulnerabilities.
     ## Previously had blacklisted eepro100 and eth1394.
@@ -110,17 +127,24 @@
     "ax25"
     "decnet"
     "dccp"
+    "xt_dccp"
     "econet"
     "eepro100"
     "eth1394"
     "ipx"
     "n-hdlc"
+    "hdlcdrv"
     "netrom"
     "p8022"
     "p8023"
     "psnap"
     "rose"
     "x25"
+    "mctp-serial"
+    "mctp-usb"
+    "mctp-i3c"
+    "batman-adv"
+    "rxrpc"
 
     ## Network Protocol - Asynchronous Transfer Mode (ATM):
     ##
@@ -128,6 +152,8 @@
     "ueagle-atm"
     "usbatm"
     "xusbatm"
+    "pppoeatm"
+    "atmtcp"
 
     ## Network Protocol - Controller Area Network (CAN):
     ##
@@ -168,6 +194,59 @@
     ##
     "sctp"
     "sctp_diag"
+    "xt_sctp"
+
+    # esp4 and esp6 provide support for Encapsulating Security Payload, part of IPSec.
+    "esp4"
+    "esp4_offload"
+    "esp6"
+    "esp6_offload"
+
+    # More IPSec functionality
+    # https://cateee.net/lkddb/web-lkddb/NET_IPVTI.html
+    # https://cateee.net/lkddb/web-lkddb/IPV6_VTI.html
+    "ip_vti"
+    "ip6_vti"
+
+    # xfrm, another part of IPSec involved in related exploits
+    "nft_xfrm"
+    "xfrm4_tunnel"
+    "xfrm6_tunnel"
+    "xfrm_algo"
+    "xfrm_interface"
+    "xfrm_ipcomp"
+    "xfrm_iptfs"
+    "xfrm_user"
+
+    # disable remaining ipsec modules
+    "ah4"
+    "ah6"
+    "ipcomp"
+    "ipcomp6"
+    #"af_key"
+
+    # disable l2tp (depends on ipsec)
+    "l2tp_core"
+    "l2tp_debugfs"
+    "l2tp_eth"
+    "l2tp_ip"
+    "l2tp_ip6"
+    "l2tp_netlink"
+    "l2tp_ppp"
+    "xt_l2tp"
+
+    # legacy interfaces
+    # https://en.wikipedia.org/wiki/Parallel_port
+    "parport"
+    "parport_cs"
+    "parport_pc"
+    "parport_serial"
+    "pps_parport"
+    "i2c-parport"
+    # https://github.com/torvalds/linux/blob/master/drivers/char/ppdev.c
+    "ppdev"
+    # https://github.com/torvalds/linux/blob/master/drivers/char/lp.c
+    "lp"
 
     ## Amateur Radios:
     ##
@@ -176,6 +255,16 @@
     ## Floppy Disks:
     ##
     "floppy"
+
+    # android tablet support
+    "x86-android-tablets"
+
+    # block loading cdrom
+    "cdrom"
+    "sr_mod"
+
+    # https://en.wikipedia.org/wiki/Game_port
+    "gameport"
 
     ## Framebuffer (fbdev):
     ## Video drivers are known to be buggy, cause kernel panics, and are generally only used by legacy devices.
@@ -237,6 +326,34 @@
     "rndis_host"
     "usb_f_rndis"
 
+    # GPIB
+    # https://en.wikipedia.org/wiki/GPIB
+    # https://github.com/torvalds/linux/blob/master/drivers/gpib/common/gpib_os.c
+    "gpib_common"
+    # https://github.com/torvalds/linux/blob/master/drivers/gpib/agilent_82350b/agilent_82350b.c
+    "agilent_82350b"
+    # https://github.com/torvalds/linux/blob/master/drivers/gpib/agilent_82357a/agilent_82357a.c
+    "agilent_82357a"
+    # https://github.com/torvalds/linux/blob/master/drivers/gpib/cb7210/cb7210.c
+    "cb7210"
+    # https://github.com/torvalds/linux/blob/master/drivers/gpib/cec/cec_gpib.c
+    "cec_gpib"
+    # https://github.com/torvalds/linux/blob/master/drivers/gpib/ines/ines_gpib.c
+    "ines_gpib"
+    # https://github.com/torvalds/linux/blob/master/drivers/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
+    "lpvo_usb_gpib"
+    # https://github.com/torvalds/linux/blob/master/drivers/gpib/nec7210/nec7210.c
+    "nec7210"
+    # https://github.com/torvalds/linux/blob/master/drivers/gpib/ni_usb/ni_usb_gpib.c
+    "ni_usb_gpib"
+    # https://github.com/torvalds/linux/blob/master/drivers/gpib/tms9914/tms9914.c
+    "tms9914"
+    # https://github.com/torvalds/linux/tree/master/drivers/gpib/tnt4882
+    "tnt4882"
+
+    # NFC
+    "nfc"
+
     ## Vivid:
     ## Disable the vivid kernel module since it has been the cause of multiple vulnerabilities.
     ## Required only for running tests associated with the Qubes Video Companion.
@@ -248,7 +365,8 @@
     ## https://github.com/Kicksecure/security-misc/issues/298
     ##
     "vivid"
-  ] ++ lib.optionals (!sysconfig.graphical) [
+  ]
+  ++ lib.optionals (!sysconfig.graphical) [
     ## Joysticks:
     ##
     ## https://docs.kernel.org/input/joydev/joystick.html
@@ -259,7 +377,8 @@
     ## Disable the USB-based video streaming driver for devices like some webcams and digital camcorders.
     ##
     "uvcvideo"
-  ] ++ lib.optionals sysconfig.server [
+  ]
+  ++ lib.optionals sysconfig.server [
     ## Bluetooth:
     ## Disable Bluetooth to reduce the attack surface due to its long history of security vulnerabilities.
     ## Replaced with a privacy and security preserving default Bluetooth configuration for better usability.
