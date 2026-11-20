@@ -16,7 +16,7 @@ in
     ssh = {
       enable = true;
       authorizedKeys = config.users.users.mads.openssh.authorizedKeys.keys;
-      hostKeys = [ "/etc/secrets/initrd/ssh_host_ed25519_key" ];
+      hostKeys = [ "/etc/secrets/initrd/ssh_host_mldsa44-ed25519_key" ];
     };
   };
 
