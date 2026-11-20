@@ -10,6 +10,8 @@
         "privacy.clearOnShutdown.sessions" = false;
         "privacy.clearOnShutdown_v2.cookiesAndStorage" = false;
         "media.videocontrols.picture-in-picture.video-toggle.enabled" = false;
+        # Mouse is fucked
+        "middlemouse.paste" = false;
       };
       # Fix color theme
       extensions.settings."FirefoxColor@mozilla.com".force = true;
