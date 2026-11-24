@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nixos-hardware.inputs.nixpkgs.follows = "nixpkgs";
@@ -54,6 +55,7 @@
     inputs@{
       self,
       nixpkgs,
+      nixpkgs-small,
       nixos-hardware,
       home-manager,
       nur,

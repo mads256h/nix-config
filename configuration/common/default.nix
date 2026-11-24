@@ -138,6 +138,9 @@ in
         );
       };
     })
+    (_:_: {
+      gpgme = inputs.nixpkgs-small.legacyPackages.x86_64-linux.gpgme;
+    })
   ];
 
   nix.settings.experimental-features = [

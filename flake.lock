@@ -860,6 +860,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-small": {
+      "locked": {
+        "lastModified": 1795469476,
+        "narHash": "sha256-fvs3qX0oG57wGKJ2Ho9Kt+3ZmSxR7SoyquMX7pF9KMI=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "8ed16af8de06a5941dc797b4e9ed27aae5cf7960",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable-small",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixvim": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -983,6 +999,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-small": "nixpkgs-small",
         "nixvim": "nixvim",
         "nur": "nur",
         "rose-pine-hyprcursor": "rose-pine-hyprcursor",
