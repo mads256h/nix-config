@@ -354,17 +354,87 @@
     # NFC
     "nfc"
 
-    ## Vivid:
-    ## Disable the vivid kernel module since it has been the cause of multiple vulnerabilities.
-    ## Required only for running tests associated with the Qubes Video Companion.
-    ##
-    ## https://forums.whonix.org/t/kernel-recompilation-for-better-hardening/7598/233
-    ## https://www.openwall.com/lists/oss-security/2019/11/02/1
-    ## https://github.com/a13xp0p0v/kconfig-hardened-check/commit/981bd163fa19fccbc5ce5d4182e639d67e484475
-    ## https://forums.whonix.org/t/testing-qubes-video-companion-on-whonix/21393
-    ## https://github.com/Kicksecure/security-misc/issues/298
-    ##
+    # kernel debugging / development modules
+    # https://linux.die.net/man/8/mce-inject
+    "mce-inject"
+    # https://github.com/torvalds/linux/blob/master/mm/hwpoison-inject.c
+    "hwpoison-inject"
+    # https://github.com/torvalds/linux/blob/master/drivers/pci/pcie/aer_inject.c
+    "aer_inject"
+    # https://github.com/torvalds/linux/blob/master/drivers/scsi/scsi_debug.c
+    "scsi_debug"
+    # https://github.com/torvalds/linux/blob/master/drivers/usb/serial/usb_debug.c
+    "usb_debug"
+    # https://github.com/torvalds/linux/blob/master/kernel/trace/ring_buffer_benchmark.c
+    "ring_buffer_benchmark"
+    # https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/vkms/vkms_drv.c
+    "vkms"
+    # diagnostic module for vsock: https://man7.org/linux/man-pages/man7/vsock.7.html
+    "vsock_diag"
+    # diagnostic module for xdp: https://github.com/torvalds/linux/blob/master/net/xdp/xsk_diag.c
+    "xsk_diag"
+    # https://docs.kernel.org/admin-guide/media/visl.html
+    # https://github.com/torvalds/linux/tree/master/drivers/media/test-drivers/visl
+    "visl"
+    # https://github.com/torvalds/linux/blob/master/drivers/media/test-drivers/vim2m.c
+    "vim2m"
+    # https://docs.kernel.org/admin-guide/media/vimc.html
+    # https://github.com/torvalds/linux/tree/master/drivers/media/test-drivers/vimc
+    "vimc"
+    # disable vivid
     "vivid"
+    # https://github.com/torvalds/linux/blob/master/drivers/usb/gadget/udc/dummy_hcd.c
+    "dummy_hcd"
+    # https://manpages.ubuntu.com/manpages/bionic/man4/nandsim.4freebsd.html
+    # https://github.com/torvalds/linux/blob/master/drivers/mtd/nand/raw/nandsim.c
+    "nandsim"
+    # https://github.com/torvalds/linux/blob/master/drivers/mtd/devices/mtdram.c
+    "mtdram"
+
+    # kernel debugging modules for blind users
+    "speakup"
+    "speakup_acntsa"
+    "speakup_apollo"
+    "speakup_audptr"
+    "speakup_bns"
+    "speakup_dectlk"
+    "speakup_ltlk"
+    "speakup_soft"
+    "speakup_spkout"
+    "speakup_txprt"
+
+    # kernel message logging over UDP
+    # https://www.kernel.org/doc/Documentation/networking/netconsole.txt
+    "netconsole"
+
+    # NFS
+    # Core NFS client functionality
+    "nfs"
+    # NFS version 3 support
+    "nfsv3"
+    # NFS version 4 support
+    "nfsv4"
+    # NFSv4.1 file-layout support
+    "nfs_layout_nfsv41_files"
+    # NFSv4 flexible file-layout support
+    "nfs_layout_flexfiles"
+    # NFS server functionality
+    "nfsd"
+    # NFSv3 file locking (NLM)
+    "lockd"
+    # Grace-period handling for NFS locks
+    "grace"
+    # NFSv3 ACL support
+    "nfs_acl"
+
+    # Sunrpc
+    # Sun RPC framework
+    "sunrpc"
+    # RPCSEC_GSS authentication framework
+    "auth_rpcgss"
+    # Kerberos authentication for RPC
+    "rpcsec_gss_krb5"
+
   ]
   ++ lib.optionals (!sysconfig.graphical) [
     ## Joysticks:
