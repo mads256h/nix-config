@@ -1,7 +1,6 @@
 {
   pkgs,
   sysconfig,
-  lib,
   ...
 }:
 {
@@ -12,6 +11,18 @@
       "*" = {
         UseRoaming = "no";
         AddKeysToAgent = "yes";
+        VerifyHostKeyDNS = "yes";
+        KexAlgorithms = [
+          "mlkem768x25519-sha256"
+          "sntrup761x25519-sha512"
+        ];
+        Ciphers = [
+          "chacha20-poly1305@openssh.com"
+          "aes256-gcm@openssh.com"
+        ];
+        Macs = [
+          "hmac-sha2-512-etm@openssh.com"
+        ];
       };
       "github.com".IdentityFile = "~/.ssh/github_rsa";
       "home.madsmogensen.dk" = {
